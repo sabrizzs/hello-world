@@ -21,6 +21,15 @@ Um dado BD informatizado pode ser criado e mantido por:
 #### SGBD
 Sistema de software de propósito geral que facilita o processo de definição, contrução, manipulação, e compartilhamento de BDs entre vários usuários e aplicações.
 
+Funções importantes:
+<li>Manter os dados por um longo período de tempo</li>
+<li>Garantir a consistência dos dados</li>
+<li>Prover eficiência no acesso aos dados</li>
+<li>Proteger os dados contra acessos não autorizados e falhas de hardware ou software</li>
+<li>Prover isolamento entre programas e dados</li>
+<li>Prover suporte a visões múltiplas dos dados</li>
+<li>Possibilitar o compartilhamento de dados e processar transações para multiusuários</li>
+
 #### Um sistema de banco de dados monousuário
 Usuários <---> Programa de aplicação <---> Dados
 
