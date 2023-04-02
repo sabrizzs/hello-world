@@ -1,6 +1,6 @@
 ## EP1 - MAC0422 - Sistemas Operacionais
 ### Sabrina Araujo da Silva - n°USP 12566182
-### Samantha - n°USP 12566182
+### Samantha - n°USP 
 ---------------
 
 #### Criando uma Shell, usando chamadas de sistema
@@ -19,4 +19,4 @@ A função cria um novo processo usando a função ```fork()```. Se ocorrer um e
 
 #### sohroda
 
-A função cria um novo processo usando a função ```fork()```. Se ocorrer um erro na criação do processo filho (pid <0), a função ```perror()``` é chamada para imprimir uma mensagem de erro. Se o processo em execução é o processo filho (pid == 0), antes da execução do programa, a função ```close(STDIN_FILENO)``` fecha o descritor de arquivo de entrada padrão (stdin) do processo filho.
+A função cria um novo processo usando a função ```fork()```. Se ocorrer um erro na criação do processo filho (pid <0), a função ```perror()``` é chamada para imprimir uma mensagem de erro. Se o processo em execução é o processo filho (pid == 0), antes da execução do programa, a função ```close(STDIN_FILENO)``` fecha o descritor de arquivo de entrada padrão (stdin) do processo filho e, em seguida,  o programa passado como parâmetro é executado usando a função ```execve()```.
