@@ -20,3 +20,20 @@ A função cria um novo processo usando a função ```fork()```. Se ocorrer um e
 #### sohroda
 
 A função cria um novo processo usando a função ```fork()```. Se ocorrer um erro na criação do processo filho (pid <0), a função ```perror()``` é chamada para imprimir uma mensagem de erro. Se o processo em execução é o processo filho (pid == 0), antes da execução do programa, a função ```close(STDIN_FILENO)``` fecha o descritor de arquivo de entrada padrão (stdin) do processo filho e, em seguida,  o programa passado como parâmetro é executado usando a função ```execve()```.
+
+#### exemplo de execução
+
+arquivo usado como teste:
+
+![image](https://user-images.githubusercontent.com/93349105/229383283-a6309635-b98f-4639-abfe-db00933a3c2c.png)
+
+```shell
+./miniShell
+nem_eu_nem_de_ninguem arq.txt
+```
+![image](https://user-images.githubusercontent.com/93349105/229383177-5d85b824-6f7d-4ec1-84b4-a7461eee2319.png)
+
+```shell
+soh_eumesmo arq.txt
+```
+![image](https://user-images.githubusercontent.com/93349105/229383240-b677135d-6756-4dc2-810e-05fd421dc2c5.png)
