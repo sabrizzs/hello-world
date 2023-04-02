@@ -1,65 +1,22 @@
-### MAC0218 - Técnicas de Programação II
+## EP1 - MAC0422 - Sistemas Operacionais
 ### Sabrina Araujo da Silva - n°USP 12566182
+### Samantha - n°USP 12566182
+---------------
 
-#### Mini EP1
+#### Criando uma Shell, usando chamadas de sistema
 
-```python
-# Define um dicionário para armazenar os valores já calculados
-memo = {0: 0, 1: 1}
+A shell simplificada foi desenvolvida na linguagem C e implementa um programa que recebe comandos e caminhos de arquivo para realizar suas operações. O programa possui quatro funções: *nem_eu_nem_de_ninguem*, *soh_eumesmo*, *rodaeolhe* e *sohroda*.
 
-# Calcula a sequência de Fibonacci
-def fibonacci(n):
-    # Verifica se o valor já foi calculado e armazenado no dicionário
-    if n in memo:
-        return memo[n]
-    
-    # Se o valor ainda não foi calculado, utiliza a recursão para calcular
-    resultado = fibonacci(n-1) + fibonacci(n-2)
-    
-    memo[n] = resultado
-    
-    return resultado
+O programa tem como base um loop infinito que lê comandos e argumentos, compara os comandos com as funções citadas anteriormente e executa a função correspondente. Se o comando digitado pelo usuário não for reconhecido, o programa exibirá uma mensagem informando que o comando é desconhecido e o loop será encerrado.
 
-# Lista de números para calcular a sequência de Fibonacci
-numeros = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40]
+#### nem_eu_nem_de_ninguem e soh_eumesmo
 
-# Calcula a sequência de Fibonacci para cada número da lista usando a função
-for n in numeros:
-    resultado = fibonacci(n)
-    print("O resultado para o número", n, "é", resultado)
-```
+As funções ```nem_eu_nem_de_ninguem``` e ```soh_eumesmo``` utilizam a chamada de sistema chmod para alterar as permissões dos arquivos especificados. A função nem_eu_nem_de_ninguem altera suas permissões para 000, ou seja, nenhum usuário terá permissão de leitura, gravação ou execução. A função soh_eumesmo altera suas permissões para 0700, ou seja, apenas o usuário atual terá permissão de leitura, gravação e execução.
 
-Neste código, a função fibonacci() utiliza recursão e memoização para armazenar os valores já calculados e melhorar a eficiência do código, sem chamadas desnecessárias. Ainda mais, as variáveis são nomeadas de forma clara e expressam o seu propósito de maneira objetiva, o que torna o código fácil de ler e entender. Portanto, considero este código muito bom.
+#### rodaeolhe
 
-### MAC0218 - Técnicas de Programação II
-### Sabrina Araujo da Silva - n°USP 12566182
+A função cria um novo processo usando a função "fork()". Se ocorrer um erro na criação do processo filho (pid <0), a função perror() é chamada para imprimir uma mensagem de erro. Se o processo em execução é o processo filho (pid == 0), o programa passado como parâmetro é executado usando a função execve(). Se o processo em execução for o processo pai (pid > 0), o código aguarda que o processo filho seja encerrado usando a função wait() e, em seguida, exibe uma mensagem informando o código de saída do programa.
 
-#### Mini EP2
 
-```python
-def fib(n):
-    if n < 0:
-        print("Número inválido")
-    elif n == 0:
-        return 0
-    elif n == 1:
-        return 1
-    elif n == 2:
-        return 1
-    else:
-        a = fib(n - 1)
-        b = fib(n - 2)
-        c = a + b
-        return c
-```
 
-Nesse código, há muitas condições de verificação e linhas desnecessárias, o que torna o código maior e menos direto do que poderia ser.
-
-Um exemplo do que poderia ser feito é o seguinte:
-```python
-def fibonacci(n):
-    if n <= 1:
-        return n
-    else:
-        return fibonacci(n-1) + fibonacci(n-2)
-```
+#### sohroda
