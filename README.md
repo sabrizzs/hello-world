@@ -2,10 +2,8 @@
 ### Sabrina Araujo da Silva - n°USP 12566182
 ### Samantha Miyahira - n°USP 11797261
 ---------------
-
-
-
-
+<br/>
+<br/>
 > ### 1) Criando uma Shell usando chamadas de sistema
 
 - ***Link para acessar a imagem .ova:*** https://drive.google.com/drive/folders/1FdiG-YB8dmSiDQoj_9oyyOhauPE7CAdA?usp=sharing
