@@ -3,6 +3,7 @@
 ### Samantha Miyahira - n°USP 11797261
 ---------------
 
+<div class="page">
 > ### 1) Criando uma Shell usando chamadas de sistema
 
 - ***Link para acessar a imagem .ova:*** https://drive.google.com/drive/folders/1FdiG-YB8dmSiDQoj_9oyyOhauPE7CAdA?usp=sharing
@@ -23,7 +24,7 @@ A função cria um novo processo usando a função ```fork()```. Se ocorrer um e
 
 A função cria um novo processo usando a função ```fork()```. Se ocorrer um erro na criação do processo filho (pid <0), a função ```perror()``` é chamada para imprimir uma mensagem de erro. Se o processo em execução é o processo filho (pid == 0), antes da execução do programa, a função ```close(STDIN_FILENO)``` fecha o descritor de arquivo de entrada padrão (stdin) do processo filho e, em seguida,  o programa passado como parâmetro é executado usando a função ```execve()```.
 
----
+</div>
 
 > ### 2) Exemplos de execução
 
