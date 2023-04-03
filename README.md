@@ -31,9 +31,16 @@ arquivo usado como teste:
 ./miniShell
 nem_eu_nem_de_ninguem arq.txt
 ```
+![image](https://user-images.githubusercontent.com/93349105/229390190-98f0a3da-47a0-4738-b27a-4b65a147160f.png)
 ![image](https://user-images.githubusercontent.com/93349105/229383177-5d85b824-6f7d-4ec1-84b4-a7461eee2319.png)
 
 ```shell
 soh_eumesmo arq.txt
 ```
+![image](https://user-images.githubusercontent.com/93349105/229390225-5ae7733f-c21e-4bfb-bf78-e4f12d36784a.png)
 ![image](https://user-images.githubusercontent.com/93349105/229383240-b677135d-6756-4dc2-810e-05fd421dc2c5.png)
+
+```shell
+rodaeolhe arq.txt
+```
+
