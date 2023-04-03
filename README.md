@@ -5,6 +5,8 @@
 
 > ### 1) Criando uma Shell, usando chamadas de sistema
 
+***[Link da imagem .ova:] *** (https://drive.google.com/drive/folders/1FdiG-YB8dmSiDQoj_9oyyOhauPE7CAdA?usp=sharing)
+
 A shell simplificada foi desenvolvida na linguagem C e implementa um programa que recebe comandos e caminhos de arquivo para realizar suas operações. O programa possui quatro funções: *nem_eu_nem_de_ninguem*, *soh_eumesmo*, *rodaeolhe* e *sohroda*.
 
 O programa tem como base um loop infinito que lê comandos e argumentos, compara os comandos com as funções citadas anteriormente e executa a função correspondente. Se o comando digitado pelo usuário não for reconhecido, o programa exibirá uma mensagem informando que o comando é desconhecido e o loop será encerrado, como por exemplo "abc abc".
@@ -94,7 +96,7 @@ Com o comando sohroda, é possível executar outros comandos enquanto a shell es
 
 ---
 
-> ### 3) Passos para executar o programa no VirtualBox:
+> ### 3) Passos para executar o programa no VirtualBox
 
 Inicialmente importar o arquivo .ova no VirtualBox. Após isso, executar a máquina virtual e logar como "root". Em */usr/local/src* encontra-se o programa em C "minhaMiniShell.c" e em */usr/local/bin* está o executável "minhaMiniShell" deste programa.
 
@@ -102,7 +104,7 @@ Para executar o programa, vá até a pasta */usr/local/bin* e digite "./minhaMin
 
 ---
 
-> ### 4) Observações:
+> ### 4) Observações
 
 Versão do VirtualBox: VirtualBox 6.1
 
