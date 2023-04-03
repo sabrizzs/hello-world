@@ -23,7 +23,7 @@ A função cria um novo processo usando a função ```fork()```. Se ocorrer um e
 
 ---
 
-#### 2) _Exemplos de execução
+> ### 2) Exemplos de execução
 
 Arquivo usado como teste para alterar as permissões:
 
@@ -94,7 +94,7 @@ Com o comando sohroda, é possível executar outros comandos enquanto a shell es
 
 ---
 
-#### 3) _Passos para executar o programa no VirtualBox:
+> ### 3) Passos para executar o programa no VirtualBox:
 
 Inicialmente importar o arquivo .ova no VirtualBox. Após isso, executar a máquina virtual e logar como "root". Em */usr/local/src* encontra-se o programa em C "minhaMiniShell.c" e em */usr/local/bin* está o executável "minhaMiniShell" deste programa.
 
@@ -102,7 +102,7 @@ Para executar o programa, vá até a pasta */usr/local/bin* e digite "./minhaMin
 
 ---
 
-#### 4) _Observações:
+> ### 4) Observações:
 
 Versão do VirtualBox: VirtualBox 6.1
 
