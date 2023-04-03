@@ -7,7 +7,7 @@
 
 A shell simplificada foi desenvolvida na linguagem C e implementa um programa que recebe comandos e caminhos de arquivo para realizar suas operações. O programa possui quatro funções: *nem_eu_nem_de_ninguem*, *soh_eumesmo*, *rodaeolhe* e *sohroda*.
 
-O programa tem como base um loop infinito que lê comandos e argumentos, compara os comandos com as funções citadas anteriormente e executa a função correspondente. Se o comando digitado pelo usuário não for reconhecido, o programa exibirá uma mensagem informando que o comando é desconhecido e o loop será encerrado.
+O programa tem como base um loop infinito que lê comandos e argumentos, compara os comandos com as funções citadas anteriormente e executa a função correspondente. Se o comando digitado pelo usuário não for reconhecido, o programa exibirá uma mensagem informando que o comando é desconhecido e o loop será encerrado, como por exemplo "abc abc".
 
 #### nem_eu_nem_de_ninguem() e soh_eumesmo()
 
@@ -30,7 +30,7 @@ Arquivo usado como teste para alterar as permissões:
 ![image](https://user-images.githubusercontent.com/93349105/229383283-a6309635-b98f-4639-abfe-db00933a3c2c.png)
 
 ```shell
-./miniShell
+./minhaMiniShell
 nem_eu_nem_de_ninguem arq.txt
 ```
 
