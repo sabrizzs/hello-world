@@ -91,3 +91,14 @@ Hora atual: 18:25:40
 ```
 
 Com o comando sohroda, é possível executar outros comandos enquanto a shell está executando um programa em background, ou seja, sem bloquear o terminal para o usuário. Para isso, a shell deve criar um novo processo filho e substituir o código do processo filho pelo código do programa indicado. O processo filho, agora com o código do programa, vai ser executado em background. A shell continua executando em primeiro plano e mostrando a saída na tela, sem bloquear o terminal para o usuário. Enquanto isso, o programa executado em background imprime sua saída na tela, sem interferir na shell. Nesse caso, o programa **hora** continua mostrando a sua saída enquanto outros comandos como "nem_eu_nem_de_ninguem arq.txt" e "soh_eumesmo arq.txt" podem ser executados.
+
+#### Passos para executar o programa no VirtualBox:
+
+Inicialmente importar o arquivo .ova no VirtualBox. Após isso, executar a máquina virtual e logar como "root". Em */usr/local/src* encontra-se o programa em C "minhaMiniShell.c" e em */usr/local/bin* está o executável "minhaMiniShell" deste programa.
+
+Para executar o programa, vá até a pasta */usr/local/bin* e digite "./minhaMiniShell".
+#### Observações:
+
+Versão do VirtualBox: VirtualBox 6.1
+Versão da ISO: minix 3.1.2a
+Sistema Operacional: Ubuntu 20.04.6 LTS
