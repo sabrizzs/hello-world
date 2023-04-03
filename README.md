@@ -23,6 +23,8 @@ A função cria um novo processo usando a função ```fork()```. Se ocorrer um e
 
 <br/>
 
+<br/>
+
 #### sohroda()
 
 A função cria um novo processo usando a função ```fork()```. Se ocorrer um erro na criação do processo filho (pid <0), a função ```perror()``` é chamada para imprimir uma mensagem de erro. Se o processo em execução é o processo filho (pid == 0), antes da execução do programa, a função ```close(STDIN_FILENO)``` fecha o descritor de arquivo de entrada padrão (stdin) do processo filho e, em seguida,  o programa passado como parâmetro é executado usando a função ```execve()```.
@@ -52,6 +54,10 @@ soh_eumesmo arq.txt
 <img src="https://user-images.githubusercontent.com/93349105/229390225-5ae7733f-c21e-4bfb-bf78-e4f12d36784a.png" alt="propriedades do arquivo" width="350">
 
 Agora, o arquivo "arq.txt" tem permissão total (leitura, escrita e execução) apenas para o usuário dono do arquivo. 
+
+<br/>
+
+<br/>
 
 Para testar as funções ```rodaeolhe()``` e ```sohroda()``` utilizamos um programa chamado **hora** em C que imprime a hora atual do sistema a cada 5 segundos, em um loop que será executado 5 vezes:
 
