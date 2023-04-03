@@ -59,6 +59,8 @@ Agora, o arquivo "arq.txt" tem permissão total (leitura, escrita e execução) 
 
 <br/>
 
+<br/>
+
 Para testar as funções ```rodaeolhe()``` e ```sohroda()``` utilizamos um programa chamado **hora** em C que imprime a hora atual do sistema a cada 5 segundos, em um loop que será executado 5 vezes:
 
 ```C
