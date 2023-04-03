@@ -5,7 +5,7 @@
 
 > ### 1) Criando uma Shell, usando chamadas de sistema
 
-***[Link da imagem .ova:] *** (https://drive.google.com/drive/folders/1FdiG-YB8dmSiDQoj_9oyyOhauPE7CAdA?usp=sharing)
+***Link da imagem .ova: *** (https://drive.google.com/drive/folders/1FdiG-YB8dmSiDQoj_9oyyOhauPE7CAdA?usp=sharing)
 
 A shell simplificada foi desenvolvida na linguagem C e implementa um programa que recebe comandos e caminhos de arquivo para realizar suas operações. O programa possui quatro funções: *nem_eu_nem_de_ninguem*, *soh_eumesmo*, *rodaeolhe* e *sohroda*.
 
