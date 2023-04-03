@@ -98,9 +98,9 @@ Com o comando sohroda, é possível executar outros comandos enquanto a shell es
 
 > ### 3) Passos para executar o programa no VirtualBox
 
-Inicialmente importar o arquivo .ova no VirtualBox. Após isso, executar a máquina virtual e logar como ```root```. Em */usr/local/src* encontra-se o programa em C *minhaMiniShell.c* e em */usr/local/bin* está o executável *minhaMiniShell* deste programa.
+Inicialmente importar o arquivo .ova no VirtualBox. Após isso, executar a máquina virtual e logar como ```root```. Em ***/usr/local/src*** encontra-se o programa em C ***minhaMiniShell.c*** e em ***/usr/local/bin*** está o executável ***minhaMiniShell*** deste programa.
 
-Para executar o programa, vá até a pasta */usr/local/bin* e digite ```./minhaMiniShell```. Foram realizados vários testes e alguns deles constam no item 2).
+Para executar o programa, vá até a pasta ***/usr/local/bin*** e digite ```./minhaMiniShell```. Foram realizados vários testes e alguns deles constam no item 2).
 
 ---
 
