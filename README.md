@@ -23,7 +23,7 @@ A função cria um novo processo usando a função ```fork()```. Se ocorrer um e
 
 #### exemplo de execução
 
-arquivo usado como teste:
+arquivo usado como teste para alterar as permissões:
 
 ![image](https://user-images.githubusercontent.com/93349105/229383283-a6309635-b98f-4639-abfe-db00933a3c2c.png)
 
@@ -37,6 +37,8 @@ nem_eu_nem_de_ninguem arq.txt
 ```shell
 soh_eumesmo arq.txt
 ```
+<img src="(https://user-images.githubusercontent.com/93349105/229390225-5ae7733f-c21e-4bfb-bf78-e4f12d36784a.png)" alt="descrição da imagem" width="300" height="200">
+
 ![image](https://user-images.githubusercontent.com/93349105/229390225-5ae7733f-c21e-4bfb-bf78-e4f12d36784a.png)
 ![image](https://user-images.githubusercontent.com/93349105/229383240-b677135d-6756-4dc2-810e-05fd421dc2c5.png)
 
