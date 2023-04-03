@@ -2,8 +2,9 @@
 ### Sabrina Araujo da Silva - n°USP 12566182
 ### Samantha Miyahira - n°USP 11797261
 ---------------
+
 <br/>
-<br/>
+
 > ### 1) Criando uma Shell usando chamadas de sistema
 
 - ***Link para acessar a imagem .ova:*** https://drive.google.com/drive/folders/1FdiG-YB8dmSiDQoj_9oyyOhauPE7CAdA?usp=sharing
@@ -19,6 +20,8 @@ As funções ```nem_eu_nem_de_ninguem``` e ```soh_eumesmo``` utilizam a chamada 
 #### rodaeolhe()
 
 A função cria um novo processo usando a função ```fork()```. Se ocorrer um erro na criação do processo filho (pid <0), a função ```perror()``` é chamada para imprimir uma mensagem de erro. Se o processo em execução é o processo filho (pid == 0), o programa passado como parâmetro é executado usando a função ```execve()```. Se o processo em execução for o processo pai (pid > 0), o código aguarda que o processo filho seja encerrado usando a função ```wait()``` e, em seguida, exibe uma mensagem informando o código de saída do programa.
+
+<br/>
 
 #### sohroda()
 
