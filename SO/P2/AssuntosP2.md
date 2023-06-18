@@ -34,6 +34,9 @@ ser controlado encapsulando as comunicações do processo servidor (F-11).
 
 > 36. O algoritmo do elevador simples favorece as trilhas do meio do disco
 
+> 24. Os sistemas com arquitetura ARMV4 podem utilizar páginas de tamanhos
+diferentes na tabela de páginas.
+
 # EP3
 
 > 30. (F) No EP3, mesmo modificando o esquema de alocação de memória, não é
