@@ -1,4 +1,4 @@
-# P2 - LABJEF
+# P2 - LABJEF MAC0350
 
 Assuntos cobrados:
 - Consultas: álgebra relacional, cálculo relacional e SQL
