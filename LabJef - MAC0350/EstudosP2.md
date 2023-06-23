@@ -6,9 +6,7 @@ Assuntos cobrados:
 - Transações 
 - Seriabilidade (?)
 
-Aqui está o sumário para o arquivo Markdown fornecido:
-
-# Sumário
+## Sumário
 
 - [SQL](#sql)
   - [Conceitos](#conceitos)
