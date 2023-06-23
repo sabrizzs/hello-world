@@ -219,14 +219,219 @@ Por exemplo:
 
 ### Remoção de Tabela
 
+- **DROP TABLE** - exclui uma tabela do banco de dados.
+
+Sintaxe básica:
+
+**DROP TABLE tabela [CASCADE | RESTRICT];**
+
+- CASCADE: todas as visões e restrições que referenciam a tabela são removidas automaticamente.
+- RESTRICT: a tabela é removida somente se não for referenciada em nenhuma restrição ou visão.
+
+Por exemplo:
+
+	DROP TABLE COMPANHIA.DEPENDENTE CASCADE
+
+No exemplo, o comando exclui a tabela "DEPENDENTE" do esquema "COMPANHIA", juntamente com todas as visões e restrições associadas a ela.
+
+### Remoção de Esquema
+
+- **DROP SCHEMA** - exclui um esquema do banco de dados.
+
+Sintaxe básica:
+
+**DROP SCHEMA esquema [CASCADE | RESTRICT]**
+
+- CASCADE: todos os elementos do esquema são removidos automaticamente
+- RESTRICT: o esquema só será removido se não existir os elementos
+
+Por exemplo:
+
+	DROP SCHEMA COMPANHIA CASCADE;
+
 ## DML
 
 - A linguagem de manipulação de dados (DML) é usada para manipular os dados dentro da base de dados.
 - Os comandos DML são usados para inserir, atualizar, excluir e consultar dados na instância do banco de dados. 
 
+Exemplos de comandos DML (Data Manipulation Language) no SQL:
+- INSERT: É usado para inserir novos registros em uma tabela.
+- UPDATE: É usado para modificar os valores existentes em uma ou mais colunas de uma tabela.
+- DELETE: É usado para excluir registros de uma tabela.
+- SELECT: É usado para recuperar dados de uma ou mais tabelas.
 
+### Inserção
 
+- INSERT – insere uma ou mais tuplas em uma tabela.
 
+Sintaxe básica:
+
+	- Inserção de 1 tupla:
+
+	INSERT INTO tabela [(atrib1,atrib2,...)]
+		VALUES(valor1, valor2,...)
+
+	- Inserção de múltiplas tuplas:
+ 
+	INSERT INTO tabela [(atrib1,atrib2,...)]
+		<comando SELECT>
+
+Por exemplo, inserção de uma única tupla:
+
+Inserir 3 tuplas na relação PROJETO:
+
+PROJETO
+
+PNOME PNUMERO PLOCALIZACAO PROJETO DNUM (ce)
+
+	INSERT INTO PROJETO VALUES ('ProductX', '1', 'Bellaire', '5')
+	INSERT INTO PROJETO VALUES ('ProductY', '2', 'Sugarland', '5')
+	INSERT INTO PROJETO VALUES ('ProductZ', '3', 'Houston', '5')
+
+O terceiro valor ‘5’ corresponde ao departamento 5. Logo, o departamento 5 deve existir na relação DEPARTAMENTO para que as inserções tenham sucesso; pois caso contrário, violaria a restrição de integridade referencial.
+
+Por exemplo, inserção de múltiplas tuplas:
+
+Popular uma tabela temporária DEPTS_INFO:
+
+	CREATE TABLE DEPTS_INFO (
+		DEPT_NAME VARCHAR(10),
+		NO_OF_EMPS INTEGER,
+		TOTAL_SAL INTEGER
+	);
+
+	INSERT INTO DEPTS_INFO (DEPT_NAME, NO_OF_EMPS, TOTAL_SAL)
+		SELECT DNAME, COUNT (*), SUM (SALARY)
+		FROM DEPARTMENT, EMPLOYEE
+		WHERE DNUMBER=DNO
+		GROUP BY DNAME;
+
+### Alteração
+
+- **UPDATE** – modifica o valor de um atributo em uma ou mais tuplas da tabela.
+
+Sintaxe básica:
+
+	UPDATE tabela SET
+		atributo1 = <valor ou expressão>,
+		atributo2 = <valor ou expressão>, ...
+	WHERE <condição de localização>;
+
+Por exemplo:
+
+	UPDATE PROJETO
+	SET PLOCALIZACAO = 'Bellaire', DNUM = 5
+	WHERE PNUMERO=10;
+
+O atributo PLOCALIZACAO é definido como 'Bellaire' e o atributo DNUM é definido como 5 na tupla em que o atributo PNUMERO é igual a 10.
+
+### Remoção
+
+- **DELETE** – remove uma ou mais tuplas da tabela.
+
+Sintaxe básica:
+
+	DELETE FROM tabela1 [FROM tabela2]
+	[WHERE<condição de localização>];
+
+Por exemplo:
+
+	DELETE FROM EMPREGADO
+	WHERE NSS='123456789’;
+ 
+	DELETE FROM EMPREGADO
+	WHERE DNUM IN
+		(SELECT DNUMERO
+		FROM DEPARTAMENTO
+		WHERE DNOME='Research');
+	DELETE FROM EMPLOYEE;
+
+### Consulta
+
+- **SELECT** – Comando de consulta. 
+
+Forma geral:
+
+	SELECT [ DISTINCT | ALL ] <lista de atributos>
+	FROM<lista de tabelas>
+	[ WHERE<condições> ]
+ 	[ GROUP BY atributo ]
+	[ HAVING<condições> ]
+	[ ORDER BY atributo [ ASC | DESC ] ];
+
+Seleciona O QUE se deseja na tabela resultado:
+- <lista de atributos> ou * (para todos os atributos)
+- ALL – inclui tuplas duplicadas (é o default)
+- DISTINCT – elimina tuplas duplicadas
+- FROM – DE ONDE retirar os dados necessários
+- WHERE – CONDIÇÕES de seleção dos resultados.
+
+### Consulta Simples
+
+Consulta 1 – Recuperar a data de aniversário e o endereço do empregado chamado 'John B. Smith'
+
+Em SQL:
+
+	SELECT DATANASC, ENDERECO
+	FROM EMPREGADO
+	WHERE PNOME='John' AND MNOME='B’ AND SNOME='Smith’;
+
+Em Álgebra Relacional:
+
+	EMP_SMITH ← σ PNOME='John' AND MNOME='B’ AND SNOME='Smith’ (EMPREGADO)
+	RESULTADO ← π DATANASC, ENDERECO (EMP_SMITH)
+
+Em Cálculo Relacional de Tuplas:
+
+	{ e.DATANASC, e.ENDERECO | EMPREGADO(E) AND
+		e.PNOME='John' AND e.MNOME='B’ AND e.SNOME='Smith’ }
+
+Assim, uma consulta com apenas uma relação na cláusula FROM é similar a um par de operações SELECT-PROJECT da Álgebra Relacional. A diferença é que podemos obter tuplas repetidas no resultado
+
+### Consulta com um Join
+
+Consulta 2 – Obter o nome e o endereço dos empregados que trabalham para o departamento de ‘Pesquisa’.
+
+Em SQL:
+
+	SELECT PNOME, ENDERECO
+	FROM EMPREGADO, DEPARTAMENTO
+	WHERE DNOME = ‘Pesquisa' AND DNUMERO=DNUM;
+
+Em Álgebra Relacional:
+
+	DEP_PESQUISA(DNUM) ← π DNUMERO (σ DNOME=‘Pesquisa’ (DEPARTAMENTO)
+	RESULT ← π PNOME, ENDERECO (DEP_PESQUISA * EMPREGADO)
+
+Em Cálculo Relacional de Tuplas: lculo Relacional de Tuplas:
+
+	{ t.PNOME, t.ENDERECO | EMPREGADO( t ) AND ( ∃d ) (DEPARTAMENTO( d ) AND
+		d.DNOME=‘Pesquisa’ AND d.DNUMERO=t.DNUM ) }
+
+- Similar à seqüência SELECT-PROJECT-JOIN da Álgebra Relacional
+- (DNOME=‘Pesquisa') é uma condição de seleção do operador SELECT da Álgebra Relacional)
+- (DNUMERO=DNUM) é uma condição de junção do operador JOIN da Álgebra Relacional.
+
+### Consulta com dois Joins
+
+Consulta 3 - Para todo projeto localizado em 'Stafford', listar o número do projeto, o número do departamento responsável, o sobrenome, endereço e data de nascimento do gerente responsável pelo departamento. 
+
+Em SQL:
+
+	SELECT PNUMERO, DNUM, SNOME, DATANASC, ENDERECO
+	FROM PROJETO, DEPARTAMENTO, EMPREGADO
+	WHERE DNUM=DNUMERO AND GERNSS=SSN AND PLOCALIZACAO='Stafford‘;
+
+Em Álgebra Relacional:
+
+	STAFFORD_PROJS ← σ PLOCALIZAÇÃO = 'Stafford' (PROJETO)
+	CONTR_DEPT ← (STAFFORD_PROJS x DNUM = DNUMERO DEPARTAMENTO)
+	PROJ_DEPT_MGR ← (CONTR_DEPT x GERNSS = NSS EMPREGADO)
+	RESULT ← π PNUMERO, DNUM, SNOME, ENDERECO, DATANASC (PROJ_DEPT_MGR) 
+
+- Na consulta anterior, existem duas condições Join
+- A condição Join DNUM=DNUMERO relaciona um projeto com o departamento que o controla
+- A condição Join GERNSS=SSN relaciona o departamento com o empregado que o gerencia.
 
 # Normalização de Banco de Dados
 
