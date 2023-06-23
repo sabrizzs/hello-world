@@ -24,8 +24,26 @@ Assuntos cobrados:
     - [Remoção](#remoção)
     - [Consulta](#consulta)
     - [Consulta Simples](#consulta-simples)
-    - [Consulta com um Join](#consulta-com-um-Join)
-    - [Consulta com dois Joins](#consulta-com-dois-Joins)
+    - [Consulta com um Join](#consulta-com-um-join)
+    - [Consulta com dois Joins](#consulta-com-dois-joins)
+  - [Qualificando um Atributo](#qualificando-um-atributo)
+  - [ALIASES](#aliases)
+  - [Cláusula WHERE não especificada](#clausula-where-nao-especificada)
+  - [O Uso do *](#o-uso-do-*)
+  - [Uso do DISTINCT](#uso-do-distinct)
+  - [Operação de Conjunto](#operação-de-conjunto)
+  - [Consultas Aninhadas](#consultas-aninhadas)
+  - [Consultas Aninhadas Correlacionadas](#consultas-aninhadas-correlacionadas)
+  - [Conjuntos Explícitos](#conjuntos-explícitos)
+  - [Divisão em SQL](#divisão-em-sql)
+  - [Valores Nulos em Consultas SQL](#valores-nulos-em-consultas-sql)
+  - [Junção de Relações](#junção-de-relações)
+  - [Funções Agregadas](#funções-agregadas)
+  - [Agrupamento](#agrupamento)
+  - [A Cláusula HAVING](#a-clausula-having)
+  - [Comparação de Substrings](#comparação-de-substrings)
+  - [Operações Aritméticas](#operações-aritméticas)
+  - [Order By](#order-by)
 - [Normalização de Banco de Dados](#normalização-de-banco-de-dados)
 - [Transações](#transações)
 - [Temas que (talvez) não serão cobrados na P2](#temas-que-talvez-não-serão-cobrados-na-p2)
@@ -441,6 +459,8 @@ Em Álgebra Relacional:
 - Na consulta anterior, existem duas condições Join
 - A condição Join DNUM=DNUMERO relaciona um projeto com o departamento que o controla
 - A condição Join GERNSS=SSN relaciona o departamento com o empregado que o gerencia.
+
+## Qualificando um atributo
 
 # Normalização de Banco de Dados
 
