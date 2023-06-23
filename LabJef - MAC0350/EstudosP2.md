@@ -462,6 +462,446 @@ Em Álgebra Relacional:
 
 ## Qualificando um atributo
 
+- Em SQL podemos usar o mesmo nome para dois ou mais atributos, desde que os atributos estejam em relações diferentes.
+- Uma consulta que referencia dois ou mais atributos com o mesmo nome deve qualificar o atributo com o nome da relação.
+
+Por exemplo:
+
+Em SQL:
+
+	SELECT EMPREGADO.PNOME, PROJETO.PNOME
+	FROM PROJETO, DEPARTAMENTO, EMPREGADO
+	WHERE DNUM=DNUMERO AND GERNSS=SSN AND PLOCALIZACAO='Stafford‘;
+
+## ALIASES
+
+- Algumas consultas precisam referenciar duas vezes a mesma relação.
+- Em alguns casos, pseudônimos (aliases) são atribuídos ao nome da relação.
+
+Por exemplo:
+
+Para cada empregado, recupere o nome do empregado e o nome de seu supervisor imediato.
+
+Em SQL:
+
+	SELECT E.PNOME, E.SNOME, S.PNOME, S.SNOME
+	FROM EMPREGADO E S
+	WHERE E.NSSSUPER=S.NSS;
+
+- Na consulta anterior, E e S são chamados de aliases ou variáveis de tupla da relação EMPREGADO.
+- Podemos pensar em E e S como duas cópias distintas de EMPREGADO: E representa os supervisionados e S representa os supervisores.
+- Aliases podem ser usados em qualquer consulta SQL.
+- Pode-se, também, usar a palavra-chave AS:
+
+Em SQL:
+
+	SELECT E.PNOME, E.SNOME, S.PNOME, S.SNOME
+	FROM EMPREGADO AS E, EMPREGADO AS S
+	WHERE E.NSSSUPER=S.NSS;
+
+## Cláusula WHERE não especificada
+
+- Uma cláusula WHERE não especificada indica ausência de uma condição.
+- Assim, todas as tuplas dos relações da cláusula FROM serão selecionadas.
+- Isso equivale a condição WHERE TRUE
+
+Por exemplo:
+
+Recupere o NSS de todos os empregados.
+
+Em SQL:
+
+	SELECT NSS
+	FROM EMPREGADO;
+
+Se mais de uma relação é especificada na cláusula FROM e não existir nenhuma condição de junção, então o resultado será o produto cartesiano.
+
+Em SQL:
+
+	SELECT NSS, DNOME
+	FROM EMPREGADO, DEPARTAMENTO;
+
+É extremamente importante não negligenciar a especificação de qualquer condição de seleção ou de junção na cláusula WHERE; sob a pena de gerar resultados incorretos e volumosos.
+
+## O Uso do *
+
+- Um * é usado para recuperar todos os valores de atributos da tupla selecionada.
+
+Por exemplo:
+
+Em SQL:
+
+	SELECT *
+	FROM EMPREGADO
+	WHERE DNUM=5;
+ 
+	SELECT *
+	FROM EMPREGADO, DEPARTAMENTO
+	WHERE DNOME='Research' AND DNUM=DNUMERO;
+
+## Uso do DISTINCT
+
+- A SQL não trata uma relação como um conjunto; tuplas duplicadas podem ocorrer.
+- Para eliminar tuplas duplicadas no resultado de uma consulta, a palavra DISTINCT é usada.
+- A primeira consulta abaixo pode gerar tuplas duplicadas, mas a segunda não:
+
+Em SQL:
+
+	SELECT SALARIO
+	FROM EMPREGADO;
+ 
+	SELECT DISTINCT SALARIO
+	FROM EMPREGADO;
+
+## Operação de Conjunto
+
+- Algumas operações de conjunto foram incorporados à linguagem SQL.
+- Existe uma operação de União e, em algumas versões da SQL, existem as operações de Subtração e Intersecção.
+- As relações resultantes dessas operações são sempre conjunto de tuplas; tuplas duplicadas são eliminadas do resultado.
+- O conjunto de operações aplicam-se somente às relações que são compatíveis na união.
+
+Por exemplo:
+
+Listar os números de projetos em que o empregado de sobrenome Smith trabalhe ou que sejam controlados por algum departamento gerenciado pelo empregado de sobrenome Smith:
+
+Em SQL:
+
+	( SELECT PNUMERO
+	FROM PROJETO, DEPARTAMENTO, EMPREGADO
+	WHERE DNUM=DNUMBER AND GERNSS=NSS AND SNOME='Smith‘ )
+	UNION
+ 
+	( SELECT PNUMERO
+	FROM PROJETO, TRABALHA-PARA, EMPREGADO
+	WHERE PNUMERO=PNO AND ENSS=NSS AND SNAME='Smith‘ );
+
+A SQL também possui operações sobre multiconjuntos (conjuntos que permitem repetição de elementos)
+- UNION ALL: Combina os resultados de duas consultas em um único conjunto, incluindo todas as ocorrências de cada elemento. 
+- EXCEPT ALL: Retorna os elementos que estão presentes na primeira consulta, mas não estão na segunda consulta.
+- INTERSECT ALL: Retorna os elementos que estão presentes tanto na primeira consulta quanto na segunda consulta.
+
+## Consultas Aninhadas
+
+- Uma consulta SELECT completa, chamada de consulta aninhada, pode ser especificada dentro da cláusula WHERE de uma outra consulta, chamada consulta externa.
+
+Por exemplo:
+
+Recupere o nome e o endereço de todos os empregados que trabalham para o departamento de Pesquisa.
+
+Em SQL:
+
+	SELECT PNAME, SNAME, ENDERECO
+	FROM EMPREGADO
+	WHERE DNUM IN ( SELECT DNUMERO
+		FROM DEPARTAMENTO
+		WHERE DNOME=‘Pesquisa' )
+
+- A consulta externa seleciona tuplas de empregados se o valor de seu DNUM pertencer ao resultado da consulta aninhada
+- O operador IN é equivalente ao operador pertence da teoria de conjuntos
+- Em geral, podemos ter vários níveis de consultas aninhadas
+- Uma referência a um atributo não qualificado estará se referindo a um atributo da relação declarada na consulta externa mais próxima
+- Neste exemplo, a consulta aninhada não está correlacionado à consulta externa
+- Se a condição WHERE de uma consulta aninhada referenciar um atributo de uma relação declarada na consulta externa, as consultas estarão correlacionadas
+
+Por exemplo:
+
+Recupere o nome de cada empregado que tenha um dependente com o mesmo nome do empregado.
+
+Em SQL:
+
+	SELECT E.PNOME, E.SNAME
+	FROM EMPREGADO AS E
+	WHERE E.NSS IN ( SELECT ENSS
+		FROM DEPENDENTE
+		WHERE ENSS=E.NSS AND E.PNOME=NOMEDEPENDENTE );
+
+- Na consulta anterior, a consulta aninhada tinha um resultado diferente para cada tupla da consulta externa
+- Consultas escritas com blocos SELECT-FROM-WHERE e que utilizem operadores de comparação e IN sempre podem ser expressas como uma consulta simples
+
+Por exemplo, a mesma consulta pode ser escrita como:
+
+Em SQL:
+
+	SELECT E.PNOME, E.SNOME
+	FROM EMPREGADO AS E, DEPENDENTE AS D
+	WHERE E.NSS=D.ENSS AND E.PNOME=D.NOMEDEPENDENTE;
+
+## Conjuntos Explícitos
+
+É possível utilizar um conjunto de valores explicitamente enumerado na cláusula WHERE ao invés de utilizar uma consulta aninhada.
+
+Por exemplo:
+
+Recupere o NSS de todos os empregados que trabalham nos projetos de números 1, 2, ou 3.
+
+Em SQL:
+
+	SELECT DISTINCT ENSS
+	FROM TRABALHA-PARA
+	WHERE PNO IN (1, 2, 3);
+
+## Divisão em SQL
+
+Encontrar os nomes de empregados que trabalham em todos os projetos controlados pelo departamento 5
+
+Em SQL:
+
+	SELECTPNOME, SNOME
+	FROM EMPREGADO
+	WHERE ( ( SELECTPNO
+		FROM TRABALHA-EM
+		WHERE NSS=ENSS )
+		CONTAINS
+			( SELECTPNUMERO
+		FROM PROJETO
+		WHERE DNUM=5 ) );
+
+- CONTAINS é equivalente ao operador de divisão da Álgebra Relacional. Infelizmente, a maioria das implementações da SQL não implementam CONTAINS.
+- Para fazer essa consulta em SQL que não possua o operador CONTAINS devemos recorrer ao Cálculo Relacional de Tuplas e utilizar cláusulas EXISTS e NOT EXISTS:
+
+Em Cálculo Relacional de Tuplas:
+
+	{ e.PNOME, e.SNOME | EMPREGADO(e) AND
+		(∀ x) ( ( PROJETO(x) AND x.DNUM=5 ) ⇒
+			(∃ w) (TRABALHA-EM(w) AND
+				w.ENSS=e.NSS AND
+				x.PNUMERO=w.PNO) ) }
+
+Ou, transformando o quantificador universal e a implicação temos:
+
+Em Cálculo Relacional de Tuplas:
+
+	{ e.PNOME, e.SNOME | EMPREGADO(e) AND
+		NOT (∃ x) ( PROJETO(x) AND x.DNUM=5 AND
+			NOT (∃ w) (TRABALHA-EM(w) AND
+				w.ENSS=e.NSS AND
+				x.PNUMERO=w.PNO) ) }
+
+Em SQL:
+
+	SELECT E.PNOME, E.SNOME
+	FROM EMPREGADO AS E
+	WHERE NOT EXISTS ( SELECT*
+		FROM PROJETO X
+		WHERE X.DNUM=5 AND
+	NOT EXISTS ( SELECT*
+		FROM TRABALHA-PARA W
+		WHERE W.ENSS = E.NSS AND
+		X.PNUMERO = W.PRNO ) );
+
+## Valores Nulos em Consultas SQL
+
+- A SQL permite que consultas verifiquem se um valor é nulo utilizando IS ou IS NOT
+
+Por exemplo:
+
+Recupere os nomes de todos os empregados que não possuem supervisores.
+
+Em SQL:
+
+	SELECT PNOME, SNOME
+	FROM EMPREGADO
+	WHERE NSSSUPER IS NULL;
+
+## Junção de Relações
+
+- Pode se especificar uma “junção de relações” na cláusula FROM.
+- A junção de relações é uma relação como outra qualquer, mas é o resultado de uma junção.
+- Permite que o usuário especifique tipos diferentes de junções ("theta" JOIN, NATURAL JOIN, LEFT OUTER JOIN, RIGHT OUTER JOIN, CROSS JOIN, etc).
+
+Por exemplo:
+
+Em SQL:
+
+	SELECT PNOME, SNOME, ENDERECO
+	FROM EMPREGADO, DEPARTAMENTO
+	WHERE DNOME=‘Pesquisa' AND DNUMERO=DNUM;
+
+Pode ser reescrito com ‘theta’ Join:
+
+Em SQL:
+
+	SELECT PNOME, SNOME, ENDERECO
+	FROM EMPREGADO JOIN DEPARTAMENTO ON DNUMERO=DNUM
+	WHERE DNOME=‘Pesquisa';
+
+Por exemplo:
+
+Em SQL:
+	SELECT DNOME, DLOCALIZACAO
+	FROM DEPARTAMENTO AS D, LOCAIS-DEPTO AS L;
+	WHERE DNOME = ‘Pesquisa' AND D.DNUMERO = L.DNUMERO;
+
+Pode ser reescrito com Natural Join:
+
+Em SQL:
+
+	SELECT DNOME, DLOCALIZACAO
+	FROM DEPARTAMENTO NATURAL JOIN LOCAIS-DEPTO
+	WHERE DNOME=‘Pesquisa';
+
+Por exemplo:
+
+Em SQL:
+
+	SELECT E.PNOME, E.SNOME, S.PNOME, S.SNOME
+	FROM EMPREGADO E S
+	WHERE E.NSSSUPER=S.NSS;
+
+Pode ser escrita como:
+
+Em SQL:
+
+	SELECT E.PNOME, E.SNOME, S.PNOME, S.SNOME
+	FROM ( EMPREGADO AS E LEFT OUTER JOIN EMPREGADO AS S ON
+	E.NSSSUPER=S.NSS );
+
+PNOME de empregados que não possuem um supervisor também serão apresentados, porém com PNOME e SNOME do supervisor com valores nulos.
+
+## Funções Agregadas
+
+- A SQL possui as seguintes funções agregadas: COUNT, SUM, MAX, MIN e AVG
+
+Por exemplo:
+
+Encontrar o maior salário, o menor salário, e a média salarial de todos os empregados.
+
+Em SQL:
+	SELECT MAX(SALARIO), MIN(SALARIO), AVG(SALARIO)
+	FROM EMPREGADO;
+
+Algumas implementações da SQL não permitem mais de uma função agregada na cláusula SELECT.
+
+Por exemplo:
+
+Recuperar o total de empregados da companhia (Consulta A) e o número de empregados do departamento Pesquisa (Consulta B).
+
+Em SQL (Consulta A):
+
+	SELECT COUNT (*)
+	FROM EMPREGADO;
+ 
+Em SQL (Consulta B):
+
+	SELECT COUNT (*)
+	FROM EMPREGADO, DEPARTAMENTO
+	WHERE DNUM=DNUMBER AND DNOME=‘Pesquisa’;
+
+## Agrupamento
+
+- Como na extensão da Álgebra Relacional, a SQL tem uma cláusula GROUP BY para especificar os atributos de agrupamento, que devem aparecer na cláusula SELECT.
+
+Por exemplo:
+
+Para cada departamento, recuperar o seu número, a quantidade de empregados que possui e a sua média salarial.
+
+Em SQL:
+
+	SELECT DNUM, COUNT (*), AVG (SALARIO)
+	FROM EMPREGADO
+	GROUP BY DNUM;
+
+Por exemplo:
+
+Para cada projeto, recuperar o número do projeto, seu nome e o número de empregados que trabalham no projeto.
+
+Em SQL:
+
+	SELECT PNUMERO, PNOME, COUNT (*)
+	FROM PROJETO, TRABALHA-EM
+	WHERE PNUMERO=PNO
+	GROUP BY PNUMERO, PNOME;
+
+Neste caso, o agrupamento e a função agregada são aplicadas após a junção das duas relações.
+
+## A Cláusula HAVING
+
+- Algumas vezes queremos recuperar os valores das funções agregadas que satisfaçam a certas condições
+- A cláusula HAVING é usada para especificar essa condição
+
+Por exemplo:
+
+Para cada projeto em que trabalhem mais de dois empregados, recupere o número do projeto, o nome do projeto e o número de empregados que trabalham no projeto.
+
+Em SQL
+
+	SELECT PNUMERO, PNOME, COUNT SELECT COUNT(*)
+	FROM PROJETO, TRABALHA-PARA
+	WHERE PNUMERO=PNO
+	GROUP BY PNUMERO, PNOME
+	HAVING COUNT(*) > 2;
+
+## Comparação de Substrings
+
+- O operador de comparação LIKE é usado para comparar partes de uma string
+- Os dois caracteres reservados são usados:
+	- O '%' (ou '*‘ em algumas implementações) pesquisa um número arbitrário de caracteres
+	- O '_‘ pesquisa um único caractere arbitrário.
+
+Por exemplo:
+
+Recupere todos os empregados que morem em Houston, Texas. Aqui, o valor do atributo endereço deve conter a substring 'Houston,TX'.
+
+Em SQL
+
+	SELECT PNOME, SNOME
+	FROM EMPREGADO
+	WHERE ENDERECO LIKE '%Houston,TX%’
+
+Por exemplo:
+
+Encontre todos os empregados que nasceram durante a década de 50.
+
+Em SQL
+
+	SELECT PNOME, SNOME
+	FROM EMPREGADO
+	WHERE DATANASC LIKE ‘________5_
+
+- Se o caractere ‘%’ ou ‘_’ for necessário como um caractere normal de uma string, ele deve ser precedido por um caractere de escape.
+	- A string ‘AB_CD%EF’ deve ser escrita como: ‘AB\_CD\%EF’.
+
+## Operações Aritméticas
+
+Os operadores aritméticos padrão +, -, * e / podem ser aplicados à valores numéricos como um resultado de uma consulta SQL.
+
+Por exemplo:
+
+Recupere todos os empregados (nome e sobrenome) e seus respectivos salários que trabalham no projeto ‘ProdutoX’ com um aumento de 10%.
+
+Em SQL
+
+	SELECT PNOME, SNOME, 1.1 * SALARIO
+	FROM EMPREGADO, TRABALHA-EM, PROJETO
+	WHERE NSS=ENSS AND PNO=PNUMERO AND PNOME='ProdutoX’;
+
+## Order By
+
+A cláusula ORDER BY é usada para ordenar tuplas resultantes de uma consulta com base nos valores de alguns atributos.
+
+Por exemplo:
+
+Recuperar a lista de empregados e dos projetos em que eles trabalhem, ordenados pelo departamento do empregado e cada departamento ordenado alfabeticamente pelo sobrenome do empregado.
+
+Em SQL
+
+	SELECT D.DNOME, E.SNOME, E.PNOME, P.PNOME
+	FROM DEPARTAMENTO D, EMPREGADO E, TRABALHA-EM W, PROJETO P
+	WHERE D.DNUMERO=E.DNUM AND E.NSS=W.ENSS AND W.PNO=P.PNUMERO
+	ORDER BY D.DNOME, E.SNOME;
+
+- A ordem padrão é ascendente, mas podemos utilizar a palavra-chave DESC para especificar que queremos a ordem descendente.
+- A palavra-chave ASC pode ser usada para especificar explicitamente a ordem ascendente.
+
+Por exemplo:
+
+Em SQL
+
+	SELECT D.DNOME, E.SNOME, E.PNOME, P.PNOME
+	FROM DEPARTAMENTO D, EMPREGADO E, TRABALHA-EM W, PROJETO P
+	WHERE D.DNUMERO=E.DNUM AND E.NSS=W.ENSS AND W.PNO=P.PNUMERO
+	ORDER BY D.DNOME ASC, E.SNOME ASC;
+
 # Normalização de Banco de Dados
 
 https://www.ime.usp.br/~jef/bd09.pdf
