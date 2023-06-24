@@ -906,9 +906,90 @@ Em SQL
 
 https://www.ime.usp.br/~jef/bd09.pdf
 
+## Abordagens de Projetoo
+
+- Top-down (análise)
+	- O projeto de banco de dados começa com uma visão conceitual do sistema, geralmente representada por meio de diagramas de entidade-relacionamento (DER) ou modelos conceituais.
+	- A partir desses diagramas, os atributos e relacionamentos são identificados e agrupados para formar as tabelas do banco de dados.
+	- Essa abordagem é chamada de projeto por análise.
+
+- Bottom-up (síntese)
+	- O projeto de banco de dados é orientado pelos relacionamentos entre os atributos.
+	- Abordagem Bottom-up analisa os atributos existentes e os relacionamentos entre eles. Com base nessa análise, as tabelas do banco de dados são construídas.
+	- Essa abordagem é chamada de projeto pela síntese, pois envolve a síntese das tabelas a partir dos atributos existentes e seus relacionamentos.
+
+- Nossa abordagem
+	- Utilizar a abordagem Top-down para obter as relações
+	- Utilizar a abordagem Bottom-up para melhorar a qualidade das relações obtidas anteriormente
+
+## Guia informal
+
+No guia informal para projetar um banco de dados relacional, o objetivo é criar "bons" esquemas de relações, avaliados em dois níveis: lógico e físico.
+
+- No nível lógico, um bom esquema é aquele que é fácil de entender e permite formular consultas corretas.
+
+- No nível físico, um bom esquema é aquele que permite que as tuplas sejam armazenadas e acessadas de maneira eficiente.
+
+O projeto do banco de dados considera dois níveis de esquemas de relações: o **nível lógico**, que corresponde à visão do usuário, e o **nível de armazenamento**, que corresponde às relações base que são efetivamente armazenadas no banco de dados.
+
+### Semântica de Atributos
+
+**Guia 1**: Informalmente, cada tupla de uma relação deve representar uma entidade ou instância de relacionamento. Assim:
+
+-  Atributos de entidades distintas não devem estar na mesma relação
+- Apenas chaves-estrangeiras devem ser usadas para referenciar outras entidades
+- Atributos de entidades e relacionamentos devem ser mantidos separadamente tanto quanto possível
+- Dica: Projete um esquema que possa ser facilmente explicada. A semântica dos atributos deve ser de fácil interpretação.
+
+Por exemplo:
+
+O que é mais claro?
+
+	Empregado(enome, nss, datanasc, endereço, dnumero)
+	Projeto(pnome, pnumero, plocalizacao, dnum)
+	Trabalha-em(nss, pnúmero, horas)
+
+Ou
+
+	EMP_PROJ (nss, pnúmero, horas, enome, pnome, plocalizacao)
+
+Qual esquema necessita de maior espaço de armazenamento?
+
+	Empregado(enome, nss, datanasc, endereço, dnumero)
+	Projeto(pnome, pnumero, plocalizacao, dnum)
+	Trabalha-em(nss, pnúmero, horas)
+
+Ou 
+
+	EMP_PROJ (nss, pnúmero, horas, enome, pnome, plocalizacao)
+
+### Informação redundante em tuplas e Anomalias de Atualização
+
+- Informações redundantes desperdiçam o espaço de armazenamento
+- A mistura atributos de várias entidades pode gerar problemas conhecidos como anomalias de atualização
+	- Anomalias de inserção
+	- Anomalias de remoção
+	- Anomalias de modificação
+
+ Por exemplo, anomalia de atualização
+
+ Considere a relação:
+
+ 	EMP_PROJ (nss, pnúmero, horas, enome, pnome, plocalizacao)
+
+Anomalia de Atualização: A mudança de nome do projeto de número 20 de ‘Faturamento’ para ‘Conta-Cliente’ provoca alterações em todos os empregados que trabalham nesse projeto
+
+Anomalia de Inserção: Não se pode inserir um projeto a menos que um empregado esteja associado. Por outro lado, não se pode inserir um empregado a menos que ele esteja associado a um projeto.
+
+Anomalia de Remoção: Quando um projeto é removido, todos os empregados que trabalham no projeto é removido. Alternativamente, se um empregado for o único empregado do projeto, a remoção desse empregado resultará na remoção do projeto correspondente
+
+**Guia 2**: Projete um esquema que não sofra de anomalias de inserção, remoção e de atualização. Se existir alguma, então assegurese de que as aplicações levem tais anomalias em consideração 
+
 # Transações
 
-Transações: https://www.ime.usp.br/~jef/bd10.pdf
+https://www.ime.usp.br/~jef/bd10.pdf
+
+# Seriabilidade
 
 Seriabilidade: https://edisciplinas.usp.br/pluginfile.php/7737480/mod_resource/content/1/Seriabilidade.pdf
 
