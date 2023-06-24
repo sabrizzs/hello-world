@@ -906,7 +906,7 @@ Em SQL
 
 https://www.ime.usp.br/~jef/bd09.pdf
 
-## Abordagens de Projetoo
+## Abordagens de Projeto
 
 - Top-down (análise)
 	- O projeto de banco de dados começa com uma visão conceitual do sistema, geralmente representada por meio de diagramas de entidade-relacionamento (DER) ou modelos conceituais.
@@ -965,6 +965,8 @@ Ou
 
 ### Informação redundante em tuplas e Anomalias de Atualização
 
+**Guia 2**: Projete um esquema que não sofra de anomalias de inserção, remoção e de atualização. Se existir alguma, então assegurese de que as aplicações levem tais anomalias em consideração 
+
 - Informações redundantes desperdiçam o espaço de armazenamento
 - A mistura atributos de várias entidades pode gerar problemas conhecidos como anomalias de atualização
 	- Anomalias de inserção
@@ -983,7 +985,131 @@ Anomalia de Inserção: Não se pode inserir um projeto a menos que um empregado
 
 Anomalia de Remoção: Quando um projeto é removido, todos os empregados que trabalham no projeto é removido. Alternativamente, se um empregado for o único empregado do projeto, a remoção desse empregado resultará na remoção do projeto correspondente
 
-**Guia 2**: Projete um esquema que não sofra de anomalias de inserção, remoção e de atualização. Se existir alguma, então assegurese de que as aplicações levem tais anomalias em consideração 
+### Valores Nulos em Tuplas
+
+**Guia 3**: Relações devem ser projetadas de forma que suas tuplas tenham a menor quantidade possível de valores nulos. Normalmente os atributos que possuem valores nulos podem ser colocados em relações separadas (com uma chave-primária).
+
+Razões para os valores nulos:
+- Valor não aplicável ou inválido
+- Valor desconhecido (embora possa existir)
+- Valor indisponível (embora se saiba que exista)
+
+### Tuplas Espúrias
+
+**Guia 4**: As relações devem ser projetadas para satisfazer a condição de junção sem perdas. Nenhuma tupla espúria deve ser gerada ao fazer um join natural de qualquer relação.
+
+- Projetos incorretos de BDRs podem gerar resultados inválidos em certas operações Join
+- A propriedade de “junção sem perdas” é usada para garantir resultados corretos em operações Join
+- Existem duas propriedades importantes de decomposições:
+	- Não-aditiva ou sem perdas (losslessness) do join correspondente
+	- Preservação das dependências funcionais
+- Note que a propriedade (a) é extremamente importante e não pode ser sacrificada. A propriedade (b) é menos restrito e pode ser sacrificada
+
+## Dependências Funcionais
+
+- Dependências funcionais (DFs) são usadas para medir formalmente a qualidade do projeto relacional
+- As DFs e chaves são usadas para definir formas normais de relações
+- As DFs são restrições que são derivadas do significado e do inter-relacionamento dos dados de atributos
+- Um conjunto de atributos X determina funcionalmente um conjunto de atributos Y se o valor de X determinar um único valor Y
+
+X->Y diz que se duas tuplas tiverem o mesmo valor para X, elas devem ter o mesmo valor para Y. Ou seja:
+	Se X->Y então, para quaisquer tuplas t1 e t2 de r(R): 
+ 	Se t1[X] = t2[X], então t1[Y] = t2[Y]
+
+Se K é uma chave de R, então K determina funcionalmente todos os atributos de R (uma vez que nós nunca teremos duas tuplas distintas com t1[K]=t2[K])
+
+Importante:
+- X->Y especifica uma restrição sobre todas as instâncias de r(R)
+- As DFs são derivadas das restrições do mundo real e não de uma extensão específica da relação R
+
+### Exemplos de Restrições de DF
+
+O número do seguro social determina o nome do empregado
+
+	NSS -> ENOME
+
+O número do projeto determina o nome do projeto e a sua localização
+
+	PNUMERO -> { PNOME, PLOCALIZACAO }
+
+O nss de empregado e o número do projeto determinam as horas semanais que o empregado trabalha no projeto
+
+	{ NSS, PNUMERO } -> HORAS 
+
+### Regras de Inferência para DFs
+
+- Regras de inferência de Armstrong:
+	- RI1. (Reflexiva) Se Y é subconjunto de X, então X -> Y (Isso também é válido quando X=Y)
+	- RI2. (Aumentativa) Se X -> Y, então XZ -> YZ (Notação: XZ significa X U Z)
+	- RI3. (Transitiva) Se X -> Y e Y -> Z, então X -> Z
+- RI1, RI2 e RI3 formam um conjunto completo de regras de inferência
+
+Algumas regras de inferência úteis:
+- (Decomposição) Se X -> YZ, então X -> Y e X -> Z
+- (Aditiva) Se X -> Y e X -> Z, então X -> YZ
+- (Pseudotransitiva) Se X -> Y e WY -> Z, então WX -> Z
+- As três regras de inferência acima, bem como quaisquer outras regras de inferência, podem ser deduzidas a partir de RI1, RI2 e RI3 (propriedade de ser completa)
+
+## Formas Normais com base em Chaves Primárias
+
+### Normalização de Relações
+
+- Normalização: Processo de decompor relações “ruins” dividindo seus atributos em relações menores 
+- Forma Normal: Indica o nível de qualidade de uma relação
+
+- 2FN, 3FN, BCNF baseiam-se em chaves e DFs de uma relação esquema
+- 4FN e 5FN baseiam-se em chaves e dependências multivaloradas (não serão discutidas)
+
+### Uso Prático das Formas Normais
+
+- Na prática, a normalização é realizada para obter projetos de alta qualidade e atender às propriedades desejáveis
+- Os projetistas de bancos de dados não precisam normalizar na maior forma normal possível.
+- Desnormalização: processo de armazenar junções de relações de forma normal superior como uma relação base que está numa forma normal inferior
+
+### Definição de Chaves e Atributos que Participam de Chaves
+
+Revisão:
+- Uma **superchave** de uma relação esquema R = {A1, A2, ...., An} é um conjunto de atributos S, subconjunto de R com a propriedade de que t1[S] ≠ t2[S] para qualquer extensão r(R)
+- Uma superchave K é uma chave se K é uma **superchave mínima**
+- Se uma relação esquema tiver mais de uma chave, cada chave será chamada de **chave-candidata**. Uma das chaves-candidatas é arbitrariamente escolhida para ser a chave-primária e as outras são chamadas de **chaves-secundárias**
+
+- Um **atributo primo** (ou primário) é membro de alguma chave-candidata
+- Um **atributo não-primo** é um atributo que não é primo – isto é, não é membro de qualquer chave-candidata
+
+### Primeira Forma Normal
+
+- Proíbe atributos compostos, atributos multivalorados e relações aninhadas. Ou seja, permite apenas atributos que sejam atômicos
+- Considerado como sendo parte da definição de relação
+
+### Segunda Forma Normal
+
+- Utiliza conceitos de DFs e chave-primária
+- Definições utilizadas:
+	- **Atributo Primo** – atributo que é membro da chave primária K
+	- **Dependência funcional total** – uma DF, Y->Z, onde a remoção de qualquer atributo de Y invalida a DF.
+	- Exemplos:
+ 
+	{ NSS, PNUMERO } -> HORAS é uma DF total, uma vez que NSS não determina HORAS e nem PNUMERO determina HORAS
+
+	{ NSS, PNUMERO } -> ENOME não é uma DF total (é uma DF parcial) pois NSS -> ENOME
+
+- Uma relação esquema R está na 2FN se estiver na 1FN e todos os atributos não-primos A de R forem totalmente dependentes da chaveprimária
+- R pode ser decomposto em relações que estejam na 2 FN através do processo de normalização
+
+### Terceira Forma Normal
+
+Definição:
+- Dependência funcional transitiva – uma DF X->Z pode ser derivada a partir de duas DFs X->Y e Y->Z.
+- Exemplos:
+	- Na figura anterior, NSS->NSSGER é uma DF transitiva pois NSS->DNUMERO e DNUMERO->NSSGER
+	- NSS->ENOME não é transitiva pois não existe um conjunto e atributos X onde NSSN->X e X->ENOME
+
+- Uma relação esquema R está na 3FN se ela estiver na 2FN e nenhum atributo não-primo, A, for transitivamente dependente da chave-primária
+- R pode ser decomposto em relações que estejam na 3FN via o processo de normalização
+- NOTA:
+	- Em X->Y e Y->Z, sendo X a chave-primária, pode ser considerado um problema se, e somente se, Y não for uma chave-candidata. Quando Y é uma chave-candidata, não existe problema com a dependência transitiva
+	- Por exemplo, considere EMP (NSS, Emp#, Salario ).
+		- Aqui, NSS->Emp#->Salario e Emp# é uma chave-candidata
 
 # Transações
 
