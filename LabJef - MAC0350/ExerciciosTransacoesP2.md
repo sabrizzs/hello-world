@@ -16,13 +16,13 @@
 
 	S3: r3(x); r2(x); w3(x); r1(x); w1(x);
 
-	S4: r3(x); r29x); r1(x); w3(x); w1(x);
+	S4: r3(x); r2(x); r1(x); w3(x); w1(x);
 
 Quais escalonamentos são seriáveis?
 
 1. Escalonamento S1:
 
-S1: r1(x); r3(x); w1(x); r2(x); w3(x);
+	S1: r1(x); r3(x); w1(x); r2(x); w3(x);
 
 Conflitos:
 - r1(x) -> w3(x)
@@ -40,13 +40,64 @@ Conflitos são causados quando transações diferentes estão fazendo operaçõe
 - gravação-gravação
 	- wi[x] < wj[x], wj[x] < wi[x]
 
-Grafo de precedência
+Grafo de precedência:
 
 ![image](https://github.com/sabrizzs/hello-world/assets/93349105/28cb67cd-d94e-46da-bdbe-550d07890f07)
 
 Para cada conflito, vemos qual transação conflita com qual e desenhamos uma aresta. Por exemplo, r1(x) -> w3(x) é um conflito da transação 1 com a transação 3, então criamos uma aresta de T1 para T3.
 
 Existe um ciclo no grafo, portanto S1 não é seriável.
+
+2. Escalonamento S2:
+
+	S2: r1(x); r3(x); w3(x); w1(x); r2(x);
+
+Conflitos:
+- r1(x) -> w3(x)
+- r3(x) -> w1(x)
+- w3(x) -> w1(x)
+- w1(x) -> r2(x)
+- w3(x) -> r2(x)
+
+Grafo de precedência:
+
+![image](https://github.com/sabrizzs/hello-world/assets/93349105/5b481f18-b913-4de0-b998-ee70171b469a)
+
+Existe um ciclo no grafo, portanto S2 não é seriável.
+
+3. Escalonamento S3:
+
+	S3: r3(x); r2(x); w3(x); r1(x); w1(x);
+
+Conflitos:
+- r3(x) -> w1(x)
+- r2(x) -> w3(x)
+- r2(x) -> w1(x)
+- w3(x) -> r1(x)
+- w3(x) -> w1(x)
+
+Grafo de precedência:
+
+![image](https://github.com/sabrizzs/hello-world/assets/93349105/302dc20d-9d00-4aa7-83ba-15dfdd7e6ba1)
+
+Não existe um ciclo no grafo, portanto S3 é seriável.
+
+4. Escalonamento S4:
+
+	S4: r3(x); r2(x); r1(x); w3(x); w1(x);
+
+Conflitos:
+- r3(x) -> w1(x)
+- r2(x) -> w3(x)
+- r2(x) -> w1(x)
+- r1(x) -> w3(x)
+- w3(x) -> w1(x)
+
+Grafo de precedência:
+
+![image](https://github.com/sabrizzs/hello-world/assets/93349105/b6cce0d3-15c5-479d-a268-bfccec863e6f)
+
+Existe um ciclo no grafo, portanto S4 não é seriável.
 
 ## GATE | GATE-CS-2014-(Set-3) | Question 65
 
