@@ -1,5 +1,35 @@
 # Conceitos
 
+## Álgebra Relacional
+
+Operações da teoria de conjunto
+- Union
+- Intersection
+- Difference
+- Cartesian Product
+
+Operações para banco de dados relacionais
+- Select
+	- σ <condição de seleção> (<nome da relação>)
+  	- exemplo: σ salário > 3000 (EMPREGADO)
+	- seleciona subconjunto de tuplas
+
+- Project
+	- π <lista de atributos> (<nome da relação>)
+	- exemplo: π sexo, salário (EMPREGADOS)
+	- seleciona colunas da tabela
+
+- Join
+	- R ⌧ <condição join> S
+	- exemplo: DEPARTAMENTO ⌧ gernss = nss EMPREGADO
+	- combina duas relações com base em atributos
+
+- Division
+	- considere as relações:
+ 		- R(A, B), onde A e B são atributos de R
+   		- S(B)
+       	- R ÷ S retorna todos os valores de A que estão relacionados com os valores de B em S
+
 # Exercícios
 
 **Consulta 0: Recuperar a data de nascimento e o endereço do empregado cujo nome é 'John B. Smith'.**
@@ -202,7 +232,9 @@ Em Cálculo Relacional
 
 ## P2 - 2019
 
-**1.1. Encontrar o nome e o endereço de todos os empregados que trabalham para oo departamento 'Pesquisa'.**
+**1.1. Encontrar o nome e o endereço de todos os empregados que trabalham para o departamento 'Pesquisa'.**
+
+
 
 **1.2. Encontrar os nomes dos empregados que trabalham em todos os projetos controlados pelo departamento 5.**
 
