@@ -179,4 +179,37 @@ Considere as três transações T1, T2 e T3 e os escalonamentos S1 e S2 descrito
 
 a) Os escalonamentos S1 e S2 são seriáveis? Justifique. Se for o caso, determine os respectivos escalonamentos seriais.
 
+1. Escalonamento S1:
+
+	S1: r1(X); r2(Z); r1(Z); r3(X); r3(Y); w1(X); w3(Y); r2(Y); w2(Z); w2(Y);
+
+Conflitos:
+- r1(Z) -> w2(Z)
+- r3(X) -> w1(X)
+- r3(Y) -> w2(Y)
+- w3(Y) -> w2(Y)
+
+Grafo de precedência:
+
+![image](https://github.com/sabrizzs/hello-world/assets/93349105/a4f370f7-bc87-4468-888f-5007e7fb17cb)
+
+Não há ciclo, portanto o escalonamento S1 é seriável. A ordem serial para S1 é T3 -> T1 -> T2.
+
+2. Escalonamento S2:
+
+	S2: r1(X); r2(Z); r3(X); r1(Z); r2(Y); r3(Y); w1(X); w2(Z) w3(Y); w2(Y);
+
+Conflitos:
+- r3(X) -> w1(X)
+- r1(Z) -> w2(Z)
+- r2(Y) -> w3(Y)
+- r3(Y) -> w2(Y)
+- w3(Y) -> w2(Y)
+
+Grafo de precedência:
+
+![image](https://github.com/sabrizzs/hello-world/assets/93349105/09686c1a-fe69-4b17-ab58-fd60c21edc18)
+
+Há ciclos no grafo, portanto S2 não é seriável.
+
 b) Usando o algoritmo de bloqueio em duas fases para escalonar as transações T2, T3, T1 (nesta ordem), qual seria a sequência dos recursos bloqueados e qual se4ria o primeiro recurso a ser desbloqueado?
