@@ -49,6 +49,65 @@ Nesse exemplo, podemos observar que os atributos A, B, C, D e E se repetem em to
 
 # Exercícios
 
+## Apostila
+
+**1. Considere uma relação universal R = {A, B, C, D, E, F, G, H, I, J} e o conjunto de dependências funcionais F = {{A, B} → {C}, {A} → {D, E}, {B} → {F}, {F} → {G, H}, {D} → {I, J}}. Qual é a chave para R? Decomponha R em relações na 2FN e em seguida na 3FN.**
+
+**2- Repita o exercício anterior com o seguinte conjunto de dependências funcionais G = {{A, B} → {C}, {B, D} → {E, F}, {A, D} → {G, H}, {A} → {I}, {H} → {J}}.**
+
+**3- Prove que qualquer esquema de uma relação com dois atributos está na FNBC.**
+
+**4- Considere a seguinte relação:**
+
+	A B C TUPLA#
+
+	10 b1 c1 #1
+
+	10 b2 c2 #2
+
+	11 b4 c1 #3
+
+	12 b3 c4 #4
+
+	13 b1 c1 #5
+
+	14 b3 c4 #6
+
+**a) Dada extensão da relação apresentada, qual(is) dependência(s) abaixo descritas podem ser
+mantida (s)? Se a dependência não pode se manter, explique o porquê, especificando as
+tuplas que causam violação.**
+
+	A → B
+
+	B → C
+
+	C → B
+
+	B → A
+
+	C → A
+
+**b) A relação mostrada anteriormente tem uma chave candidata? Justifique sua reposta.**
+
+**5) Considere a relação R(A, B, C, D, E) com as seguintes dependências: AB Æ C, CD Æ E, DE Æ B Existem chaves candidatas para essa relação? Justifique sua resposta.**
+
+**6) Considere a relação para livros publicados:**
+
+	LIVRO (título_do_livro, nome_do_autor, tipo_do_livro, preço_de_tabela, afiliação_do_autor, editora)
+ 
+**Suponha as que existam as seguintes dependências:**
+
+	título_do_livro → editora, tipo_do_livro
+ 
+	tipo_do_livro → preço_de_tabela
+ 
+	nome_do_autor → afiliação_do_autor
+ 
+**a) Em que forma normal está a relação? Justifique sua resposta.**
+
+**b) Aplique a normalização até que não possa mais decompor as relações. Justifique as razões de cada decomposição.** 
+
+
 ## exercicios-normalizacao.pdf
 
 **1.Considere a relação R(A, B, C, D, E) com as seguintes dependências:**
