@@ -94,7 +94,14 @@ Essas relações são com base em, respectivamente:
 
 Agora nas três relações todos os atributos dependem totalmente da chave. 
 
-Contundo R2 e R3 não satisfazem a 3NF, pois existem dependências transitivas: B → F e F → GH em R2 e A → D e D → IJ em R3.
+Contundo R2 e R3 não satisfazem a 3NF, pois existem dependências transitivas: B → F e F → GH em R2 e A → D e D → IJ em R3, ou seja, um atributo depende de outro atributo que, por sua vez, depende da chave primária.
+
+- Em R2, o atributo F depende funcionalmente do atributo B e, por sua vez, o atributo GH depende funcionalmente do atributo F. Essa cadeia de dependências funcionais **B → F → GH** é uma dependência transitiva.
+
+- Em R3, o atributo D depende funcionalmente do atributo A e, por sua vez, os atributos IJ dependem funcionalmente do atributo D. Essa cadeia de dependências funcionais **A → D → IJ** é uma dependência transitiva.
+
+Para resolver essas dependências transitivas devemos entao decompor R2 e R3 da
+seguinte forma 
 
 ## P2 - 2019
 
