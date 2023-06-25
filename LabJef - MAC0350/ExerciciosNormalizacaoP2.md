@@ -127,11 +127,44 @@ Não existem mais dependências transitivas nas relações resultantes portanto 
 
 A relação está em 1NF, pois todos os atributos são atômicos.
 
-Sabendo que uma candidata da chave primária é AB, pois AB+ = {ABCDEFGHIJ}, a relação não está em 2NF, pois há atributos que não dependem completamente da chave primária, como A → DE.
+Sabendo que uma candidata da chave primária é AB, pois AB+ = {ABCDEFGHIJ}, a relação não está em 2NF, pois há atributos que não dependem completamente da chave primária, como A → DE e B → F.
+
+Portanto, a relação está em 1NF.
 
 **b) Considerando apenas as formas normais 1NF, 2NF, 3NF e BCNF, normaliza a relação R até a mais alta forma normal possível**
 
+Para a relação estar em 2NF, temos que decompor de modo que os atributos que dependem parcialmente da chave se transformem em chaves da própria relação.
 
+- R1 = {**A**,**B**,C}
+	- AB → C
+- R2 = {**A**,D,E,I,J}
+	- A → DE, D → IJ
+- R3 = {**B**,F,G,H}
+	- B → F, F → GH
+
+Para estar em 3NF, temos que remover as dependências transitivas em R2, A → D → IJ, e em R3, B → F → GH, decompondo em outras relaçõoes.
+
+- R21 = {**A**,D,E}
+	- A → DE
+- R22 = {**D**,I,J}
+	- D → IJ
+- R31 = {**B**,F}
+	- B → F
+- R32 = {**F**,G,H}
+	- F → GH
+
+Para estar na forma normal mais alta, que é BCNF, todas as dependências funcionais devem ser determinadas pela chave primária de cada relação. E temos isso em todas as relações:
+
+- R1 = {**A**,**B**,C}
+	- AB → C
+- R21 = {**A**,D,E}
+	- A → DE
+- R22 = {**D**,I,J}
+	- D → IJ
+- R31 = {**B**,F}
+	- B → F
+- R32 = {**F**,G,H}
+	- F → GH
 
 
 
