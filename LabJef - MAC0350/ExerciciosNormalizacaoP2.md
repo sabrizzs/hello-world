@@ -108,7 +108,7 @@ tuplas que causam violação.**
 **b) Aplique a normalização até que não possa mais decompor as relações. Justifique as razões de cada decomposição.** 
 
 
-## exercicios-normalizacao.pdf
+## exercicios-normalizacao.pdf (resolvido)
 
 **1.Considere a relação R(A, B, C, D, E) com as seguintes dependências:**
 
@@ -178,7 +178,7 @@ Mais uma vez dividimos a relação original, mas agora de forma que os atributos
 
 Não existem mais dependências transitivas nas relações resultantes portanto o esquema está normalizado.
 
-## P2 - 2019
+## P2 - 2019 (resolvido)
 
 **3) Considere a relação genérica R={A,B,C,D,E,F,G,H,I,J} e o conjunto de dependencias funcionais F: AB -> C; A -> DE; B -> F; F -> GH; D -> IJ**
 
