@@ -1115,6 +1115,128 @@ Definição:
 
 https://www.ime.usp.br/~jef/bd10.pdf
 
+## Modelo Transacional Clássico
+
+- Transação é um programa que acessa dados.
+- Sempre termina.
+- Término com sucesso: confirmação (COMMIT)
+	- Todas as operações são confirmadas e mantidas
+- Término com falha: aborto (ABORT)
+	- Todas as operações são desfeitas
+- Transações confirmadas não podem ser abortadas e vice-versa.
+
+## Propriedades ACID
+
+Atomicidade
+
+- Uma transação é atômica se:
+	- Ou todas suas operações são confirmadas no banco de dados;
+	- Ou todas suas operações são desfeitas.
+		-o sistema deve voltar ao mesmo estado em que estava antes do início da transação.
+
+Consistência
+
+Isolamento
+
+- A execução de uma transação não pode ser afetada por outras executando concorrentemente.
+- Tudo deve se passar como se todos os recursos estivessem disponíveis.
+
+Durabilidade
+
+- Os efeitos de uma transação confirmada não podem ser desfeitos.
+
+## Escalonamentos 
+
+- As diversas operações de transações precisam ser executadas em alguma ordem
+- Escalonamento = Ordem de execução
+
+## Teoria da Seriação
+
+- Trata das operações executadas
+- Ignora o código da transação
+- Operações consideradas
+	- leitura: r[x] (valor lido não importa)
+	- escrita: w[x] (valor escrito não importa)
+	- confirmação: c
+	- aborto: a
+	- x: qualquer item de dado (dado, índice, dicionário, etc)
+
+## Conflitos
+
+- Transações Ti ≠ Tj concorrentes;
+- Duas operações sobre o mesmo dado x conflitam se **uma delas é operação de escrita**.
+- Pares conflitantes
+
+	ri[x] < wj[x] wj[x] < ri[x]
+
+	rj[x] < wi[x] wi[x] < rj[x]
+
+	wi[x] < wj[x] wj[x] < wi[x]
+
+- Não conflitam:
+  
+	ri[x] < rj[x] rj[x]< ri[x]
+
+## Escalonamentos Equivalentes
+
+- E1 é equivalente a E2:
+	- E1 e E2 ordenam conflitos da mesma forma
+- Exemplo:
+
+	E1 = r1[x]; w1[y]; c1; r2[y]; r2[z]; w2[x]; c2
+
+	E2 = r1[x]; r2[z]; w1[y]; r2[y]; c1; w2[x]; c2
+
+	E3 = r1[x]; r2[z]; r2[y]; w1[y]; c1; w2[x]; c2
+
+- E1 é equivalente a E2 mas não a E3
+
+## Escalonamentos Seriáveis
+
+- Um escalonamento é seriável se for equivalente a algum escalonamento serial.
+- Dado E, podem existir mais de um e escalonamentos seriais equivalentes.
+- Escalonamentos não seriáveis devem ser proibidos pelo Escalonador.
+
+## Grafo da Seriação
+
+- E é um escalonamento sobre T1, ... , Tn.
+- Gs(E) é definido:
+	- Nós: T1, ... , Tn.
+	- Arestas dirigitas: Ti → Tj se existe x tal que:
+		- pi[x] e qj[x] são operações conflitantes
+		- pi[x] < qj[x] em E
+
+## Teorema da Seriação
+
+- Um escalonamento E é seriável se e somente se Gs(E) é acíclico.
+- Por exemplo:
+	- E1 é serial, Gs(E1) é acíclico
+	- E2 é seriável, Gs(E2) é acíclico
+	- E3 é seriável, Gs(E3) é acíclico
+
+## O Protocolo de Bloqueios Bifásicos (BBF)
+
+- Escalonamentos BBF são sempre seriáveis.
+- pli[x] : bloqueio para executar pi[x]
+- pui[x]: desbloqueio de pi[x]
+- pli[x] < pi[x] < pui[x]
+- pli[x] e qlj[x] conflitam se pi[x] e qj[x] conflitam.
+- Ti requer pli[x] e obtém se não há Tj com qlj[x].
+- Caso contrário, Ti é posta em espera.
+
+## Regra das Duas Fases
+
+- Após liberar um bloqueio, uma transação não pode mais obter nenhum outro bloqueio.
+
+## BBF: Propriedades
+
+- Pode gerar travamentos (deadlocks)
+- Necessidade de monitoramento de travamentos.
+- Uma vítima é escolhida, abortada e reiniciada.
+- BBF é facilmente generalisável para transações distribuídas.
+- Controle de travamento também é extensível no caso distribuído.
+- BBF Estrito: bloqueios só liberados no fim.
+
 # Seriabilidade
 
 Seriabilidade: https://edisciplinas.usp.br/pluginfile.php/7737480/mod_resource/content/1/Seriabilidade.pdf
