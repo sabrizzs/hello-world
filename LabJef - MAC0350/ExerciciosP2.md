@@ -102,17 +102,9 @@ Contundo R2 e R3 não satisfazem a 3NF, pois existem dependências transitivas: 
 
 **a) Em que forma normal está a relação R? Justifique.**
 
-Primeira Forma Normal (1NF): A relação R está na 1NF se todos os atributos forem atômicos e não houver repetição de grupos de atributos. Como a relação R possui atributos simples (individuais) e não há repetição de grupos, ela satisfaz a 1NF.
-
-Segunda Forma Normal (2NF): Para estar na 2NF, todos os atributos não chave devem depender completamente da chave primária. Observando as dependências funcionais em F, podemos ver que todas as dependências funcionais possuem a chave primária (AB) determinando completamente os atributos à direita. Portanto, a relação R já está na 2NF.
-
-Terceira Forma Normal (3NF): Para estar na 3NF, não pode haver dependências transitivas, ou seja, nenhum atributo não chave deve depender de outro atributo não chave. Analisando as dependências funcionais em F, não encontramos nenhuma dependência transitiva. Portanto, a relação R também está na 3NF.
-
-Forma Normal de Boyce-Codd (BCNF): A relação R estará na BCNF se todas as dependências funcionais forem determinadas pela chave candidata, sem dependências parciais ou transitivas. Ao observar as dependências funcionais em F, vemos que todas as dependências são determinadas pela chave AB, sem dependências parciais ou transitivas. Portanto, a relação R também está na BCNF.
-
 **b) Considerando apenas as formas normais 1NF, 2NF, 3NF e BCNF, normaliza a relação R até a mais alta forma normal possível**
 
-Como a relação R já está na forma normal mais alta possível (BCNF), não é necessário realizar nenhuma normalização adicional. A relação R já está em um estado normalizado e atende a todas as propriedades necessárias.
+
 
 
 
