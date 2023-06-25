@@ -22,6 +22,12 @@ Em SQL
 	FROM EMPREGADO, DEPARTAMENTO
 	WHERE DNOME = 'Pesquisa' AND DNUMERO = NDEP 
 
+Em Álgebra Relacional
+
+	PESQUISA_DEPTO←σ DNOME = 'Pesquisa' (DEPARTAMENTO)
+	PESQUISA_DEPTO_EMPS←(PESQUISA_DEPTO ⌧ DNÚMERO = NDEP EMPREGADO)
+	RESULT←π PNOME, SNOME, ENDEREÇO (PESQUISA_DEPTO_EMPS)
+
 **Consulta 2: Para todo projeto localizado em 'Stafford', listar o número do projeto, o número do departamento responsável, e o sobrenome, endereço e data de nascimento do gerente responsável pelo departamento.**
 
 Em SQL
@@ -30,6 +36,13 @@ Em SQL
 	FROM PROJETO, DEPARTAMENTO, EMPREGADO
 	WHERE DNUM = DNUMERO AND SSNGER = NSS AND
 		PLOCALIZAÇÃO = 'Stafford'
+
+Em Álgebra Relacional
+
+	STAFFORD_PROJS←σ PLOCALIZAÇÃO = 'Stafford' (PROJETO)
+	CONTR_DEPT←(STAFFORD_PROJS ⌧ DNUM = DNÚMERO DEPARTAMENTO)
+	PROJ_DEPT_MGR←(CONTR_DEPT ⌧ SSNGER = NSS EMPREGADO)
+	RESULT←π PNÚMERO, DNUM, SNOME, ENDEREÇO, DATANASC (PROJ_DEPT_MGR)
 
 **Consulta 3: Encontrar os nomes de empregados que trabalham em todos os projetos controlados pelo departamento 5.**
 
@@ -45,6 +58,13 @@ Em SQL
 		FROM PROJETO
 		WHERE DNUM = 5))
 
+Em Álgebra Relacional
+
+	DEPT5_PROJS(PNO)←π PNÚMERO (σ DNUM=5 (PROJETO)))
+	EMP_PROJ(NSS, PNO)←π NSSEMP, PNRO (TRABALHA_EM)
+	RESULT_EMP_SSNS←EMP_PROJ ÷ DEPT5_PROJS
+	RESULT←π SNOME, PNOME (RESULT_EMP_SSNS * EMPREGADO) 
+
 **Consulta 4: Fazer uma lista de números de projetos no qual um empregado, cujo sobrenome é 'Smith' , trabalha no projeto ou é gerente do departamento que controla o projeto.**
 
 Em SQL
@@ -57,6 +77,16 @@ Em SQL
 	FROM PROJETO, TRABALHA_EM, EMPREGADO
 	WHERE PNUMERO=PNRO AND NSSEMP=NSS AND SNOME='Smith') 
 
+Em Álgebra Relacional
+
+	SMITH(NSSEMP)← π NSS (σ SNOME='Smith' (EMPREGADO))
+	SMITH_WORKER_PROJS← π PNRO (TRABALHA_EM * SMITH)
+	MGRS←π SNOME, DNÚMERO (EMPREGADO ⌧ NSS = NSSGER DEPARTAMENTO)
+	SMITH_MGS←σ SNOME = 'Smith' (MGRS)
+	SMITH_MANAGED_DEPTS(DNUM)←π DNÚMERO (SMITH_MGRS)
+	SMITH_MGR_PROJS(PNRO)←π PNÚMERO (SMITH_MANAGED_DEPTS * PROJETO)
+	RESULT←(SMITH_WORKER_PROJS ∪ SMITH_MGR_PROJS) 
+
 **Consulta 5: Listar os nomes de todos os empregados com dois ou mais dependentes.**
 
 Em SQL
@@ -67,6 +97,12 @@ Em SQL
 	FROM DEPENDENTE
 	WHERE NSS=NSSEMP) >= 2
 
+Em Álgebra Relacional
+
+	T1(NSS, NO_DE_DEPS)←NSSEMP ℑ COUNT NOMEDEPENDENTE (DEPENDENTE)
+	T2←σ NO_DE_DEPS >= 2 (T1)
+	RESULT←π SNOME, PNOME (T2 * EMPREGADO) 
+
 **Consulta 6: Listar os nomes dos empregados que não possuem dependentes.**
 
 Em SQL
@@ -76,6 +112,13 @@ Em SQL
 	WHERE NOT EXISTS ( SELECT *
 			FROM DEPENDENTE
 			WHERE NSS=NSSEMP)
+
+Em Álgebra Relacional
+
+	TODOS_EMPS←π NSS (EMPREGADO)
+	EMPS_COM_DEPS(NSS)←π NSSEMP (DEPENDENTE)
+	EMPS_SEM_DEPS←(TODOS_EMPS - EMPS_COM_DEPS)
+	RESULT←π SNOME, PNOME (EMPS_SEM_DEPS * EMPREGADO) 
 
 **Consulta 7: Listar os nomes dos gerentes que têm ao menos um dependente.** 
 
@@ -90,6 +133,48 @@ Em SQL
 		EXISTS ( SELECT *
 			FROM DEPARTAMENTO
 			WHERE NSS=NSSGER)
+
+Em Álgebra Relacional
+
+	MGRS(NSS)←π NSSGER (DEPARTAMENTO)
+	EMPS_COM_DEPS(NSS)←π NSSEMP (DEPENDENTE)
+	MGRS_COM_DEPS←(MGRS ∩ EMPS_COM_DEPS)
+	RESULT←π SNOME, PNOME (MGRS_COM_DEPS * EMPREGADO) 
+
+**Consulta 8: Encontre todos os empregados cujos salários estejam acima de R$3.500,00.**
+
+Em Cálculo Relacional
+
+	{t | EMPREGADO(t) AND t.SALARIO > 3500} 
+
+**Consulta 9: Dê apenas os nomes e sobrenomes dos empregados cujos salários estejam acima de R$3.500,00.**
+
+Em Cálculo Relacional
+
+	{t.NOME, t.SOBRENOME | EMPREGADO(t) AND t.SALARIO > 3500}
+
+**Consulta 10: Selecione o nome e o endereço dos empregados que trabalham para o departamento de ‘Informática’.**
+
+Em Cálculo Relacional
+
+	{t.NOME, t.SOBRENOME, t.ENDERECO | EMPREGADO(t) AND (∃ d) (DEPARTAMENTO (d)
+ 	AND d.NOMED = ‘Informática’ AND d.NUMERODEP = t.NUD)} 
+
+**Consulta 11: Para cada projeto localizado em ‘São Paulo’, liste o número do mesmo, o nome do departamento proponente, bem como sobrenome, data de nascimento e endereço do gerente responsável.**
+
+Em Cálculo Relacional
+
+	{p.NUMEROP, p.NUMD, m.SOBRENOME, m.DATANASCIMENTO, m.ENDERECO |
+	PROJETO(p) AND EMPREGADO(m) AND p.LOCALIZACAO = ‘São Paulo’ AND ((∃ d)
+	(DEPARTAMENTO(d) AND d.NUMD = d.NUMERODEP AND d.NSSGER = m.NSS) )}
+
+**Consulta 12: Encontre os nomes dos empregados que trabalham em todos os projetos controlados pelo departamento de número 5.**
+
+Em Cálculo Relacional
+
+	{e.SOBRENOME, e.NOME | EMPREGADO(e) AND ((∀ x) (NOT(PROJETO(x)) OR
+	NOT(x.NUMD = 5) OR ((∃ w) (TRABALHA_EM(w) AND w.NSSE = e.NUMEROP AND
+	x.NUMEROP = w.NUMP))))} 
 
 ## Apostila, pág 62
 
