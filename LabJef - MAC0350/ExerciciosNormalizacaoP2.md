@@ -125,6 +125,10 @@ Não existem mais dependências transitivas nas relações resultantes portanto 
 
 **a) Em que forma normal está a relação R? Justifique.**
 
+A relação está em 1NF, pois todos os atributos são atômicos.
+
+Sabendo que uma candidata da chave primária é AB, pois AB+ = {ABCDEFGHIJ}, a relação não está em 2NF, pois há atributos que não dependem completamente da chave primária, como A → DE.
+
 **b) Considerando apenas as formas normais 1NF, 2NF, 3NF e BCNF, normaliza a relação R até a mais alta forma normal possível**
 
 
