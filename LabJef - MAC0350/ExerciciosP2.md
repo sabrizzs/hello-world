@@ -1,8 +1,8 @@
-## Conceitos
+# Conceitos
 
 ## 1NF
 
-- Atributos atômicos
+- **Atributos atômicos**
 - Sem repetição de grupos de atributos
 - Cada coluna deve ter um nome único.
 - A ordem das tuplas não importa.
@@ -10,8 +10,14 @@
 ## 2NF
 
 - Deve satisfazer os requisitos da 1NF.
-- Todos os atributos não chave devem depender completamente da chave primária.
-- Caso a chave primária seja composta, cada atributo não chave deve depender completamente da combinação desses atributos.
+- **Todos os atributos não-chave devem depender completamente da chave primária.**
+	- Nesse caso, é necessário decompor a relação original.
+
+## 3NF
+
+- Deve satisfazer os requisitos da 2NF.
+- **Não deve haver dependências transitivas**, ou seja, um atributo depende de outro atributo que, por sua vez, depende da chave primária
+	- Nesse caso, o atributo dependente deve ser movido para uma relação separada.
 
 ### Dependência funcional A -> B
 
@@ -32,6 +38,63 @@ Vamos considerar a relação R={A, B, C, D, E, F, G, H, I, J} e supor que temos 
 R = {(A, B, C, D, E, F), (A, B, C, D, E, G), (A, B, C, D, E, H), (A, B, C, D, E, I), (A, B, C, D, E, J)}
 
 Nesse exemplo, podemos observar que os atributos A, B, C, D e E se repetem em todas as tuplas da relação, formando um grupo de atributos repetido.
+
+# Exercícios
+
+## exercicios-normalizacao.pdf
+
+**1.Considere a relação R(A, B, C, D, E) com as seguintes dependências:**
+
+	AB → C, CD → E, DE → B
+
+**AB é Chave candidata? Se não, e ABD?**
+
+Para determinar se AB é uma chave candidata, precisamos calcular o fechamento de AB (AB+). Se o fechamento de AB contiver todos os atributos da relação, então AB é uma chave candidata.
+
+Para AB:
+
+	AB+ = {AB}
+	AB → C: o lado esquerdo (AB) está no conjunto atual (AB), então adicionamos C no conjunto.
+ 	AB+ = {ABC}
+  	CD → E: o lado esquerdo não está no conjunto, não adiciona E.
+   	DE → B: o lado esquerdo não está no conjunto, não adiciona B.
+
+Como o fechamento não contém todos os atributos da relação, AB não é chave. 
+
+Para ABD:
+
+	ABD+ = {ABD}
+ 	AB → C: o lado esquerdo está no conjunto, adiciona C.
+  	ABD+ = {ABCD}
+   	CD → E: o lado esquerdo está no conjunto, adiciona E.
+	ABD+ = {ABCDE}
+
+Como o fechamento contém todos os atributos da relação, ABD é uma chave candidata.
+
+Calculando o fechamento de AB:
+AB+ = {A, B, C}
+
+**2. Considere a relação R (A, B, C, D, E, F, G, H, I, J) e o conjunto de dependências F = { AB → C, A → DE, B → F, F → GH, D → IJ}. Qual a chave de R? Decomponha R na 2NF e depois na 3NF.**
+
+AB+ = {ABCDEFGHIJ}, AB é chave pois contém todos os atributos da relação.
+
+A relação R não está na segunda forma normal já que existem atibutos que depende de partes da chave, a saber, A → DE, B → F.
+
+Para satisfazer a 2NF devemos então decompor R em três relações, ou seja, dividimos a relação original de forma que os atributos que dependem parcialmente da chave se transformem em chaves da própria relação: 
+
+- R1(**A**, **B**, C)
+- R2(**B**, F, G, H)
+- R3(**A**, D, E, I, J)
+
+Essas relações são com base em, respectivamente:
+
+- AB → C
+- B → F, F → GH
+- A → DE, D → IJ
+
+Agora nas três relações todos os atributos dependem totalmente da chave. 
+
+Contundo R2 e R3 não satisfazem a 3NF, pois existem dependências transitivas: B → F e F → GH em R2 e A → D e D → IJ em R3.
 
 ## P2 - 2019
 
