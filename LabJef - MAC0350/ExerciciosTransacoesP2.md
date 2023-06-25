@@ -82,6 +82,8 @@ Grafo de precedência:
 
 Não existe um ciclo no grafo, portanto S3 é seriável.
 
+Nota: A ordem serial para S3 é T2 -> T3 -> T1.
+
 4. Escalonamento S4:
 
 	S4: r3(x); r2(x); r1(x); w3(x); w1(x);
@@ -123,23 +125,43 @@ Qual das seguintes afirmações sobre os esquemas é VERDADEIRA?
 
 (D) Nem S1 nem S2 são seriáveis.
 
-Resposta: (A)
+1. Escalonamento S1:
 
-Explicação: Para serialização de conflito de um escalonamento, devemos verificar as operações de conflito, que são: 
-- leitura-gravação
-	- ri[x] < wj[x], rj[x] < wi[x]
-- gravação-leitura
-	- wj[x] < ri[x], wi[x] < rj[x]
-- gravação-gravação
-	- wi[x] < wj[x], wj[x] < wi[x]
- 
-entre cada par de transações e, com base nesses conflitos, faça um grafo de precedência, se o grafo contiver um ciclo, não é um cronograma seriável.
+	r1(X); r3(Y); r3(X); r2(Y); r2(Z); w3(Y); w2(Z); r1(Z); w1(X); w1(Z)
 
-Para fazer um grafo de precedência: se r(x) em Ti é seguido por w(x) em Tj (daí um conflito), então desenhamos uma aresta de Ti para Tj (Ti -> Tj)
+Conflitos:
+- r3(X) -> w1(X)
+- r2(Y) -> w3(Y)
+- r2(Z) -> w1(Z)
+- w2(Z) -> r1(Z)
+- w2(Z) -> w1(Z)
 
-Se fizermos um gráfico de precedência para S1 e S2 , obteremos arestas direcionadas para S1 como T2->T1, T2->T3, T3->T1 e para S2 como T2->T1, T2->T3, T3->T1, T1->T2. Em S1 não há ciclo, mas S2 tem um ciclo. Portanto, apenas S1 é seriável.
+Grafo de precdência:
+
+![image](https://github.com/sabrizzs/hello-world/assets/93349105/7c580be6-065a-483d-9ffb-61c9da40dd7f)
+
+Não existe ciclo no grafo, portanto S1 é seriável.
 
 Nota: A ordem serial para S1 é T2 -> T3 -> T1.
+
+2. Escalonamento S2:
+
+	S2: r1(X); r3(Y); r2(Y); r3(X); r1(Z); r2(Z); w3(Y); w1(X); w2(Z); w1(Z)
+
+Conflitos:
+- r2(Y) -> w3(Y)
+- r3(X) -> w1(X)
+- r1(Z) -> w2(Z)
+- r2(Z) -> w1(Z)
+- w2(Z) -> w1(Z)
+
+Grafo de precedência:
+
+![image](https://github.com/sabrizzs/hello-world/assets/93349105/9f98999b-c901-448a-959a-7e931bfe5bda)
+
+Há um ciclo no grafo, portanto S2 não é seriável.
+
+Resposta: (A)
 
 ## P2 - 2019
 
