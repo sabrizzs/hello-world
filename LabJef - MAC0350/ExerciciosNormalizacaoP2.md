@@ -11,17 +11,25 @@
 
 - Deve satisfazer os requisitos da 1NF.
 - **Todos os atributos não-chave devem depender completamente da chave primária.**
+	- Por exemplo, se a chave primária é AB, os atributos devem ser do modo AB → C (completa) e não A → D (parcial).
 	- Nesse caso, é necessário decompor a relação original.
 
 ## 3NF
 
 - Deve satisfazer os requisitos da 2NF.
 - **Não deve haver dependências transitivas**, ou seja, um atributo depende de outro atributo que, por sua vez, depende da chave primária
-	- Nesse caso, o atributo dependente deve ser movido para uma relação separada.
+	- Por exemplo, se a chave primária é AB, não deve existir uma dependência transistiva do modo AB → C → D
+	- Nesse caso, é necessário decompor a relação original.
 
-### Dependência funcional A -> B
+## BCNF
+ 
+- Maior forma normal.
+- **Todas as dependências funcionais são determinadas pela chave candidata completa.**
+	- Por exemplo, se a chave primária é AB, todas as dependências devem ser do modo AB → C, AB → D...
 
-Por exemplo, na dependência funcional AB -> C, os atributos AB são os atributos determinantes, enquanto o atributo C é o atributo determinado funcionalmente. Isso indica que o valor de C é determinado pelos valores de A e B.
+### Dependência funcional A → B
+
+Por exemplo, na dependência funcional AB → C, os atributos AB são os atributos determinantes, enquanto o atributo C é o atributo determinado funcionalmente. Isso indica que o valor de C é determinado pelos valores de A e B.
 
 ### Atributos atômicos
 
@@ -109,8 +117,7 @@ Para resolver essas dependências transitivas devemos entao decompor R2 e R3 da 
 
 Mais uma vez dividimos a relação original, mas agora de forma que os atributos que dependem da chave primária e possuem outros atributos se transformem em chaves da própria relação.
 
-Não existem mais dependências transitivas nas relações resulatntes portanto o esquema
-está normalizado.
+Não existem mais dependências transitivas nas relações resultantes portanto o esquema está normalizado.
 
 ## P2 - 2019
 
