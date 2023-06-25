@@ -100,8 +100,17 @@ Contundo R2 e R3 não satisfazem a 3NF, pois existem dependências transitivas: 
 
 - Em R3, o atributo D depende funcionalmente do atributo A e, por sua vez, os atributos IJ dependem funcionalmente do atributo D. Essa cadeia de dependências funcionais **A → D → IJ** é uma dependência transitiva.
 
-Para resolver essas dependências transitivas devemos entao decompor R2 e R3 da
-seguinte forma 
+Para resolver essas dependências transitivas devemos entao decompor R2 e R3 da seguinte forma:
+
+- R21(**B**, F)
+- R22(**F**, G, H)
+- R31(**A**, D, E)
+- R32(**D**, I, J)
+
+Mais uma vez dividimos a relação original, mas agora de forma que os atributos que dependem da chave primária e possuem outros atributos se transformem em chaves da própria relação.
+
+Não existem mais dependências transitivas nas relações resulatntes portanto o esquema
+está normalizado.
 
 ## P2 - 2019
 
