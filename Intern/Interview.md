@@ -23,4 +23,5 @@
  - Past experience with business analytics
 
 ### Virtual Interview
+- STAR
 - Generally if you are hired they will answer you in one business day if you dont get the email in one day then you are most likely not getting hired
