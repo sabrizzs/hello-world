@@ -319,30 +319,99 @@ Em Cálculo Relacional ∃ ∀
 
 Em SQL
 
-	SELECT PNOME, SNOME
+	SELECT DISTINCT PNOME, SNOME
  	FROM EMPREGADO, PROJETO, TRABALHA_EM
-  	WHERE NDEP='5' AND PNOME='ProjetoX' AND PNUMERO=PNRO
-   		AND HORAS > 10 AND NSSEMP = NSS
+  	WHERE NDEP='5' AND 
+   	      PNOME='ProjetoX' AND
+	      PNUMERO=PNRO AND 
+              HORAS > 10 AND
+	      NSSEMP = NSS
 
 **b) Listar os nomes dos empregados que tenham um dependente com o mesmo nome (PNOME).**
 
 Em Álgebra Relacional σ π ⌧ ÷
 
+	DEPEND <- EMPREGADO ⌧ nss = nssemp DEPENDENTE
+	MSMNOME <- σ nomedependente = pnome (DEPEND)
+	NOMES <- π pnome, snome (MSMNOME)
+
 Em Cálculo Relacional ∃ ∀
 
+	{e.pnome, e.snome | EMPREGADO(e) AND
+				(∃d)(DEPENDENTE(d) AND
+   					e.nss = d.nssemp AND d.nomedependente = e.pnome)}
+   				
+
 Em SQL
+
+	SELECT DISTINCT PNOME, SNOME
+	FROM EMPREGADO, DEPENDENTE
+	WHERE NSS=NSSEMP AND 
+ 	      PNOME=NOMEDEPENDENTE
 
 **c) Encontrar os nomes de empregados que são diretamente supervisionados por 'Franklin Wong'.**
 
 Em Álgebra Relacional σ π ⌧ ÷
 
+	FRANKW <- σ pnome = 'Franklin' AND snome = 'Wong' (EMPREGADO)
+	SPVFRANK <- FRANKW ⌧ nss=nsssuper EMPREGADO
+	NOMES <- π pnome, snome (SPVFRANK) 
+
 Em Cálculo Relacional ∃ ∀
+
+	{e.pnome, e.snome | EMPREGADO(e) AND
+ 				(∃f)(EMPREGADO(f) AND
+     					f.pnome = 'Franklin' AND f.snome = 'Wong' AND
+	  				e.nsssuper = f.nss)}
 
 Em SQL
 
+	SELECT DISTINCT emp.pnome, emp.mnome, emp.snome
+ 	FROM EMPREGADO emp, EMPREGADO sup
+  	WHERE sup.pnome='Franklin' AND sup.snome='Wong' AND
+   	      emp.nsssuper=sup.nss
+
 **d) Para cada projeto, listar o nome do projeto e o total de horas (de todos os empregados) gastos em cada projeto.**
 
+Em Álgebra Relacional σ π ⌧ ÷
+
+	PROJETOS <- PROJETO ⌧ pnro=pnumero TRABALHA_EM
+ 	HORAS(pnome, totalhoras) <- pnome F sum horas (PROJETOS)
+
+Em Cálculo Relacional ∃ ∀
+
+	Não é possível representar utilizando cálculo de tuplas devido à presença de função de agregação.
+
+Em SQL
+
+	SELECT DISTINCT pnome, sum(horas)
+ 	FROM PROJETO, TRABALHA_EM
+  	WHERE pnro=pnumero
+   	GROUP BY pnome
+
 **e) Recuperar os nomes dos empregados que trabalham em todos os projetos.**
+
+Em Álgebra Relacional σ π ⌧ ÷
+
+	PROJETOS <- π pnumero (PROJETO)
+ 	EMPREGADOS <- EMPREGADO ⌧ nss=nssemp TRABALHA_EM
+  	EMPATRIBUTOS(pnome, mnome, snome, pnumero) <- π pnome, mnome, snome, pnumero (EMPREGADOS)
+   	TODOS <- EMPATRIBUTOS ÷ PROJETOS
+    	RESULT <- π pnome, mnome, snome (TODOS)
+
+Em Cálculo Relacional ∃ ∀
+
+
+
+Em SQL
+
+	SELECT DISTINCT pnome, mnome, snome
+ 	FROM EMPREGADO
+  	WHERE NOT EXISTS ( SELECT *
+   				FROM projeto
+       				WHERE pnumero NOT IN (SELECT pnro
+	   						FROM TRABALHA_EM
+	  						WHERE nssemp = nss
 
 **f) Recuperar os nomes dos empregados que não trabalham em quaisquer projetos.**
 
@@ -360,9 +429,7 @@ Em SQL
 
 **1.1. Encontrar o nome e o endereço de todos os empregados que trabalham para o departamento 'Pesquisa'.**
 
-
-
-**1.2. Encontrar os nomes dos empregados que trabalham em todos os projetos controlados pelo departamento 5.**
+**1.2. Encontrar os nomes dos empregados que trabalham' em todos os projetos controlados pelo departamento 5.**
 
 **1.3. Listar os nomes dos empregados que não possuem dependentes.**
 
