@@ -401,7 +401,11 @@ Em Álgebra Relacional σ π ⌧ ÷
 
 Em Cálculo Relacional ∃ ∀
 
-
+	{e.pnome, e.mnome, e.snome | EMPREGADO(e) AND
+					(∀p)(PROJETO(p) 
+    						(∃t)(TRABALHA_EM(t) AND
+	 						p.pnumero=t.pnro AND
+       							t.nssemp=e.nss)}
 
 Em SQL
 
@@ -415,25 +419,126 @@ Em SQL
 
 **f) Recuperar os nomes dos empregados que não trabalham em quaisquer projetos.**
 
+Em Álgebra Relacional σ π ⌧ ÷
+
+	TODOSEMP <- π pnome, mnome, snome, nss (EMPREGADO)
+	TRABALHAM <- π pnome, mnome, snome, nss (EMPREGADO ⌧ nss=nssemp TRABALHA_EM)
+	NAOTRABALHAM <- TODOSEMP - TRABALHAM
+	RESULT <- π pnome, mnome, snome NAOTRABALHAM
+
+Em Cálculo Relacional ∃ ∀
+
+	{e.pnome, e.mnome, e.snome | EMPREGADO(e) AND NOT
+						(∃t)(TRABALHA_EM(t) AND
+     							t.nssemp = e.nss)}
+     						
+Em SQL
+
+	SELECT DISTINCT pnome, mnome, snome
+ 	FROM EMPREGADO
+  	WHERE NOT EXISTS
+   		(SELECT *
+     		 FROM TRABALHA_EM
+		 WHERE nssemp = nss)
+
+ou 
+
+	SELECT pnome, mnome, snome
+	FROM empregado
+	WHERE nss NOT IN (SELECT nssemp
+			  FROM trabalha_em)
+
 **g) Para cada departamento, recuperar o nome do departamento e a média salarial dos empregados que trabalham no departamento.**
+
+Em Álgebra Relacional σ π ⌧ ÷
+
+Em Cálculo Relacional ∃ ∀
+
+Em SQL
 
 **h) Recuperar a média salarial de todos os empregados femininos.**
 
+Em Álgebra Relacional σ π ⌧ ÷
+
+Em Cálculo Relacional ∃ ∀
+
+Em SQL
+
 **i) Encontrar os nomes e endereços de empregados que trabalham em ao menos um projeto localizado em Houston mas cujo departamento não possua localização em Houston.**
+
+Em Álgebra Relacional σ π ⌧ ÷
+
+Em Cálculo Relacional ∃ ∀
+
+Em SQL
 
 **j) Listar os sobrenomes dos gerentes de departamentos que não tenham dependentes.**
 
+Em Álgebra Relacional σ π ⌧ ÷
+
+Em Cálculo Relacional ∃ ∀
+
+Em SQL
+
 **k) Generalize a consulta i) acima para listar os nomes e endereços de empregados que trabalham em um projeto em alguma cidade , mas que o departamento não tenha nenhuma localização nessa cidade.** 
+
+Em Álgebra Relacional σ π ⌧ ÷
+
+Em Cálculo Relacional ∃ ∀
+
+Em SQL
 
 ## P2 - 2019
 
 **1.1. Encontrar o nome e o endereço de todos os empregados que trabalham para o departamento 'Pesquisa'.**
 
+Em Álgebra Relacional σ π ⌧ ÷
+
+	DEPPESQUISA <- σ dnome = 'Pesquisa' (DEPARTAMENTO)
+	EMPPESQUISA <- EMPREGADO ⌧ ndep = dnumero DEPARTAMENTO
+	RESULT <- π pnome, mnome, snome, endereço (EMPPESQUISA)
+
+Em Cálculo Relacional ∃ ∀
+
+	{e.pnome, e.mnome, e.snome | EMPREGADO(e) AND
+					(∃d)(DEPARTAMENTO(d) AND
+    						d.dnome='Pesquisa' AND
+	 					d.dnumero=e.ndep)}
+
+Em SQL
+
+	SELECT DISTINCT pnome, mnome, snome, endereço
+ 	FROM EMPREGADO, DEPARTAMENTO
+  	WHERE dnome = 'Pesquisa' AND
+   	      dnumero = ndep
+   
 **1.2. Encontrar os nomes dos empregados que trabalham' em todos os projetos controlados pelo departamento 5.**
+
+Em Álgebra Relacional σ π ⌧ ÷
+
+	PROJDEP5 <- σ dnum = 5 (PROJETO)
+ 	EMPTRAB <- EMPREGADO ⌧ nss=nssemp TRABALHA_EM
+  	PROJDEP5(pnro) <- π pnumero (PROJDEP5)
+   	EMPPROJ <- EMPTRAB ÷ PROJDEP5
+    	RESULT <- π pnome, mnome, snome (EMPPROJ)
+
+Em Cálculo Relacional ∃ ∀
+
+
+
+Em SQL
 
 **1.3. Listar os nomes dos empregados que não possuem dependentes.**
 
+Em Álgebra Relacional σ π ⌧ ÷
 
+
+
+Em Cálculo Relacional ∃ ∀
+
+
+
+Em SQL
 
 
 
