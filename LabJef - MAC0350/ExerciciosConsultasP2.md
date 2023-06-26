@@ -1,5 +1,61 @@
 # Conceitos
 
+## SQL
+
+- SELECT
+
+Forma geral:
+
+	SELECT [ DISTINCT | ALL ] <lista de atributos>
+	FROM <lista de tabelas>
+	[ WHERE<condições> ]
+	[ GROUP BY atributo ]
+	[ HAVING <condições> ]
+	[ ORDER BY atributo [ ASC | DESC ] ];
+
+Seleciona O QUE se deseja na tabela resultado:
+
+- ou * (para todos os atributos)
+- ALL – inclui tuplas duplicadas (é o default)
+- DISTINCT – elimina tuplas duplicadas
+- FROM – DE ONDE retirar os dados necessários
+- WHERE – CONDIÇÕES de seleção dos resultados.
+
+Exemplo: Recuperar a data de aniversário e o endereço do empregado chamado 'John B. Smith'
+
+	SELECT DATANASC, ENDERECO
+	FROM EMPREGADO
+	WHERE PNOME='John' AND MNOME='B’ AND SNOME='Smith’;
+
+- PROJECT 
+
+Exemplos: Recuperar a data de aniversário e o endereço dos empregados
+
+	SELECT DATANASC, ENDERECO
+	FROM EMPREGADO
+
+- JOIN
+
+Exemplo: Obter o nome e o endereço dos empregados que trabalham para o departamento de ‘Pesquisa’.
+
+	SELECT PNOME, ENDERECO
+	FROM EMPREGADO, DEPARTAMENTO
+	WHERE DNOME = ‘Pesquisa' AND DNUMERO=DNUM;
+
+- DIVISION
+
+Exemplo: Encontrar os nomes de empregados que trabalham em todos os projetos controlados pelo departamento 5.
+
+	SELECT PNOME, SNOME
+	FROM EMPREGADO
+	WHERE ( ( SELECT PNO
+		FROM TRABALHA-EM
+		WHERE NSS=ENSS )
+		CONTAINS
+			( SELECT PNUMERO
+			FROM PROJETO
+			WHERE DNUM=5 ) );
+
 ## Álgebra Relacional
 
 Operações da teoria de conjunto
@@ -29,6 +85,39 @@ Operações para banco de dados relacionais
  		- R(A, B), onde A e B são atributos de R
    		- S(B)
        	- R ÷ S retorna todos os valores de A que estão relacionados com os valores de B em S
+
+## Cálculo Relacional
+
+Exemplo de SELECT
+
+Recupere todos os empregados do sexo feminino
+
+	{t | EMPREGADO(t) AND t.sexo = 'F'}
+
+Exemplo de PROJECT
+
+Recupere o nome e o endereço de todos os empregados
+
+	{t.pnome, t.snome, t.endereço | EMPREGADO(t)}
+
+Exemplo de JOIN
+
+Recupere o nome e o endereço de todos os empregados que trabalham para o departamento 'Pesquisa'
+
+	{t.pnome, t.snome, t.endereço | EMPREGADO(t) AND
+					(∃d) (DEPARTAMENTO(d) AND
+  						d.dnumero = p.dnum AND
+    						d.gernss = m.nss)}
+
+Exemplo de DIVISION
+
+Liste o nome de todos os empregados que trabalham em todos os projetos
+
+	{e.pnome | EMPREGADO(e) AND
+		(∀p)(PROJETO(p) => (∃w)(TRABALHA_EM(w) AND
+  					w.pno = p.numero AND
+       					w.enss = e.nss}
+  			
 
 # Exercícios
 
