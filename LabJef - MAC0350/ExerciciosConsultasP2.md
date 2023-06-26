@@ -452,17 +452,36 @@ ou
 
 Em Álgebra Relacional σ π ⌧ ÷
 
+	DEPEMP <- π dnome, salario (EMPREGADO ⌧ ndep = dnumero DEPARTAMENTO)
+	MEDIA(dnome, mediasalarial) <- dnome F average salario (DEPEMP)
+
 Em Cálculo Relacional ∃ ∀
 
+	Não é possível representar utilizando cálculo de tuplas devido à presença de função de agregação.
+
 Em SQL
+
+	SELECT dnome, average(salario)
+ 	FROM DEPARTAMENTO
+  	WHERE dnumero=ndep
+   	GROUP BY dnome
 
 **h) Recuperar a média salarial de todos os empregados femininos.**
 
 Em Álgebra Relacional σ π ⌧ ÷
 
+	EMPFEM <- σ sexo = 'feminino' (EMPREGADO)
+ 	MEDIASALARIAL(mediasalarial) <- F Average salario (EMPFEM)
+
 Em Cálculo Relacional ∃ ∀
 
+	Não é possível representar utilizando cálculo de tuplas devido à presença de função de agregação.
+
 Em SQL
+
+	SELECT average(salario)
+ 	FROM EMPREGADO
+  	WHERE sexo='feminino'
 
 **i) Encontrar os nomes e endereços de empregados que trabalham em ao menos um projeto localizado em Houston mas cujo departamento não possua localização em Houston.**
 
@@ -476,8 +495,21 @@ Em SQL
 
 Em Álgebra Relacional σ π ⌧ ÷
 
+	GERENTES <- EMPREGADO ⌧ nss = nssger DEPARTAMENTO
+	COMDEPEN <- GERENTES ⌧ nss = nssemp DEPENDENTE
+	TODOSGERENTES(pnome, mnome, snome, nss) <- π pnome, mnome, snome, nss (GERENTES)
+	GERCOMDEPEN(pnome, mnome, snome, nss) <- π pnome, mnome, snome, nss (COMDEPEN)
+	SEMDEPEN <- TODOSGERENTES - GERCOMDEPEN
+	RESULT <- π mnome, snome (SEMDEPEN)
+
 Em Cálculo Relacional ∃ ∀
 
+	{e.mnome, e.snome | EMPREGADO(e) AND
+ 				(∃d)(DEPARTAMENTO(d) AND
+     					d.nssger=e.nss AND NOT
+	  				(∃m)(DEPENDENTE(m) AND
+       						m.nssemp=enss))}
+	  		
 Em SQL
 
 **k) Generalize a consulta i) acima para listar os nomes e endereços de empregados que trabalham em um projeto em alguma cidade , mas que o departamento não tenha nenhuma localização nessa cidade.** 
@@ -524,23 +556,48 @@ Em Álgebra Relacional σ π ⌧ ÷
 
 Em Cálculo Relacional ∃ ∀
 
-
+	{e.pnome, e.mnome, e.snome | EMPREGADO(e) AND 
+ 					(∀p)(PROJETO(p) AND
+      						p.dnum = 5 AND
+	    					(∃t)(TRABALHA_EM(t) AND
+	  						p.numero=t.pnro AND
+	 						t.nssemp=e.nss)}
 
 Em SQL
+
+	SELECT DISTINCT pnome, mnome, snome
+ 	FROM EMPREGADO
+  	WHERE NOT EXISTS
+   		(SELECT *
+     		 FROM PROJETO
+		 WHERE dnum = 5 AND pnumero NOT IN
+   					(SELECT pnro
+					 FROM TRABALHA_EM
+      					 WHERE nssemp=nss))
 
 **1.3. Listar os nomes dos empregados que não possuem dependentes.**
 
 Em Álgebra Relacional σ π ⌧ ÷
 
-
+	EMPCOMDEPEN <- EMPREGADO ⌧ nss = nssemp DEPENDENTE
+	COMDEPEN <- π pnome, mnome, snome, nss (EMPCOMDEPEN)
+	TODOSEMP <- π pnome, mnome, snome, nss (EMPREGADO)
+	SEMDEPEN <- TODOSEMP - COMDEPEN
+	RESULT <- π pnome, mnome, snome (SEMDEPEN)
 
 Em Cálculo Relacional ∃ ∀
 
-
+	{e.pnome, e.mnome, e.snome | EMPREGADO(e) AND NOT
+					(∃d)(DEPENDENTE(d) AND
+    						d.nssemp = e.nss)}
 
 Em SQL
 
-
+	SELECT DISTINCT pnome, mnome, snome
+ 	FROM EMPREGADO 
+  	WHERE nss NOT IN
+   		(SELECT nssemp
+     		 FROM DEPENDENTE)
 
 
 
