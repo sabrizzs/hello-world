@@ -53,6 +53,21 @@ Nesse exemplo, podemos observar que os atributos A, B, C, D e E se repetem em to
 
 **1. Considere uma relação universal R = {A, B, C, D, E, F, G, H, I, J} e o conjunto de dependências funcionais F = {{A, B} → {C}, {A} → {D, E}, {B} → {F}, {F} → {G, H}, {D} → {I, J}}. Qual é a chave para R? Decomponha R em relações na 2FN e em seguida na 3FN.**
 
+A chave de R é AB, pois AB+= {ABCDEFGHIJ} possui todos os atributos da relação.
+
+Para estar em 2FN, todas os atributos devem depender completamente da chave primária, o que não é o caso, pois temos as dependências A -> DE e B -> F. Portanto, temos que decompor R em relações:
+
+R1 = {**A**,**B**,C}
+R2 = {**A**,D,E,I,J}
+R3 = {**B**,F,G,H}
+
+Mas a relação ainda não está em 3FN, pois temos dependências transitivas em R2 e R3, como em A -> D -> IJ e B -> F -> GH. Para isso temos que decompor R2 e R3.
+
+R21 = {**A**,D,E}
+R22 = {**D**,I,J}
+R31 = {**B**,F}
+R32 = {**F**,G,H}
+
 **2- Repita o exercício anterior com o seguinte conjunto de dependências funcionais G = {{A, B} → {C}, {B, D} → {E, F}, {A, D} → {G, H}, {A} → {I}, {H} → {J}}.**
 
 **3- Prove que qualquer esquema de uma relação com dois atributos está na FNBC.**
@@ -89,7 +104,9 @@ tuplas que causam violação.**
 
 **b) A relação mostrada anteriormente tem uma chave candidata? Justifique sua reposta.**
 
-**5) Considere a relação R(A, B, C, D, E) com as seguintes dependências: AB Æ C, CD Æ E, DE Æ B Existem chaves candidatas para essa relação? Justifique sua resposta.**
+**5) Considere a relação R(A, B, C, D, E) com as seguintes dependências: AB → C, CD → E, DE → B Existem chaves candidatas para essa relação? Justifique sua resposta.**
+
+Não existem chaves candidatas, pois não há nenhum fechamento que contém todos os atributos.
 
 **6) Considere a relação para livros publicados:**
 
