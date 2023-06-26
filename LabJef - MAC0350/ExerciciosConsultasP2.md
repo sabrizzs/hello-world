@@ -58,6 +58,8 @@ Exemplo: Encontrar os nomes de empregados que trabalham em todos os projetos con
 
 ## Álgebra Relacional
 
+σ π ⌧ ÷
+
 Operações da teoria de conjunto
 - Union
 - Intersection
@@ -87,6 +89,8 @@ Operações para banco de dados relacionais
        	- R ÷ S retorna todos os valores de A que estão relacionados com os valores de B em S
 
 ## Cálculo Relacional
+
+∃ ∀
 
 Exemplo de SELECT
 
@@ -299,9 +303,42 @@ Em Cálculo Relacional
 
 **a) Recuperar os nomes de empregados do departamento 5 que trabalham mais que 10 horas no projeto 'ProdutoX'.**
 
+Em Álgebra Relacional σ π ⌧ ÷
+
+	DEP5 <- σ ndep = 5 (EMPREGADO)
+	PRODX <- (σ pnome = 'ProdutoX' (PROJETO)) ⌧ pnumero = pnro TRABALHA_EM
+	EMPDEP5 <- (PRODX σ horas > 10) ⌧ nssemp = nss DEP5
+	NOMES <- π pnome, snome EMPDEP5
+
+Em Cálculo Relacional ∃ ∀
+
+	{e.pnome, e.snome | EMPREGADO(e) AND e.ndep = 5 AND
+				(∃ p,t) (PPROJETO(p) AND TRABALHA_EM(t) AND
+   				p.pnome = 'ProjetoX' AND p.pnumero = t.pnro AND
+      				t.horas > 10 AND t.nssemp = e.nss)}
+
+Em SQL
+
+	SELECT PNOME, SNOME
+ 	FROM EMPREGADO, PROJETO, TRABALHA_EM
+  	WHERE NDEP='5' AND PNOME='ProjetoX' AND PNUMERO=PNRO
+   		AND HORAS > 10 AND NSSEMP = NSS
+
 **b) Listar os nomes dos empregados que tenham um dependente com o mesmo nome (PNOME).**
 
+Em Álgebra Relacional σ π ⌧ ÷
+
+Em Cálculo Relacional ∃ ∀
+
+Em SQL
+
 **c) Encontrar os nomes de empregados que são diretamente supervisionados por 'Franklin Wong'.**
+
+Em Álgebra Relacional σ π ⌧ ÷
+
+Em Cálculo Relacional ∃ ∀
+
+Em SQL
 
 **d) Para cada projeto, listar o nome do projeto e o total de horas (de todos os empregados) gastos em cada projeto.**
 
