@@ -52,5 +52,18 @@ Assim, as entradas são os graus das disciplinas, no momento em que você se for
 
 Pergunta: como estas variáveis afetam a saída?
 
-Aplicando a regressão linear podemos analisar quais disciplinas foram mais importantes para o resultado 10 anos depois;
+Aplicando a regressão linear podemos analisar quais disciplinas foram mais importantes para o resultado 10 anos depois.
 
+### Exemplo do crédito
+
+- Classificação: aprovação de crédito (yes/no)
+- Regressão: limite de crédito (depende da entrada)
+- Input: x = dados do cliente
+- Output da regressão linear: h(x)
+  
+![image](https://github.com/sabrizzs/hello-world/assets/93349105/58a4175f-c799-448d-af7e-57cd3606bdf5)
+
+- É regressão pois a saída é real
+- É regressão linear pois a forma em termos da entrada é linear
+
+- 
