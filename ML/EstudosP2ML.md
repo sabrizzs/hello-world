@@ -79,4 +79,4 @@
    	- [24. Método Holdout](#24.-Método-Holdout)
    	- [24. Mexendo no conjunto de dados (splits)](#24.-Mexendo-no-conjunto-de-dados-(splits))
 	
-## 
+## Regressão Lin
