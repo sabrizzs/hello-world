@@ -83,3 +83,23 @@ Em regressão linear usamos o erro quadrático
 ![image](https://github.com/sabrizzs/hello-world/assets/93349105/a611379f-b5c9-4b98-a9ef-e9f74d4b1b19)
 
 - O algoritmo deve diminuir esse erro.
+
+### Illustration of linear regression
+
+- Exemplo das notas daqui 10 anos
+- Nota geral = x
+- Ganhos daqui 10 anos = y
+- Regressão linear tenta produzir uma reta que tenta se ajustar aos dados de acordo com o erro quadrático
+
+![image](https://github.com/sabrizzs/hello-world/assets/93349105/0c85c684-6564-4b63-9757-e16280d316dc)
+
+
+- Threshold depende do w0 e inclinação depende do w1 (peso para o x).
+- Soma dos erros em vermelho é a MSE
+- Regressão linear pode ser aplicada a mais de uma dimensão:
+
+![image](https://github.com/sabrizzs/hello-world/assets/93349105/17e0ae6c-9b78-4c13-a584-3b18481936c0)
+
+- Em geral, quando se considera um espaço de dimensão superior, a "linha" não é realmente uma reta é um hiperplano, uma dimensão a menos que o espaço que está sendo trabalhado.
+
+stopped at 34:16
