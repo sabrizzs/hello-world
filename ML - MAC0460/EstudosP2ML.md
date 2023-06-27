@@ -65,5 +65,21 @@ Aplicando a regressão linear podemos analisar quais disciplinas foram mais impo
 
 - É regressão pois a saída é real
 - É regressão linear pois a forma em termos da entrada é linear
+- Anteriormente lidamos com h(x) como sendo -1 e +1, agora não limitamos a saída e consideramos h(x) como um número real.
+- É importante que seja linear e resulte em um vetor (algoritmo).
 
-- 
+### Error
+
+Em regressão linear usamos o erro quadrático
+
+![image](https://github.com/sabrizzs/hello-world/assets/93349105/432cd9e3-5bc0-4792-82b9-24a5cce347a3)
+
+- Antes o erro era binário (acertou ou não), a frequência era calculada para obter Ein e Eout.
+- Agora medimos o "quão boa ou ruim a situação é".
+- Medida de erro: erro quadrático.
+- h depende de w.
+- MSE (Mean Squared Error).
+
+![image](https://github.com/sabrizzs/hello-world/assets/93349105/a611379f-b5c9-4b98-a9ef-e9f74d4b1b19)
+
+- O algoritmo deve diminuir esse erro.
