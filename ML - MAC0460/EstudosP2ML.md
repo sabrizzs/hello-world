@@ -34,16 +34,23 @@ Como Ein e Eout varia com N:
 
 - O número de exemplos necessários para atingir um certo desempenho é proporcional à dimensão VC.
 
-## Linear models
-
 - Linear classification
-   - Perceptrons 5:09
+   - Perceptrons
 
 ## Regressão Linear
 
 capítulo 3, página 82 (Mostafa)
+videoaula: https://youtu.be/FIbVs5GbBlQ?t=1299
 
+- Regressão: saída com valor real.
+- Função real: problema de regressão.
+### Exemplo 
 
+Digamos que você gostaria de relacionar o seu desempenho em diferentes tipos de disciplinas aos seus ganhos futuros. E você obteve um grau (nota) em cada uma delas. Após 10 anos após a graduação observamos a sua renda anual.
 
+Assim, as entradas são os graus das disciplinas, no momento em que você se formou. A saída é quanto dinheiro você ganha por ano, 10 anos depois.
 
+Pergunta: como estas variáveis afetam a saída?
+
+Aplicando a regressão linear podemos analisar quais disciplinas foram mais importantes para o resultado 10 anos depois;
 
