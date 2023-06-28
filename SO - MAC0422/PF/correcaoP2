@@ -1,0 +1,34 @@
+## Revisão P2 SO
+
+1/15
+
+### Questão 1
+- Falsa
+- Marquei: falsa
+- A MMU que reedita
+- o sistema operacional não viabiliza a memória virtual no reendereçamento
+- Hardware faz o endereçamento
+
+### Questão 2
+- Verdadeira
+- Área de swap: páginas que não estão na memória
+
+### Questão 3
+- Verdadeira
+- Marquei: falsa
+
+### Questão 4
+- Falsa
+- O tamanho do segmento não é de tamanho variável
+- Não dá para implementar o tamanho variável
+
+### Questão 5
+- Verdadeira
+- É a definição
+
+### Questão 6
+- Falsa
+- O número da página não diz nada sobre o segmento
+- Tem que ser o endereço do início do segmento
+- Em páginas o número da página diz sobre o endereço, pois são de tamanho fixo e é só multiplicar o tamanho pelo número do bloco
+- Em segmentação isso não é possível, pois os tamanhos dos segmnetos são variáveis
