@@ -6,6 +6,8 @@
 - Learning From Data, Mostafa: https://edisciplinas.usp.br/pluginfile.php/7566295/mod_resource/content/1/learningrf.pdf
 - Python Machine Learning, Sebastian
 
+- SVM https://www.youtube.com/watch?v=eHsErlPJWUU&list=PLD63A284B7615313A&index=14&ab_channel=caltech
+
 ## Dúvidas
 
 - É importante saber as contas do gradiente de Ein?
