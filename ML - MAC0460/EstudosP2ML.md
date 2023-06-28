@@ -1,10 +1,15 @@
 # Machine Learning
 
 - Aulas da Nina: https://edisciplinas.usp.br/course/view.php?id=86532
-- Aulas do livro Learning from Data: https://edisciplinas.usp.br/course/view.php?id=73852
+- Aulas do livro Learning from Data: https://www.youtube.com/watch?v=mbyG85GZ0PI&list=PLD63A284B7615313A&ab_channel=caltech
 
 - Learning From Data, Mostafa: https://edisciplinas.usp.br/pluginfile.php/7566295/mod_resource/content/1/learningrf.pdf
 - Python Machine Learning, Sebastian
+
+## Dúvidas
+
+- É importante saber as contas do gradiente de Ein?
+  - Descobri por conta própria que é importante para o algoritmo da regressão linear
 
 ## Conceitos anteriores
 
@@ -36,6 +41,8 @@ Como Ein e Eout varia com N:
 
 - Linear classification
    - Perceptrons
+- Linear regression
+   - one step learning
 
 ## Regressão Linear
 
@@ -44,6 +51,7 @@ videoaula: https://youtu.be/FIbVs5GbBlQ?t=1299
 
 - Regressão: saída com valor real.
 - Função real: problema de regressão.
+
 ### Exemplo 
 
 Digamos que você gostaria de relacionar o seu desempenho em diferentes tipos de disciplinas aos seus ganhos futuros. E você obteve um grau (nota) em cada uma delas. Após 10 anos após a graduação observamos a sua renda anual.
@@ -102,4 +110,105 @@ Em regressão linear usamos o erro quadrático
 
 - Em geral, quando se considera um espaço de dimensão superior, a "linha" não é realmente uma reta é um hiperplano, uma dimensão a menos que o espaço que está sendo trabalhado.
 
-stopped at 34:16
+### Erro interno (Ein)
+
+![Alt text](image-4.png)
+
+- Expressão analítica que queremos minimizar
+- Do Ein derivamos o algoritmo de regressão linear
+
+![Alt text](images/image1.png)
+
+- Como é uma regressão linear, o valor h(xn) é w transposto xn (função linear do xn).
+
+![Alt text](images/image2.png)
+
+- Forma vetorial:
+
+![Alt text](images/image.png)
+
+- Colocamos os vetores xn em uma matriz e os yn em um vetor
+- O yi é a saída de cada vetor xi
+
+![Alt text](images/image-1.png)
+
+- X é uma matriz muito alta
+
+#### Minimização do Ein
+
+- Estamos apenas variando **w**, Ein depende de w
+- Para tentar minimizar:
+  - obtemos a derivada e igualamos a 0
+  - derivada conhecida como **gradiente**
+  - gradiente é a derivada de vários Ein, todos de uma vez
+  - vetor de 0, todas as derivadas são zero de uma vez
+  - isto vai definir um ponto em que essa expressão atinge um mínimo
+
+![Alt text](images/image-2.png)
+
+- Para que os termos nos parenteses se cancelem e a derivada seja zero temos:
+
+![Alt text](images/image-3.png)
+
+- Ordenando essa igualdade temos o valor de w, que é o que procuramos
+
+![Alt text](images/image-5.png)
+
+### Learning Algorith da Regressão Linear - Adaline
+
+![Alt text](images/image-6.png)
+
+### Generalization issues
+- Procurar o vetor w na regressão linear garante um Eout decente? A resposta é sim.
+- Existe uma versão da regressão linear do VC generalization bound
+
+![Alt text](image-9.png)
+
+### Linear regression for classification
+
+- A regressão linear aprende uma função real
+- Funções binárias (funções de classificação) também são funções reais (-1 e +1 são números reais)
+- Usamos regressão linear e verificamos se o conjunto de soluções está próximo do conjunto yn em questão de sinais positivo e negativo
+
+![Alt text](images/image-8.png)
+
+- O classificador final é obtido depois de um threshold
+
+![Alt text](images/image-7.png)
+
+- Perceptron é lento, pois usa um w aleatório até chegar à região de interesse para convergir
+- Então podemos usar a regressão linear para obter os w's, que são razoáveis mas não estão realmente adaptados para classificação, mas são bons para iniciar
+
+## Regressão Logística
+
+videoaula: https://youtu.be/qSTHZvN8hzs?t=1442
+
+### Comparando modelos lineares
+
+- Ser linear significa que nós consideramos as suas entradas, calculamos um sinal s que é uma combinação linear da entrada com pesos, e então eu considero o s e efetuo uma operação nele.
+
+![Alt text](image-10.png)
+
+- A operação poderia ser a **classificação linear** (os perceptrons). 
+  - A hipótese é uma decisão +1 ou -1 e essa decisão é um limiar direto do sinal com relação ao zero.
+
+![Alt text](image-11.png)
+
+![Alt text](image-12.png)
+
+- Também poderia ser a **regressão logística** (Adaline). 
+  - Não fazemos nada com o sinal, deixamos o valor original em número real
+
+![Alt text](image-13.png)
+
+- E agora temos a **regressão logística**. 
+  - Consideramos o s e aplicamos uma não linearidade a ele. 
+  - A não linearidade (teta) não é tão rígida quanto a classificação linear, é algo entre a classificação linear e a regressão linear
+  - Devolve um valor real
+  - A saída será interpretada como uma probabilidade
+
+![Alt text](image-14.png)
+
+### The logistic function Θ
+
+stopped: https://youtu.be/qSTHZvN8hzs?t=1661
