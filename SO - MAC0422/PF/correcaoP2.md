@@ -1,6 +1,6 @@
 ## Revisão P2 SO
 
-1/15
+6/15
 
 ### Questão 1
 - **Falsa**
@@ -67,7 +67,121 @@
 - Motivação da memória segmentada
 
 ### Questão 14
-
-
+- Verdadeira
+- SO é mapeado para dentro do programa
 
 ### Questão 15
+- **Falsa**
+- Marquei: falsa
+
+### Questão 16
+- **Falsa**
+- Marquei: falsa, mas justifiquei errado
+- TLB é indexada pelo conjunto página-segmento, número do bloco virtual que inclui todos os níveis de páginas
+- A TBL é associada ao conjunto inteiro
+
+### Questão 17
+- Verdadeira
+
+### Questão 18
+- Verdadeira
+
+### Questão 19
+- Verdadeira
+- Estratégia de reposição
+
+### Questão 20
+- Verdadeira
+- FIFO usa bit de acesso
+
+### Questão 21
+- **Falsa**
+- Não pode zerar o dirty bit
+
+### Questão 22
+- Verdadeira
+- Marquei: falsa
+- Protection bit é essencial
+
+### Questão 23
+- Verdadeira
+
+### Questão 24
+- Verdadeira, mas aceita como **falsa** se falar que existe páginas invertidas
+- Marquei: não lembro o que coloquei, mas não foi verdadeira
+
+### Questão 25
+- Verdadeira
+
+### Questão 26
+- Verdadeira
+- Existem hardwares que possuem TLB para hardware e TLB para dados
+
+### Questão 27
+- Verdadeira
+- ARM e Intel
+
+### Questão 28
+- Verdadeira
+
+### Questão 29
+- Verdadeira, mas pode ser considerada **falsa** por causa do DAG
+- Marquei: falsa
+
+### Questão 30
+- Falsa
+- Indexado é por chave
+- seek() é acesso aleatório
+
+### Questão 31
+- Não peguei a resposta, talvez seja verdadeira
+
+### Questão 32
+- **Falsa**, por dois motivos
+- O tipo de arquivo fica no número mágico dos primeiros bytes do arquivo
+
+### Questão 33
+- Verdadeira
+
+### Questão 34
+- Verdadeira
+
+### Questão 35
+- Falsa
+- Nome simbólico tem um problema seríssimo de ter que acessar totalmente o caminho do arquivo, é muito custoso
+
+### Questão 36
+- Verdadeira
+
+### Questão 37
+- Verdadeira
+- Nem todos os discos precisam ter MBR
+
+### Questão 38
+- Verdadeira
+
+### Questão 39
+- Verdadeira
+
+### Questão 40
+- Não peguei a resposta
+
+### Questão 41
+- Verdadeira, mas prof aceitou uma questão como falsa
+- Marquei: falsa, mas não sei se minha resposta conta
+
+### Questão 42
+- Falsa
+- Marquei: falsa!
+
+### Questão 43
+- Verdadeira
+
+### Questão
+- Falsa
+- Não existe setor de lixo em RAID
+
+### Questão 45
+- Falsa
+- Não tem nenhuma proteção contra vírus
+- Feitos para lidar com falha de hardware
