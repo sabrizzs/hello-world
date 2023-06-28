@@ -162,7 +162,7 @@ Em regressão linear usamos o erro quadrático
 - Procurar o vetor w na regressão linear garante um Eout decente? A resposta é sim.
 - Existe uma versão da regressão linear do VC generalization bound
 
-![Alt text](image-9.png)
+![Alt text](images/image-9.png)
 
 ### Linear regression for classification
 
@@ -187,19 +187,19 @@ videoaula: https://youtu.be/qSTHZvN8hzs?t=1442
 
 - Ser linear significa que nós consideramos as suas entradas, calculamos um sinal s que é uma combinação linear da entrada com pesos, e então eu considero o s e efetuo uma operação nele.
 
-![Alt text](image-10.png)
+![Alt text](images/image-10.png)
 
 - A operação poderia ser a **classificação linear** (os perceptrons). 
   - A hipótese é uma decisão +1 ou -1 e essa decisão é um limiar direto do sinal com relação ao zero.
 
-![Alt text](image-11.png)
+![Alt text](images/image-11.png)
 
-![Alt text](image-12.png)
+![Alt text](images/image-12.png)
 
 - Também poderia ser a **regressão logística** (Adaline). 
   - Não fazemos nada com o sinal, deixamos o valor original em número real
 
-![Alt text](image-13.png)
+![Alt text](images/image-13.png)
 
 - E agora temos a **regressão logística**. 
   - Consideramos o s e aplicamos uma não linearidade a ele. 
@@ -207,7 +207,7 @@ videoaula: https://youtu.be/qSTHZvN8hzs?t=1442
   - Devolve um valor real
   - A saída será interpretada como uma probabilidade
 
-![Alt text](image-14.png)
+![Alt text](images/image-14.png)
 
 ### The logistic function Θ
 
