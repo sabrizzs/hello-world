@@ -3,7 +3,7 @@
 1/15
 
 ### Questão 1
-- Falsa
+- **Falsa**
 - Marquei: falsa
 - A MMU que reedita
 - o sistema operacional não viabiliza a memória virtual no reendereçamento
@@ -18,7 +18,7 @@
 - Marquei: falsa
 
 ### Questão 4
-- Falsa
+- **Falsa**
 - O tamanho do segmento não é de tamanho variável
 - Não dá para implementar o tamanho variável
 
@@ -27,8 +27,16 @@
 - É a definição
 
 ### Questão 6
-- Falsa
+- **Falsa**
 - O número da página não diz nada sobre o segmento
 - Tem que ser o endereço do início do segmento
 - Em páginas o número da página diz sobre o endereço, pois são de tamanho fixo e é só multiplicar o tamanho pelo número do bloco
 - Em segmentação isso não é possível, pois os tamanhos dos segmnetos são variáveis
+
+### Questão 7
+- Falsa, prof achava que estava certa
+- Falta o endereço na memória real
+
+### Questão 8
+- Falsa
+- Não é possível desfragmentar a paginação, pois é fragmentação interna.
