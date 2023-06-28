@@ -34,9 +34,40 @@
 - Em segmentação isso não é possível, pois os tamanhos dos segmnetos são variáveis
 
 ### Questão 7
-- Falsa, prof achava que estava certa
+- **Falsa**, prof achava que estava certa
 - Falta o endereço na memória real
 
 ### Questão 8
-- Falsa
+- **Falsa**
 - Não é possível desfragmentar a paginação, pois é fragmentação interna.
+- Somente é possível desfragmentar a segmentação externa
+
+### Questão 9
+- Verdadeira
+- Marquei: falsa
+- A TLB é o hardware específico
+
+### Questão 10
+- **Falsa***
+- Não é um trecho da tabela, é uma entrada individual
+- São entradas completamente separadas
+- Não está na cache
+- É um hardware específico
+- Caro de fazer, por isso é pequeno
+
+### Questão 11
+- Verdadeira
+
+### Questão 12
+- Verdadeira
+- Definição de mapeamento N associativo
+
+### Quetão 13
+- Verdadeira
+- Motivação da memória segmentada
+
+### Questão 14
+
+
+
+### Questão 15
