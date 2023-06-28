@@ -1,6 +1,6 @@
 ## Revisão P2 SO
 
-6/15
+9/15
 
 ### Questão 1
 - **Falsa**
@@ -35,6 +35,7 @@
 
 ### Questão 7
 - **Falsa**, prof achava que estava certa
+- Marquei: falsa, mas justificativa pode estar errada
 - Falta o endereço na memória real
 
 ### Questão 8
@@ -108,7 +109,7 @@
 
 ### Questão 24
 - Verdadeira, mas aceita como **falsa** se falar que existe páginas invertidas
-- Marquei: não lembro o que coloquei, mas não foi verdadeira
+- Marquei: falsa, mas errei a justificativa
 
 ### Questão 25
 - Verdadeira
@@ -134,7 +135,8 @@
 - seek() é acesso aleatório
 
 ### Questão 31
-- Não peguei a resposta, talvez seja verdadeira
+- Falsa
+- Marquei: falsa, mas errei a justificativa
 
 ### Questão 32
 - **Falsa**, por dois motivos
@@ -152,6 +154,7 @@
 
 ### Questão 36
 - Verdadeira
+- Marquei: falsa
 
 ### Questão 37
 - Verdadeira
@@ -162,22 +165,23 @@
 
 ### Questão 39
 - Verdadeira
+- Marquei: falsa
 
 ### Questão 40
-- Não peguei a resposta
+- Falsa
 
 ### Questão 41
-- Verdadeira, mas prof aceitou uma questão como falsa
+- Verdadeira, mas prof aceitou uma questão como **falsa**
 - Marquei: falsa, mas não sei se minha resposta conta
 
 ### Questão 42
-- Falsa
+- **Falsa**
 - Marquei: falsa!
 
 ### Questão 43
 - Verdadeira
 
-### Questão
+### Questão 44
 - Falsa
 - Não existe setor de lixo em RAID
 
