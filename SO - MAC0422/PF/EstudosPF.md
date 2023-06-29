@@ -1,6 +1,6 @@
 # PF
 
-parei: 238
+parei: 242/259
 
 slides: 1 - 229 - 259 ; 380 - 403 (ao todo cerca de 60 slides)
 
@@ -159,8 +159,37 @@ respostas das provas: https://docs.google.com/document/d/1htvzhlW3EPrYwOh2mBsPRA
     - Variação – inodes no meio do disco
 
     ![Alt text](image-3.png)
-    
+
 ## Sistemas de arquivos estruturados como logs
+
+Log-strutured file systems –LSU (Berkeley)
+
+- Aumento da diferença de performance motivou aumento das caches
+- Enorme aumento das memórias (secundária maior e barata mas lenta, primárias crescendo exponencialmente)
+- Caches devem conter porcentagem cada vez maior dos acessos
+- Maioria dos acessos ao disco serão para escrita, pois leitura será feita na cache
+- Porém – escritas em geral são pequenas (pense em um print) e por isso custam muito para tão pouco
+
+- Ex: criar arquivo em Unix
+    - O i-node do diretório, o bloco do diretório, o i-node do arquivo e o arquivo precisam ser gravados no primeiro write, imediatamente para evitar inconsistência.
+- Adiar estas escritas pode comprometer consistência.
+
+- Sistemas de arquivos são estruturados como buffers circulares
+- Todas as escritas são inicialmente colocadas em buffer na memória
+- Periodicamente, todas as informações postas no buffer são escritas no disco, em um único segmento, no final do log. 
+- Agora, a abertura de um arquivo consiste em usar o mapa para localizar o i-node do arquivo
+- Uma vez localizado o i-node, os endereços dos blocos podem ser encontrados a partir dele.
+- Todos os blocos estarão, eles próprios, em segmentos, em algum lugar no log
+- Blocos continuam no disco, mas em segmentos.
+- Neste esquema segmentos podem conter blocos obsoletos.
+- Cleaner: (buffer circular)
+    - Blocos escritos de volta em novos segmentos
+    - Inicialmente verifica no segmento quais i-nodes e arquivos estão lá (no sumário)
+    - Verifica mapa dos i-nodes para descobrir quais i-nodes do segumento ainda válidos e quais blocos ainda ativos.
+    - Copia informação ainda válida em novo segmento, livra o segmento atual.
+- Para reconstruir sistema de arquivos após crash, basta iniciar do último ponto consistente do log
+- Para livrar espaço atrás: pula versões antigas, se encontra última versão, move para o início
+- Muito mais eficiente que UNIX para escritas pequenas, e igual ou superior para leituras e escritas grandes
 
 ## Segurança
 
