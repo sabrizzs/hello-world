@@ -1,10 +1,54 @@
 # PF
 
-parei: 242/259
+parei: 1/229
 
 slides: 1 - 229 - 259 ; 380 - 403 (ao todo cerca de 60 slides)
 
 respostas das provas: https://docs.google.com/document/d/1htvzhlW3EPrYwOh2mBsPRAcDP2JfZFJfiu5Z6QvfnTY/edit?pli=1
+
+## Dúvidas
+
+- TIME: requires a contex mode switch to kernel-mode
+
+# Matéria P1
+
+## Conceitos e história
+
+- Sistema computacional/ Arquitetura de um computador
+    - Barramentos: trilhas de comunicação, uma mensagem de cada vez
+    - CPU: unidade central de processamento
+        - Processador: program counter (PC), pilha, status...
+    - Memória primária: memória RAM por exemplo
+    - Mmemória secundária: HD por exemplo, memória persistente
+    - Dispositivos de E/S: discos, vídeo, teclado, ...
+        - CPU não se comunica com o dispositivo e sim com o controlador
+
+- Importância do SO
+    - Suporte para as aplicações
+    - Tradutor para as aplicações se comunicarem com o hardware
+    - Usuário -> Aplicação -> Rotina de E/S -> Hardware
+
+- Processamento: dois tipos de SO
+    - Monoprogramação: único programa fica na RAM até seu fim
+        - Recursos mal utilizados, ociosidade
+        - Três estados: execução nova -> executando -> terminada
+        - Simples
+    - Multiprogramação: vários programas dentro do sistema, compartilham tempo de CPU e recursos
+        - Menos ociosa
+        - Tarefas simultâneas (vários cores)
+        - Enquanto uma espera, outra roda
+        - Trocas rápidas de processos
+        - Sistemas batch (em lotes)
+            - lote de programas de uma vez
+            - sem interação com o usuário
+        - Sistemas de tempo compartilhado
+        
+        - Sistemas de tempo real (tempo estipulado)
+
+
+# Matéria P2
+
+# Matéria PF
 
 ## Confiabilidade do sistema de arquivos
 
@@ -193,4 +237,205 @@ Log-strutured file systems –LSU (Berkeley)
 
 ## Segurança
 
+- Segurança vs. Proteção
+    - Segurança é o problema geral
+    - Proteção são os mecanismos para garantir a informação no sistema
+- Objetivos com ameaças
+    - Confidencialidade dos dados
+        - Sistema deve garantir que dados de usuário só serão conhecidos com sua permissão
+    - Integridade dos dados
+        - Usuários não autorizados não devem poder modificar dados sem permissão (inclui remoção e adição de dados)
+    - Disponibilidade
+        - Ninguém deve conseguir perturbar o sistema a ponto de tornar acesso aos dados impossível (denial of service), tornar o sistema inútil.
+    - Privacidade
+        - Proteger usuários do uso indevido de informações a seu respeito (padrões de uso, etc.)
+
+- Intrusos
+    - Usuários não autorizados no sistema
+    - Passivos vs. Ativos: apenas olham os dados ou tentam modificá-los
+    - 4 tipos de intruso
+        - Curiosos ocasionais: pessoas com pouco conhecimento que xeretam arquivos não protegidos (e.g. em Unix é comum arquivos serem criados com permissão de leitura universal)
+        - “xeretas descolados”: pessoas que são usuários do sistema que consideram desafio pessoal conseguir quebrar a segurança da informação. Em geral são muito habilidosos e dispostos a usar muito tempo na tarefa
+        - Estelionatários: programadores em bancos. Ameaças incluem truncar (e não arredondar) transações, uso de fundos de contas inativas, chantagem
+        - Espionagem comercial ou militar: esforços sérios e muito bem financiados para roubar programas, informações, tecnologia, etc. Iniciativas podem envolver escuta de linhas de transmissão, antenas para detectar sinais eletromagnéticos do computador 
+    - Esforço dedicado à segurança deve ser proporcional à qualidade do possível intruso e do potencial dano a ser infringido.
+
+- Programas maliciosos
+    - Virus: pedaço de código que pode se reproduzir introduzindo uma cópia de si mesmo em outros programas e causar vários danos
+        - Destruição de informação
+        - Envio de informação privada
+        - Inserção de informação
+        - ‘Denial of service’: consome recursos do sistema a ponto de torná-lo inutilizável (CPU, disco, canais de comunicação, serviços...)
+        - DDOS (Distributed Denial of Service): virus tem duas fases, reprodução, onde se espalha pela rede, e ataque. Em data pré determinada todas as cópias “acordam” e iniciam ataque (ex. Webpage específica).
+    - Key logger: monitora teclado procurando padrões (e.g. Conta de email seguida de sequencia de caracteres.....)
+    - Worm: diferente do virus, que está incluído em outro programa/arquivo, é um programa independente
+        - Worm pode se colocar no “startup directory”
+    - Cavalo de Troia: programa que desempenha uma função mas que esconde funcionalidade secundária (lançar um worm, inserir virus, bisbilhotar sistema de arquivos, etc.) Em geral baixados voluntariamente.
+    - Bomba lógica: programa elaborado por programador do sistema que exigem senha periódica. Se não receber a senha a bomba é “detonada” ações podem envolver todo o tipo de dano como remoção de arquivos (aleatória ou não), encriptação de arquivos, mudanças difíceis de detectar em programas importantes, etc.
+    - Spyware: obtido visitando-se sites na web,
+        - Cookies usado para identificar o usuário e coletar informações sobre quais sites ele visitou, etc.
+        - Plugins maliciosos instalados pelo usuário
+    - Multics (cavalo de tróia)
+        - Não havia nenhuma segurança pra processamento BATCH (sistema foi feito para usuários interativos, processamento BATCH adicionado depois)
+        - Qualquer um podia submeter programa batch que lia conjunto de cartões (sim, cartões de computador, faz tempo....) e copiava seu conteúdo no diretório de QUALQUER usuário
+        - Para roubar arquivos de um usuário era só modificar fontes de um editor de texto, recompilá-lo e substituir código objeto do editor original no diretório bin do usuário
+        - seria possível fazer isso no seu diretório? – CUIDADO COM PERMISSÕES DE DIRETÓRIO
+
+- Segurança: história
+    - TENEX (popular nos sistemas DEC-10)
+        - Um sistema com memória paginada, mas para auxiliar usuários em monitoração era possível mandar o S.O. chamar uma rotina de usuário a cada falha de página
+        - Acesso a arquivos era controlado por senhas, que eram verificadas um caracter por vez, parando no primeiro caracter inválido.
+        - Para violar senhas o usuário deveria colocar uma senha com o primeiro caracter em uma página da memória e caracteres seguintes na próxima página.
+        - Em seguida usuário deveria certificar-se que próxima página não estava na memória (bastava fazer várias referências a outras páginas distintas)
+        - Quando programa tentava abrir um arquivo, se primeiro caracter estivesse errado, sistema retornaria mensagem de senha inválida., senão quando ocorresse a falha de página a rotina do usuário informaria o fato
+        - No máximo 128 tentativas para adivinhar cada caracter da senha
+        - N*128 tentativas (ao invés de 128N)
+
+    - OS 360
+        - Era possível começar uma transferência de dados de uma fita e continuar computando enquanto transferência era feita em paralelo
+        - O truque era começar uma transferência e então emitir uma chamada de sistema para ler/modificar um arquivo dando seu nome e a senha, fornecidos na área de usuário
+        - Sistema de arquivos primeiro verificava se a senha estava correta e, em seguida, relia o nome do arquivo a ser aberto (não guardava internamente o nome do arquivo).
+        - Truque estava em sincronizar transferência da fita para que o nome do arquivo fosse substituído na memória pelo nome de um outro arquivo qualquer no intervalo entre a verificação da senha e a releitura do nome.
+        - Cronometragem correta não era muito difícil de se conseguida e podia ser tentada automaticamente por programas
+
+    - Unix:
+        - Arquivos de senhas tinham leitura pública. Algoritmo “one way” usado para encriptar senhas. Usuários podiam olhar arquivos e testar listas de senhas prováveis aplicando algoritmo e vendo se codificação da senha batia (nomes, dicionários, datas...)
+        - Lpr tem uma opção para remoção do arquivo após sua impressão. Versões iniciais do Unix permitiam que qualquer um imprimisse e depois removesse arquivo de senhas.
+        - Usuário podia linkar arquivo com nome “core” no seu diretório ao arquivo de senhas. O intruso então forçava um “core dump”de um programa com SETUID. O sistema escrevia o dump no arquivo “core”, substituindo o arquivo de senhas do sistema
+        - Mkdir foo : mkdir é um programacom SEUID cujo dono é o root. Mkdir primeiro cria o i-node para foo, e após isso muda o “dono” do arquivo do UID efetivo (root) para o real (usuário). Se o sistema fosse lento era possível ao usuário remover o i-node de “foo” após o mknod, mas antes do chown e trocá-lo por outro no arquivo de dietório. Invasor podia assim se apropriar de arquivos de sistema (login, senhas, etc.). Colocando programas numa shellscript tentativa podia ser repetida até funcionar
+
+    - 1988 – Robert T. Morris (Cornell) – verme com 2 programas: o comando de bootstrap e o verme em si.
+        - Programa de bootstrap tinha 99 linhas em C, compilado e executado no sistema sob ataque
+        - Uma vez rodando, conectava-se à máquina de origem e carregava o verme principal, executando-o
+        - Após algumas etapas de camuflagem consultava tabelas de roteamento de seu hospedeiro e tentava espalhar o comando de boostrap nestas.
+        - Na máquina hospedeira tentava quebrar senhas de usuário, usando técnicas de artigo clássico da área de 1979. A cada usuário invadido, espalhava-se pelas máquinas onde este usuário
+        tinha contas.
+        - Lotou a rede em 1988 e derrubou inúmeros sistemas
+        - Defesa argumentou que não foi malicioso e que era apenas um experimento (!!!)
+    - Motivou a criação do CERT (Computer Emergency Response Team)
+
+- Segurança: ataques
+    - Todo o S.O. tem lacunas. Maneira normal de se testar é uso de times de invasão (peritos contratados ou desafio)
+    - Ataques mais comuns:
+        1. Requisitar páginas de memória, espaço em disco e simplesmente investigar o conteúdo: muitos sistemas não apagam o conteúdo, apenas reutilizam
+        2. Tentar chamadas de sistema ilegais, ou chamadas legais com parâmetros legais, mas improváveis.
+        3. Faça o login e então pressione DEL, RUBOUT, BREAK no meio da sequência de login, o sistema pode matar o programa de login e deixá-lo entrar
+        4. Tente modificar estruturas do SO mantidas no espaço de usuário (caso existam)
+            - Em algum sistemas, por exemplo, ao abrir arquivo, vários parâmetros mantidos em área de usuário. Modificação destes parâmetros DURANTE a leitura pode afetar segurança 
+
+        1. Criar programa falso de login que registra username e senha do usuário antes de fazer um login.
+        2. Olhe nos manuais onde diz: “não faça X” e tente todas as possíveis variações de X.
+        3. Porta dos fundos: covença ($$$$) programador de sistema para liberar controle de segurança de sua conta
+        4. Suborno (diretor do centro de computação, secretária)
+
+- Segurança: princípios de segurança
+    - Design de um sistema deve ser público:
+        - Supor que o intruso não vai saber como funciona o sistema é uma ilusão (pior ainda nos dias de hoje, com web)
+        - Depender de um sistema privado para manter o sigilo das informações não é bom
+    - A ação padrão deve ser sempre negar o acesso. Erros nos quais um acesso autorizado é negado são relatados mais rapidamente do que casos de permissão de acesso não autorizado
+    - Faça verificação contínua de permissões
+        - Ex. Usuário pode abrir arquivo e mantê-lo aberto por semanas, mesmo depois que o dono mudar as permissões.
+    - A cada processo deve ser dado o mínimo possível de privilégios. Se um editor só puder acessar os arquivo que está sendo editado, por exemplo, ataques tipo “cavalo de tróia” são impedidos
+    - Mecanismo de proteção deve ser simples, uniforme e implantado nas camadas mais internas do sistema
+    - Mecanismos devem ser de fácil aceitação: usuário não adotam procedimentos muito complexos e mesmo assim ficam contrariados quando acontece acesso não autorizado.
+
+- Segurança: controle de acesso
+    - Senhas
+        - Fácil de quebrar pois difícil forçar usuário a escolher boas senhas
+        - Bloqueio de senhas fáceis
+        - Substituição periódica obrigatória
+        - Variação: perguntas e respostas armazenados no sistema
+        - Variação: resposta a desafio – algoritmos pré escolhidos (ex x^2), computador faz perguntas periódicas e espera resposta da aplicação do algoritmo.
+    - Identificação física
+        - Digitais
+        - Comprimento de dedos
+        - Identificação de retina
+
+- Segurança: contramedidas
+    - Delays no processo de login dificultam tentativas exaustivas. Delays crescentes melhor
+    - Registro de todos os logins: ataques podem ser detectados por logins falhos sucessivos de alguma fonte
+    - Armadilhas:
+        - login fácil com senha fácil (silva, 1234): login nestas contas alertam administradores que podem monitorar uso
+        - Bugs fáceis de achar
+
+- Mecanismos de Proteção: domínios de proteção
+    - Domínio = (objeto, direitos de acesso)
+        - Cada par especifica um objeto e algum subconjunto das operações que podem ser efetuadas nele.
+    - Objeto: entidade do S.O. (arquivo, etc.)
+    - Direitos: (permissões para efetuar cada operação relativa ao objeto)
+    - A cada momento processo executa em um domínio de proteção:
+        - Há coleção de objetos que ele pode acessar, cada um com conjunto de direitos.
+        - Domínio pode ser mudados
+        - Dois processos com mesmo domíno tem mesmo acesso
+    - Ex: Unix:
+        - domínio é UID (user ID) e GID (group ID).
+        - Setuid muda domínio
+            - SETUID: ao executar o executável, ele definirá suas permissões para as do usuário que o criou (proprietário)
+        - Conceitualmente existe grande “matriz de domínios”
+
 ## Threads
+
+### Processes and Threads
+- Multithreading (diferente de multiprogramação)
+	- Cada processo tem uma linha de execução
+- Tabela de threads e tabela de processos
+
+### Threads
+- Os processos são usados para agrupar recursos; as threads são as entidades programadas para execução na CPU.
+- Qualquer processo deve possuir pelo menos uma thread
+- Modelo da thread:
+    - Um espaço de endereçamento e múltiplas linhas de controle
+- Um processo possui um espaço de endereçamento
+- A thread como está dentro do processo compartilha o espaço de endereçamento
+- Mas não compartilha PC (contador de programa - proxima instrução a ser executada), registradores, pilha
+- o SO cria mecanismos para evitar concorrência de recursos (espaço de endereçamento)
+- Mais rápidas de criar e destruir que processos
+- Ponteiro de pilha e ponteiro de instrução
+- Cada thread está ligada a um processo só
+- Um processo pode ter várias threads
+- Área de memória comum para cooperar entre threads
+	- Em geral acaba usando memória compartilhada
+- Possuem estado de execução (executando, pronto, bloqueado, ...)
+
+### Itens
+
+![Alt text](image-4.png)
+
+### One or more threads in a Process
+- Cada thread tem sua pilha de execução
+    - Seu contador de programa, registradores e estado de execução
+- Área por thread para guardar váriaveis locais
+- Paralelismo real
+
+### Benefits using threads
+- Muito mais rápido que criar um processo
+- Menos recurso liberado quando ela morre
+- Mudar entre threads tem menor tempo que mudar entre processos
+
+- Se um processo é suspenso, todas as threads dos processos também são suspensas
+	- O processo inteiro é suspenso para "suspender uma thread"
+- Thread não tem fork, tem spawn, "uma brota da outra"
+
+### Problems using threads
+- Mesmo espaço de endereçamento gera concorrência 
+
+### Types of threads
+- Nível de usuário (ULTs): simulação de uma thread
+    - Gerenciamento feito pelo programa
+	- Não tem multiprocessamento, só há quando o kernel sabe sobre o multiprocessamento
+    - Criação e escalonamento são realizados sem o conhecimento do kernel
+    - Kernel visualiza como um programa mono-thread, e gerencia como processo
+    - Modo usuário, espaço de endereçamento do usuário
+    - Toda a gerencia da thread fica a nivel de usuário
+    - Controla apenas as propriedades da thread
+    - A thread não consegue ser visualizada a nivel de kernel, o kernel só escalona a nivel de processo, o processo no nivel de usuario que escalona as threads
+- Nível de Kernel: entrada nova na tabela de processos
+	- Kernel gerencia o escalonamento de cada thread
+    - Suportadas diretamente pelo SO
+    - Criação, escalonamento e gerenciamento pelo kernel
+    - O SO não sabe sobre a quantidade de threads, então não há como escalonar com base em quantas threads existem, desvantagem.
+    - O SO pode escalonar diferentes threads de diferentes processos
+    - TIME: requires a contex mode switch to kernel-mode, disavantage
+
+### Models
+- N:1 - N threads a nivel de usuário que são mapeadas para uma única thread a nivel de kernel
