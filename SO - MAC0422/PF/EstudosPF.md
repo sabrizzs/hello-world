@@ -1,8 +1,8 @@
 # PF
 
-parei: 1/229
+parei: 82/229
 
-slides: 1 - 229 - 259 ; 380 - 403 (ao todo cerca de 60 slides)
+slides: 1 - 152 - 229 - 259 ; 380 - 403 (ao todo cerca de 60 slides)
 
 respostas das provas: https://docs.google.com/document/d/1htvzhlW3EPrYwOh2mBsPRAcDP2JfZFJfiu5Z6QvfnTY/edit?pli=1
 
@@ -45,6 +45,7 @@ respostas das provas: https://docs.google.com/document/d/1htvzhlW3EPrYwOh2mBsPRA
             - sem interação com o usuário
         - Sistemas de tempo compartilhado  
         - Sistemas de tempo real (tempo estipulado)
+            - Tempo é um fator crítico
         - Mais sofisticado, mais processamento
 
 - Estruturas do SO
@@ -69,14 +70,177 @@ respostas das provas: https://docs.google.com/document/d/1htvzhlW3EPrYwOh2mBsPRA
     - Altera do modo usuário para modo kernel
         - Ler um arquivo
     - Exemplos:
-        - printf
+        - printf (write() e exit() na tela ou no arquivo)
         - fork (criação de processo)
     - Chamadas de sistemas são realizadas por instruções Traps
         - Pega a requisição do usuário, identifica o endereço da chamada e processa  as intruções no sistema operacional
-        - Interrupções de software
+        - Interrupções em nível de software
         - Aplicação para a execução e depois da chamada continua a execução de onde parou
             - Salva registradores
+    - Interfaces das syscalls
+        - Aplicações utilizam API
+        - Disfarçar complexidade
+        - POSIX: padrões de interface
 
+- Interrupções
+    - Nível de software temos traps
+        - Traps (chamadas de sistema)
+        - De dentro do processador para fora
+    - Nível de hardware temos interrupções
+        - Dispositivos de E/S
+        - Clock
+        - Sinais elétricos
+        - De fora do processador para dentro
+        - Procura rotina de tratamento de interrupção
+        - Procura o que causou a interrupção
+        - Mesmo esquema de traps
+
+## Processos
+
+- Programa em execução
+- Instância de um programa
+- Código acompanhado de dados e estado
+- Possui dados de entrada, dados de saída e um estado
+- 3 Estados:
+    - Executando
+        - Manuseia o processador
+        - Tem a CPU
+    - Bloqueado
+        - Chamada de sistema ou interrupção
+        - Incapaz de executar enquanto um evento externo não ocorrer
+        - Está esperando algo
+    - Pronto
+        - Possui tudo menos CPU
+        - Aguardando disponibilidade
+    - Também pode ter 5 com o Suspenso:
+        - Suspenso bloqueado
+        - Suspenso pronto
+- Componentes do processo:
+    - Conjunto de instruções
+    - Espaço de endereçamento
+        - Espaço reservado para ele trabalhar
+    - Contexto de hardware
+        - Valor nos registradores (PC), ponteiro de pilha, etc
+    - Contexto de software
+        - Atributos em geral, recursos
+- Espaço de endereçamento
+    - Text: código executável
+    - Data: variáveis temporárias armazenadas
+    - Stack: controla execução
+
+    ![Alt text](image-5.png)
+
+    - Gap entre stack e data, para proteger caso a pilha "vaze" por causa do tamanho menor do que o que ela armazena
+
+- Tabela de processos
+    - Múltiplos processos em execução
+    - Elementosdo contexto de cada processo:
+        - Ponteiros de arquivos abertos, posição do byte a ser lido, etc
+    - Tabela de processos tem entrada para tabela de endereços de cada processo, para a tabela não ficar extensa
+
+- Características de processos
+    - CPU-bound: processos que utilizam mais CPU
+    - I/O-bound: processos que utilizam mais dispositivos de E/S
+    - O ideal é ter um balanceamento entre esses dois tipos
+
+- Formas de criação de processos
+    - Inicialização do sistema
+    - Execução de uma system call
+    - Requisição de novo processo pelo usuário
+    - Inicialização de um processo em batch
+
+- Processos criando outros processos
+    - UNIX: com a função fork()
+        - Cria clone do processo pai, cópias exatas mas identificadores diferentes (espaço de endereçamento também)
+    - Windows: CreateProcess
+    - São chamadas de sistema (trap)
+
+
+- Finalizando processos
+    - Término normal: voluntário, tarefa finalizada
+    - Término por erro: voluntário, processo não pode ser finalizado
+    - Término com erro fatal: involuntário, erro, bug
+    - Termino involuntário por outro processo: kill (UNIX)
+
+## Comunicação entre processos
+
+- Se comunicam através de alguma área de armazenamento comum
+- Condição de corrida: dois ou mais processos acessam recursos compartilhados concorrentemente, corrida pelo recurso
+- Problema de sincronização
+
+- Exclusão mútua: restringir região crítica que possuem recursos compartilhados
+    - Um processo não terá acesso à uma região crítica quando outro processo estiver nela
+
+- Importante exclusão mútua para threads, pois compartilham o mesmo espaço de endereçamento
+
+- 4 condições para uma boa solução
+    - Só um processo deve entrar na região crítica de cada vez
+    - Não deve ser feita nenhuma hipótese sobre a velocidade relativa dos processos
+    - Nenhum processo executando fora de sua região crítica deve bloquear outro processo
+    - Nenhum processo deve esperar um tempo arbitráriamente longo para entrar na sua região crítica (adiamento indefinido) (inanição)
+
+
+## Escalonamento
+
+- Escalonador: processo/módulo do SO que seleciona próximo processo a ser executado
+    - Nível mais baixo do SO
+
+- Mudança de contexto
+    - Overhead de tempo, tarefa cara, pois precisa armazenar conteúdo do processo, depois alocar novamente no processador
+
+- Quando o escalonador é chamado?
+    - Novo processo
+    - Fim do processo
+    - Processo bloqueado, outro deve ser executado
+
+- Categorias do escalonador
+    - Preemptivo
+        - Processo perde uso da CPU
+        - Interrupção forçada para outro processo usar CPU
+    - Não preemptivo
+        - Permite que o processo sendo executado continue executando
+        - Ignora evento
+        - Não perde uso da CPU
+
+- Algoritmos de escalonamento
+    - Data limite
+    - Sistemas Batch (lote) (conjunto de processos para serem executados, usuário só vê resultado no final)
+        - First In First Out (FIFO)
+            - Não preemptivo, só são interrompidos voluntariamente por E/S
+            - Seguem ordem de requisição
+            - Desvantagem quando há processos que demoram na execução
+        - Shortest Job First (SJF)
+            - Não preemptivo
+            - Tarefas mais curtas
+            - Jobs precisam ser conhecidos antes
+            - Jobs longos podem demorar para serem executados
+        - Shortest Remaining Time First (SRTN)
+            - Preemptivo
+            - Versão preemptiva do SJF
+            - Menor tempo restante é executado
+            - Suspende se processo com tempor menor chega
+    - Sistemas Interativos (interação com o usuário)
+        - Prioridade
+            - Preemptivo
+            - Maior prioridade são executados primeiro
+        - Round-robin
+            - Preemptivo
+            - Cada processo recebe um tempo de execução igual (quantum)
+            - Fila circular
+            - Problema: chaveamento de processos (trocas de processos)
+            - Exemplo: no banco tem uma fila que só pode pagar 5 contas de uma vez, se a pessoa tiver mais de 5 contas ela volta no final da fila para pagar as restantes
+        - Multi-level queues
+            - Quantum diferente para cada fila
+            - Menor quantum maior prioridade
+            - Round-robin em cada fila
+        - Multi-level FEEDBACK queues
+            - Interrupção de tempo reduz prioridade
+            - Promoção: tempo sem rodar, interrupção I/O
+    - Sistemas de Tempo Real (possuem deadline para execução)
+        - Data limite
+            - Processo ao iniciar determina quando sua tarefa precisa estar completa
+            - Planejamento complexo: envolve cuidadosa estimação de uso dos recursos do sistema (disco, CPU, etc.)
+            - Sobrecarga de planejamento, pois é complexo
 
 
 # Matéria P2
