@@ -23,6 +23,8 @@ respostas das provas: https://docs.google.com/document/d/1htvzhlW3EPrYwOh2mBsPRA
     - Dispositivos de E/S: discos, vídeo, teclado, ...
         - CPU não se comunica com o dispositivo e sim com o controlador
 
+## Sistema Operacional
+
 - Importância do SO
     - Suporte para as aplicações
     - Tradutor para as aplicações se comunicarem com o hardware
@@ -41,9 +43,40 @@ respostas das provas: https://docs.google.com/document/d/1htvzhlW3EPrYwOh2mBsPRA
         - Sistemas batch (em lotes)
             - lote de programas de uma vez
             - sem interação com o usuário
-        - Sistemas de tempo compartilhado
-        
+        - Sistemas de tempo compartilhado  
         - Sistemas de tempo real (tempo estipulado)
+        - Mais sofisticado, mais processamento
+
+- Estruturas do SO
+    - Estrutura monolítica
+        - Módulo kernel (núcleo) e módulo usuário
+        - UNIX, Windows
+    - Estrutura microkernel
+        - Principal função do kernel é gerenciar comunicações de processos
+        - Maior parte das funções do SO em processos de usuário
+        - MINIX
+    - Estrutura de camadas
+        - Divisão de um programa complexo em módulos menores
+        - Hierárquico
+        - MULTICS, OpenVMS
+
+## Chamadas de sistema e Interrupção
+
+- Chamadas de sistemas
+    - Se uma aplicação precisa realizar uma instrução privilegiada
+        - Leitura no disco
+        - Rotina de serviço
+    - Altera do modo usuário para modo kernel
+        - Ler um arquivo
+    - Exemplos:
+        - printf
+        - fork (criação de processo)
+    - Chamadas de sistemas são realizadas por instruções Traps
+        - Pega a requisição do usuário, identifica o endereço da chamada e processa  as intruções no sistema operacional
+        - Interrupções de software
+        - Aplicação para a execução e depois da chamada continua a execução de onde parou
+            - Salva registradores
+
 
 
 # Matéria P2
