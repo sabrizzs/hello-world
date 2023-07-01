@@ -1,6 +1,6 @@
 # PF
 
-parei: 91/229
+parei: 104/229
 
 slides: 1 - 152 - 229 - 259 ; 380 - 403 (ao todo cerca de 60 slides)
 
@@ -9,6 +9,7 @@ respostas das provas: https://docs.google.com/document/d/1htvzhlW3EPrYwOh2mBsPRA
 ## Dúvidas
 
 - TIME: requires a contex mode switch to kernel-mode
+- Os registradores guardam os endereços virtuais ou físicos?
 
 # Matéria P1
 
@@ -238,10 +239,10 @@ respostas das provas: https://docs.google.com/document/d/1htvzhlW3EPrYwOh2mBsPRA
 ## Exclusão mútua
 
 - 4 condições para uma boa solução
-    - Só um processo deve entrar na região crítica de cada vez
-    - Não deve ser feita nenhuma hipótese sobre a velocidade relativa dos processos
-    - Nenhum processo executando fora de sua região crítica deve bloquear outro processo
-    - Nenhum processo deve esperar um tempo arbitráriamente longo para entrar na sua região crítica (adiamento indefinido) (inanição)
+    1. Só um processo deve entrar na região crítica de cada vez
+    2. Não deve ser feita nenhuma hipótese sobre a velocidade relativa dos processos
+    3. Nenhum processo executando fora de sua região crítica deve bloquear outro processo
+    4. Nenhum processo deve esperar um tempo arbitráriamente longo para entrar na sua região crítica (adiamento indefinido) (inanição)
 
 - Soluções de espera ocupada (solução para exclusão mútua)
     - Verificar se a região crítica está ocupada ou não
@@ -345,19 +346,92 @@ respostas das provas: https://docs.google.com/document/d/1htvzhlW3EPrYwOh2mBsPRA
 - Ocorre tanto em hardware (impressoas, cd rom) ou software (semáforos mal definidos)
 - Recursos preemptivos: memória,CPU
 - Recursos não-preemptivos: criar CD-ROM, impressora. (causam prejuízos na desalocação)
+
 - Deadlocks ocorrem em geral com recursos não preemptivos
 - Cada processo está esperando por um evento que somente outro processo no conjunto pode causar (espera circular)
+
 - 4 condições para que impasses ocorram
     1. Exclusão mútua: cada recurso pode apenas ser designado a um processo
     2. Espera e segura: processos que requisitaram recursos previamente podem requisitar novos
     3. Não preempção: recursos previamente designados a processos não podem ser retirados. Os processos precisam liberá-los explicitamente
     4. Espera circular: deve existir um conjunto de 2 ou mais processos que podem ser organizados em uma lisa circular onde cada processo está esperando um recurso do processo anterior da lista.
 
+- Estratégias para Deadlock
+    - Ignorar o problema
+        - algoritmo do avestruz
+        - custo para tratar é muito alto
+    - Detectar e recuperar
+        - gráfico de alocação: detectar ciclo e terminar processo
+    - Prevenção
+        - exclusão mútua: alocar recursos usando spooling (recursos armazenados antes de serem utilizados, dispositivos E/S)
+        - espera e segura: requisitar todos os recursos de uma vez
+        - não preempção: se não consegue todos os recursos libera todos: adiamento indefinido
+        - espera circular: numerar recursos e alocar em ordem
 
+- Algoritmo do banqueiro
+    - Verifica estado seguro para evitar deadlock
 
-
+- Tratamento de deadlock: gerenciamento de processos
 
 # Matéria P2
+
+## Administração de Memória
+
+### Memória real
+
+- Gerenciamento de recursos
+- Sistema operacional: interface entre hardware e usuário, gerenciar recursos (CPU, memória)
+- Como a memória principal é gerenciada pela memória principal
+
+- Hierarquia de memória (do menor e mais rápido para o maior e menos rápido):
+    - Cache (princípio da localidade)
+    - Memória principal (RAM, memória volátil)
+    - Memória secundária (disco, memória persistente)
+
+- Tarefas do gerenciador de memória:
+    - Gerenciar a hierarquia de memória
+    - Controlar partes que estão em uso e as que não
+        - Alocar, liberar
+        - Swapping (trocar entre memórias primária e secundária)
+
+- Monoprogramação:
+    - Único processo no sistema + SO de cada vez
+
+- Programas muito grandes causam overlay, por isso é importante gerenciar a memória
+
+- Multiprogramação:
+    - Compartilham a CPU e a memória
+    - Divide a memória em partições
+        - Fixas
+            - já definidas no boot
+            - fragmentação interna
+        - Variáveis
+            - criadas durante a execução
+            - fragmentação externa
+            - utiliza lista livre
+            - first-fit, best-fit, worst-fit
+            - Estruturas para gerenciar
+                - Bitmap: 1 bit para cada região da memória (0 vazia, 1 ocupada), muito lenta
+                - Lista ligada: partições usadas e livres, mais rápido que bitmap. Processo + base + deslocamento. Hole + base + deslocamento
+                - Buddy system: tamanhos pré definidos, lista para cada tamanho, rápido, fragmentação interna
+        - Fila de jobs para cada partição
+    - Tradução e “loading”
+        - absoluto: partição definida
+        - relocáveis: pode entrar em qualquer partição
+    - Endereçamento
+        - 2 registradores (é uma memória na CPU muito rápida): base e deslocamento (endereços virtuais)
+    - MMU (Memory Management Unit)
+        - Dispositivo de Hardware
+        - Manipulação de endereços lógicos (virtuais) em físicos
+        - Endereços lógicos (onde o processo vai trabalhar) para endereço físico (onde o processo foi carregado na memória principal)
+    - Swapping
+        - Chaveamento de processos entre memória (RAM) e disco
+        - Mais memória, quer rodar outro
+
+### Memória virtual
+
+- Usa a memória secundária como uma "cache"
+- Existe uma quantidade grande de processos que não cabem na memória principal (RAM)
 
 # Matéria PF
 
