@@ -1,6 +1,6 @@
 # PF
 
-parei: 82/229
+parei: 91/229
 
 slides: 1 - 152 - 229 - 259 ; 380 - 403 (ao todo cerca de 60 slides)
 
@@ -162,24 +162,6 @@ respostas das provas: https://docs.google.com/document/d/1htvzhlW3EPrYwOh2mBsPRA
     - Término com erro fatal: involuntário, erro, bug
     - Termino involuntário por outro processo: kill (UNIX)
 
-## Comunicação entre processos
-
-- Se comunicam através de alguma área de armazenamento comum
-- Condição de corrida: dois ou mais processos acessam recursos compartilhados concorrentemente, corrida pelo recurso
-- Problema de sincronização
-
-- Exclusão mútua: restringir região crítica que possuem recursos compartilhados
-    - Um processo não terá acesso à uma região crítica quando outro processo estiver nela
-
-- Importante exclusão mútua para threads, pois compartilham o mesmo espaço de endereçamento
-
-- 4 condições para uma boa solução
-    - Só um processo deve entrar na região crítica de cada vez
-    - Não deve ser feita nenhuma hipótese sobre a velocidade relativa dos processos
-    - Nenhum processo executando fora de sua região crítica deve bloquear outro processo
-    - Nenhum processo deve esperar um tempo arbitráriamente longo para entrar na sua região crítica (adiamento indefinido) (inanição)
-
-
 ## Escalonamento
 
 - Escalonador: processo/módulo do SO que seleciona próximo processo a ser executado
@@ -241,6 +223,138 @@ respostas das provas: https://docs.google.com/document/d/1htvzhlW3EPrYwOh2mBsPRA
             - Processo ao iniciar determina quando sua tarefa precisa estar completa
             - Planejamento complexo: envolve cuidadosa estimação de uso dos recursos do sistema (disco, CPU, etc.)
             - Sobrecarga de planejamento, pois é complexo
+
+## Comunicação entre processos
+
+- Se comunicam através de alguma área de armazenamento comum
+- Condição de corrida: dois ou mais processos acessam recursos compartilhados concorrentemente, corrida pelo recurso
+- Problema de sincronização
+
+- Exclusão mútua: restringir região crítica que possuem recursos compartilhados
+    - Um processo não terá acesso à uma região crítica quando outro processo estiver nela
+
+- Importante exclusão mútua para threads, pois compartilham o mesmo espaço de endereçamento
+
+## Exclusão mútua
+
+- 4 condições para uma boa solução
+    - Só um processo deve entrar na região crítica de cada vez
+    - Não deve ser feita nenhuma hipótese sobre a velocidade relativa dos processos
+    - Nenhum processo executando fora de sua região crítica deve bloquear outro processo
+    - Nenhum processo deve esperar um tempo arbitráriamente longo para entrar na sua região crítica (adiamento indefinido) (inanição)
+
+- Soluções de espera ocupada (solução para exclusão mútua)
+    - Verificar se a região crítica está ocupada ou não
+    - Exclusão mútua: excluir um dos processos para apenas um entrar na região crítica
+    - Solução 1: inibir interrupções
+        - Desabilita interrupção do processador, impede que o processador faça o chaveamento de processos
+        - Impede que outro processo entre na região crítica
+        - Só funciona em ambientes monoprocessados
+        - Pode resultar em inanição de outros processos
+    - Solução 2: lock
+        - Usar variável lock para permitir entrada ou não de um processo
+        - Não funciona, pois pode haver interrupções que atrapalham
+    - Solução 3: alternância explicíta
+        - Um processo não pode passar pela região crítica duas vezes
+    - Solução 4: Peterson
+        - Avisa quando quer entrar na região crítica, entra quando é seguro e sai avisando que saiu.
+    - Exclusão mútua por hardware: usa Peterson com TSL (test and set lock)
+    - Desvantagem: desperdiça tempo de CPU, a consulta constante causa ciclos de processamento (ociosidade?)
+
+- Semáforos (SO/compiladores)
+    - Variável para controlar o acesso aos recursos compartilhados
+    - Uso de recursos em grande quantidade
+    - Uso de recursos disponíveis ou não
+    - Só um processo pode acessar o semáforo
+    - Semáforo=0 não há recurso livre
+    - Semáforo>0 recurso livre
+    - Operação down ou P (sytem call) - quer recurso
+        - verifica se é maior que 0 
+        - se for, decrementa 1 e continua
+        - caso contrário o processo é colocado em sleep
+    - Operação up ou V - liberou recurso
+        - se há processos na fila, em sleep, libera o processo
+        - caso contrário incrementa 1 (recurso desbloqueado)
+    - Semáforo binário: usa mutex, exclusão mútua
+    - Facilita exclusão mútua
+    - Memória compartilhada e não para comunicação em sistemas distribuídos
+    - Único computador
+
+- Monitor (compiladores)
+    - Implementado pelo compilador
+    - Primitiva de alto nível
+    - Conjunto de procedimentos, variáveis e estruturas de dados agrupados em um único módulo
+    - Todos os recursos compartilhados devem estar no monitor
+    - Somente um processo pode entrar no monitor/módulo
+    - Exclusão mútua implementada automaticamente
+    - Memória compartilhada e não para comunicação em sistemas distribuídos
+    - Único computador
+    
+- Mensagens 
+    - Sistemas distribuídos
+    - Exclusão mútua em sistemas distribuídos
+    - Processo emissor -> mensagem -> processo receptor
+    - Confirmação após receber a mensagem
+    - Send
+        - send(destino, &mensagem)
+    - Receive
+        - receive(fonte, &mensagem)
+    - Chamadas de sistema
+    - Síncrona: bloqueia processo quando envia mensagem, quando recebe a resposta desbloqueia
+    - Assíncrono: não bloqueia processos no envio e no recebimento
+    - Minix: mensagens síncronas, pipe
+    - Chamada de procedimento remota
+        - Síncrono
+        - Para cliente parece chamada de procedimento local
+        - Transparência: cliente e servidor não precisam saber que utilizam mensagens em máquinas distintas
+        - Dificuldade de passar parâmetros
+        - Pode precisar de conversão de informações
+        - Falhas: 
+            - at least once: repetir até receber resposta
+            - at most once: não sabe se foi executada
+            - exactly once: não sabe se o servidor processou
+    - Mailbox (caixa postal): de um para vários processos
+
+- Problemas com a comunicação de processos
+    - Jantar dos filósofos
+        - 5 hashis e 5 filósofos
+        - para comer precisa de 2 hashis
+        - precisam sincronizar os recursos compartilhados
+        - alternar entre pensar (lock direito e esquerdo) e comer (deixar os hashis)
+        - Deadlock: todos pegam ao mesmo tempo e ninguém consegue comer
+        - Starvation (inaninação): ficam indefinidamente pegando hashis simultaneamente e não conseguem comer
+        - Solução: usar semáforo binário (mutex)
+    - Leitores e escritoes
+        - Modela acesso a banco de dados
+        - Muitos podem ler ao mesmo tempo
+        - r(x) e w(x), w(x) e r(x), w(x) e w(x)
+        - Solução: usar semáforos binário (mutex)
+
+- Equivalência dos mecanismos de exclusão mútua
+    - Semáforos -> Monitores
+    - Monitores -> Semáforos
+    - Semáforos -> Mensagens
+    - Mensagens -> Semáforos
+
+## Deadlocks (impasse)
+
+- Dispositivos e recursos são compartilhados
+- Acesso exclusivo a certos recursos
+- Deadlock (impasse):
+    - Processos ficam parados sem continuar esperando por algo que nunca irá acontecer
+- Ocorre tanto em hardware (impressoas, cd rom) ou software (semáforos mal definidos)
+- Recursos preemptivos: memória,CPU
+- Recursos não-preemptivos: criar CD-ROM, impressora. (causam prejuízos na desalocação)
+- Deadlocks ocorrem em geral com recursos não preemptivos
+- Cada processo está esperando por um evento que somente outro processo no conjunto pode causar (espera circular)
+- 4 condições para que impasses ocorram
+    1. Exclusão mútua: cada recurso pode apenas ser designado a um processo
+    2. Espera e segura: processos que requisitaram recursos previamente podem requisitar novos
+    3. Não preempção: recursos previamente designados a processos não podem ser retirados. Os processos precisam liberá-los explicitamente
+    4. Espera circular: deve existir um conjunto de 2 ou mais processos que podem ser organizados em uma lisa circular onde cada processo está esperando um recurso do processo anterior da lista.
+
+
+
 
 
 # Matéria P2
