@@ -1,6 +1,6 @@
 # PF
 
-parei: 104/229
+parei: 197/229
 
 slides: 1 - 152 - 229 - 259 ; 380 - 403 (ao todo cerca de 60 slides)
 
@@ -10,6 +10,44 @@ respostas das provas: https://docs.google.com/document/d/1htvzhlW3EPrYwOh2mBsPRA
 
 - TIME: requires a contex mode switch to kernel-mode
 - Os registradores guardam os endereços virtuais ou físicos?
+
+## Monitoria de domingo
+- I-64: memória virtual menor que número de bits da página real
+- FAT deixa na memória uma maneira de você descobrir qual é o endereço do bloco que contém aquele conteúdo no disco
+    - Qual o bloco do disco que contém o próximo conteúdo daquele arquivo
+    - Cada entrada corresponde à um endereço de um bloco no disco
+    - Descritor de arquivo contém 
+    - Conteúdo da FAT diz qual o próximo bloco que contém o conteúdo daquele arquivo
+    - Posição na FAT para cada bloco do disco
+    - Componente linear
+    - Overhead é pequeno
+    - Problema para discos grandes
+    - FAT usado quando disquetes eram removíveis, a gravação tinha que ser na hora write through, uso pessoal
+    - escrita intensa usando FAT é lento
+    - lento pois tem escrita direta no disco
+    - overhead de escrita
+    - FAT: encontrar endereço do memória (rápido)
+    - oberhead acesso aleatorio: quanto precisa trabalhar para encontrar o bloco que precisa? na FAT é uma lista ligada que percorre na memória, é um overhead pequeno. No i-node, se já tiver um indicador na memória é ate rapido, mas se tiver um bloco novo grande, é necessario carregar na memoria as tres tabelas (terceiro indireto) (muito trabalho) 
+    - Acesso sequencial: diferença pequena
+    - FAT proporcional ao tamanho do disco (windows abandonou o byte)
+    - 
+
+- I-node
+    - Toda vez que vai abrir
+    - eficiente para arquivos pequenos
+    - overhead muito grande para acesso aleatorio, exemplo terceiro indireto
+    - acesso aleatorio é uma exceção
+
+- Área de swapping pequena: pode ser que programas possam ser perdidos
+- Tabela de processos mesmo para sistemas monoprogramados
+
+
+
+- Principais ataques e seguranças
+- Princípios de segurança
+- RAM-disk cai
+- Como funciona driver de disquete no Minix, nível de coisa que o driver faz (liga um timer)
+- Threads
 
 # Matéria P1
 
@@ -138,6 +176,7 @@ respostas das provas: https://docs.google.com/document/d/1htvzhlW3EPrYwOh2mBsPRA
     - Elementosdo contexto de cada processo:
         - Ponteiros de arquivos abertos, posição do byte a ser lido, etc
     - Tabela de processos tem entrada para tabela de endereços de cada processo, para a tabela não ficar extensa
+    - Overhead em relação ao tamanho da memória e número de processos
 
 - Características de processos
     - CPU-bound: processos que utilizam mais CPU
@@ -155,7 +194,6 @@ respostas das provas: https://docs.google.com/document/d/1htvzhlW3EPrYwOh2mBsPRA
         - Cria clone do processo pai, cópias exatas mas identificadores diferentes (espaço de endereçamento também)
     - Windows: CreateProcess
     - São chamadas de sistema (trap)
-
 
 - Finalizando processos
     - Término normal: voluntário, tarefa finalizada
@@ -277,6 +315,8 @@ respostas das provas: https://docs.google.com/document/d/1htvzhlW3EPrYwOh2mBsPRA
         - se há processos na fila, em sleep, libera o processo
         - caso contrário incrementa 1 (recurso desbloqueado)
     - Semáforo binário: usa mutex, exclusão mútua
+    - Semáforo contador
+    - É possível implementar semáforo contador a nivel de usuário com semáforos binários
     - Facilita exclusão mútua
     - Memória compartilhada e não para comunicação em sistemas distribuídos
     - Único computador
@@ -430,8 +470,266 @@ respostas das provas: https://docs.google.com/document/d/1htvzhlW3EPrYwOh2mBsPRA
 
 ### Memória virtual
 
-- Usa a memória secundária como uma "cache"
+- Usa a memória secundária como uma "cache" para partes do programa
 - Existe uma quantidade grande de processos que não cabem na memória principal (RAM)
+- Fazer com que todos os processos possam usar a memória principal
+
+![Alt text](image-6.png)
+
+- MMU (hardware) faz a conversão do endereço lógico/virtual para o físico (RAM)
+- Memória sempre em blocos (páginas ou segmentos)
+- Blocos pequenos: maior overhead, pois como são em maior quantidade necessitam de mais operações e espaço para armazenar informações de cada um, leitura menos eficiente.
+- Blocos grandes: maior tempo de transferência, fragmentação interna
+- Podem existir mais blocos no endereço virtual do que na memória física
+
+- Tabela de indexação de blocos (mapeamento):
+    - Endereço na memória real do bloco
+    - Endereço na memória secundária
+    - Dirty bit: se foi modificado
+    - Residence bit: se está na memória secundária
+    - Reference bit: se foi acessada
+    - Protection bit: controla acessos
+
+- O disco é dividido em blocos, esses blocos são divididos de maneira lógica/virtual, existe uma tabela de endereço virtual que contém esses blocos (páginas ou segmentos). Também existe uma tabela de mapeamento (de páginas ou segmentos) que mapeia o endereço virtual para o físico (na memória RAM). A MMU faz a conversão desse endereço lógico para o físico usando a tabela de mapeamento.
+
+- Paginação
+    - tamanho fixo
+    - processo dividido em partes iguais no disco (4kb)
+    - cada parte contém parte do endereçamento do processo (lógico, virtual)
+    - cada parte será mapeada para a memória RAM (físico)
+    - MMU faz a conversão
+    - endereço físico: concatenar número da página física com deslocamento
+    - fragmentação interna (média metade)
+    - páginas no endereçamento virtual e frames na memória física
+    - Tabela de páginas (mapeamento): página virtual para página física
+        - Componentes:
+            - Residence bit (está na RAM), Protection bit, Reference bit, Bit de cache, Dirty bit
+            - Endereço da página na memória secundária
+            - Número da página na memória física (não é o endereço)
+        - causa overhead do SO, muitas informações e processos de mapeamento
+        - pode ser armazenada em um array de registradores (se for pequena, hardware), na RAM (MMU gerencia com registradores), memória "cache" na MMU (melhora desempenho, memória associativa, TLB, não está na cache)
+    - Mapeamento direto (na RAM)
+        - usa dois registradores: endereço físico da base da tabela e tamanho da tabela
+        - dois acessos (problema): um para a tabela, outro para o dado/instrução
+        - solução: TLB
+    - MEMÓRIA associativa (TLB)
+        - princípio da localidade
+        - TLB implementada em hardware ou software (hardware mais rápido, mas ocupa espaço)
+        - Procura na TLB, se encontra pega o número da página + o deslocamento e consegue a memória física. Caso contrário acessa a tabela de páginas e substitui uma das entradas da TLB.
+        - Organização da TLB:
+            - mapeamento direto: indica bits do endereço da entrada da tlb e depois compara bits do endereço da página virtual e devolve endereço físico.
+            - mapeamento associativo: busca simultânea, paralelo
+            - mapeamento n-associativo: direto com associativo, indica bit do banco e depois procura em paralelo dentro do banco.
+        ![Alt text](image-7.png)
+
+    - Problema com tabela de páginas grandes
+        - Estruturas:
+            - Paginação em múltiplos níveis: dividir páginas em outras páginas para carregar apenas parte da tabela, tabelas secundárias com ponteiros, ...
+            - Tabela de páginas invertida: em vez de mapear pela memória virtual mapeia pela memória principal, há apenas ocorrências da memória física, possui número de processos, física menor que virtual.
+                - Aumenta tempo de leitura, usa TLB
+
+- Segmentação
+    - Blocos de tamanho arbitrário com informações do mesmo tipo (divisão lógica)
+    - elimina fragmentação interna, mas tem externa
+    - Tabela de segmentos (mapeamento):
+        - Residence bit, tamanho, access bit (proteção), endereço do início do segmento na memória física, endereço na memória secundária
+    - Endereçamento direto ou associativo (TLB)
+        - endereço físico: soma base (número da página física) e deslocamento (mais lento)
+
+- Compartilhamento de memória: 2 entradas para o mesmo bloco, reduz utilização da memória, aumenta velocidade (menos falhas), mais fácil em segmentação pois a divisão é lógica, complexo com crescimento dinâmico.
+
+- Segmentação + Paginação
+    - Memória dividida em páginas, páginas agrupadas em segmentos
+    - Tabela de segmentos, cada segmento tem uma tabela de páginas
+    - endereço: segmento, página, deslocamento
+    - maior overhead, TLB minimiza
+    - endereço maior que a memória
+
+- Estratégia de carregamento
+    - Paginação por demanda
+    - Carregamento preventivo, difícil
+
+- Estratégias de colocação
+    - Segmentados: first fit, best fit, worst fit
+    - Paginados: indiferente
+
+- Estratégias de reposição de páginas
+    - Randômica: processos com pouco uso de memória, simples e barato, supõe baixa probabilidade de substituir página muito usada
+    - FIFO: página muito tempo na memória já deve ter sido usada, problema: página muito usada pode ser substituída
+    - FIFO segunda chance: usa bit R (lida ou escrita)
+    - LRU
+        - hardware (MMU) e software
+        - contador com páginas mais utilizadas
+        - alto overhead
+        - muito acessadas no início não serão retiradas
+    - NRU
+        - LRU com menor overhead
+        - R (lida ou escrita) e M (modificada) ativados pelo hardware
+        - resident bit e protection bit simulados pelo SO
+        - access bit e dirty bit
+        - 00: não referenciada, não modificada
+        - periodicamente o bit R é limpo pelo software, o bit M não é limpo pois o SO precisa saber se deve escrever a página no disco
+    - Working Set
+        - conjunto de trabalho de  páginas que um processo está efetivamente utilizando
+        - processo deve ser mantido na memória apenas se o conjunto de memória está todo na memória
+        - Utiliza bit R
+    - WSClock
+        - Lista circular de páginas
+        - Bit R e clock
+
+## Entrada e saída
+104 - 123
+- SO controla todos os dispositivos de E/S
+- Os dispositivos de E/S são limitados, portando devem ser devidamente compartilhados
+- Independência do dispositivo
+- Comandos do SO para:
+    - emitir instruções (read, write, etc): 
+    - interceptar interrupções
+    - tratar erros
+
+- Interface única
+- Boa parcela do SO (e/s, drivers, overhead)
+
+- Tipos de E/S
+    - Tipo de conexão
+        - Serial: barato e lento (impressoas e terminais)
+        - Paralela: rápido e caro (disco)
+    - Tipo de transferência
+        - Dispositivos de blocos
+            - Blocos de tamanho fixo
+            - Discos, USB, CD
+            - Princípio da localidade
+            - Acesso aleatório
+        - Dispositivos de caracter
+            - Fluxo de caracteres
+            - Terminais antigos, impressoras
+            - Sem acesso aleatório (seek operation)
+    - Tipo de conexões
+        - Ponto a ponto: paralelismo, cada periférico tem um ponto
+        - Multiponto: sem paralelismo, escalonamento, compartilha linha
+
+- Princípios de hardware
+    - Componente mecânico: dispositivo em si
+    - Controladora de dispositivo: SO lida com o controlador
+        - Dispositivos -> Controladora <-> SO
+        - Dispositivo - controladora: baixo nível
+        - Controladora - CPU/SO: alto nível
+        - Possui registradores controlados pela CPU (comunicação)
+- Princípios de software
+    - Tratamento de erro
+        - Pode ser o driver
+
+- Modos de operação de E/S
+    - E/S programada
+        - tudo realizado pela CPU
+        - CPU acompanha operações com controladora e SO
+    - E/S via interrupções
+        - CPU recebe requisição de leitura
+        - Controladora realiza algumas ações
+        - CPU fica mais ociosa mas participa
+    - E/S via acesso direto à memória: DMA (Direct Memory Access)
+        - Processador dedicado para E/S
+        - DMA faz E/S programada em vez da CPU
+        - Dispositivo/outro processador chamado DMA
+        - Desvantagem: CPU pode ser mais rápida, barata
+        - Vantagem: libera CPU
+
+- Drivers
+    - Parte do SO especifica para dispositivo dentro do kernel do SO
+    - Software
+    - Camada mais baixa junto com manipuladores de interrupções
+
+
+## Arquivos
+- Memória persistente: não se afetam pela criação e finalização de um processo
+- Acesso usando exclusão mútua
+- Arquivos são gerenciados pelo SO 
+- Ponto de vista do usuário (alto nível)
+- SO (baixo nível)
+- Arquivos são armazenados fisicamente
+- São referenciados por links
+- Hierarquia de memória
+    - Caches
+    - Memória primária
+    - Memória secundária (dispositivos): onde o sistema de arquivos está
+
+### Estruturas de arquivos
+- Blocos
+    - Bytes
+        - Para o SO são apenas conjuntos de bytes
+        - SO não se importa com o conteúdo do arquivo
+        - Significado deve ser dado eplas aplicações
+        - Flexibilidade: conteúdo e nomes
+        - Unix, Minix
+    - Registros
+        - SOs mais antigos: mainfraimes
+        - Leitura/escrita em registros
+        - Tamanho determinado na criação
+
+- Métodos de acesso
+    - Sequencial
+        - SOs mais antigos, em fitas
+        - byte a byte, registro a registro
+    - Indexado
+    - Aleatório
+        - SOs mais modernos, acesso feito fora de ordem por chave
+
+- Acesso aos arquivos
+    - Onde iniciar a leitura:
+        - read(): indica a posição do arquivo a ser lido
+            - aleatório e depois a leitura é feita de modo sequencial
+            - seek(): marca a posição, chama o seek e a leitura é feita
+
+- Tipos de arquivos
+    - Arquivos regulares
+        - Número mágico descreve tipo do arquivo no primeiro byte
+        - Atributos descritos nos bytes do arquivo
+        - Arquivos de caracter ASCII
+            - linhas com CR+LF
+            - facilitam pipes
+        - Binário
+            - código executável
+            - não é reconhecido por qualquer programa
+    - Diretórios
+        - arquivos para estruturar o sistema de arquivos
+    - Arquivos do sistema
+        - /dev
+        - /proc
+
+### Operações com arquivos
+- Chamada de sistema
+- open(): abre arquivo
+- read(): indica a posição do arquivo a ser lido
+    - seek(): marca a posição, chama o seek e a leitura é feita
+- close(): libera espaço ocupado por open e força o último bloco de dados seja escrito
+- read(): lê do arquivo para um buffer
+- write(): escreve dados no arquivo
+
+### Implementação do sistema de arquivos
+- dual boot, divisão do disco em partições distintas
+- MBR: master boot record
+    - Iniciar o computador
+    - Possui tabela de partição
+    - Escolhe qual partição iniciar o computador, a partição contém seu boot
+    - Free space management
+![Alt text](image-8.png)
+![Alt text](image-9.png)
+
+- Estruturas de dados do arquivo
+    - Informações sobre o arquivo
+    - Informações dos seus blocos
+
+- Como os arquivos são colocados no disco?
+    - Alocação contínua
+        - Simples
+        - seek para o primeiro bloco
+    - Alocação com lista ligada
+        - primeira palavra é o endereço do bloco seguinte
+    - FAT
+        - Tabela com os números blocos e cada número tem o número do próximo bloco
+        - Na memória principal
+    - I-Nodes
+
 
 # Matéria PF
 
