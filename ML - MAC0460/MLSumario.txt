@@ -71,3 +71,7 @@
    	- [24. Training and Test Sets](#24.-Training-and-Test-Sets)
    	- [24. Método Holdout](#24.-Método-Holdout)
    	- [24. Mexendo no conjunto de dados (splits)](#24.-Mexendo-no-conjunto-de-dados-(splits))
+- [Model Selection](#Model-Selection)
+	- [25. Model Selection](#Model-Selection)
+- [PCA](#PCA)
+	- [26. 
