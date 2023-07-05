@@ -46,6 +46,8 @@ Como Ein e Eout varia com N:
 - Linear regression
    - one step learning
 
+![Alt text](image-18.png)
+
 ## Regressão Linear
 
 capítulo 3, página 82 (Mostafa)
@@ -114,7 +116,7 @@ Em regressão linear usamos o erro quadrático
 
 ### Erro interno (Ein)
 
-![Alt text](image-4.png)
+![Alt text](images/image-4.png)
 
 - Expressão analítica que queremos minimizar
 - Do Ein derivamos o algoritmo de regressão linear
@@ -142,6 +144,9 @@ Em regressão linear usamos o erro quadrático
 - Para tentar minimizar:
   - obtemos a derivada e igualamos a 0
   - derivada conhecida como **gradiente**
+
+  ![Alt text](image.png)
+
   - gradiente é a derivada de vários Ein, todos de uma vez
   - vetor de 0, todas as derivadas são zero de uma vez
   - isto vai definir um ponto em que essa expressão atinge um mínimo
@@ -214,3 +219,121 @@ videoaula: https://youtu.be/qSTHZvN8hzs?t=1442
 ### The logistic function Θ
 
 stopped: https://youtu.be/qSTHZvN8hzs?t=1661
+
+![Alt text](image-1.png)
+
+- probabilidade 0 quanto mais a esquerda (negativo) e 1 quanto mais a direita (positivo), e metade caso for 0
+
+![Alt text](image-2.png)
+
+- se 's' for grande será próximo de 1, se for negativo será próximo de 0
+- soft threshold: incerteza
+- sigmoid
+
+### Interpretação da probabilidade
+
+![Alt text](image-3.png)
+
+- exemplo: predição de ataques cardíacos, probabilidade de ter envolve vários fatores, não é sim ou não
+
+### Probabilidade genuína
+
+![Alt text](image-4.png)
+
+- quero aprender f(x)
+
+![Alt text](image-5.png)
+
+![Alt text](image-6.png)
+
+### Error measure
+
+- y é -1 e 1
+- verossimilhança
+  - avaliar diferentes hipóteses de acordo com a verossimilhança de que elas sejam, na verdade, a função alvo que gerou os dados
+- qual a probabilidade de gerar esses dados se a sua suposição for verdadeira? probabilidade pequena = solução ruim
+- qual a probabilidade dos dados dada a hipótese
+- dado o conjunto de dados, quão provável é essa hipótese?
+- qual a probabilidade desse conjunto de dados, sob a suposição de que esta hipótese seja, de fato, o alvo?
+
+![Alt text](image-8.png)
+![Alt text](image-7.png)
+
+- supondo que h seja a f, calcule a probabilidade e o resultado será a verossimilhança da hipótese dado um ponto (x,y)
+
+### Fórmula da verosimilhança
+
+- +b
+
+![Alt text](image-9.png)
+
+- Probabilidade de obter o DataSet: verossimilhança
+- multiplica a verossimilhança individual por todo o dataset
+
+![Alt text](image-10.png)
+
+- o w reflete todo o dataset
+
+### Maximizando a verossimilhança
+
+- a maximização da verossimilhança se traduz para a minimização de uma medida de erro
+- maximizamos em relação ao vetor wT
+- fazemos várias contas estranhas e a verossimilhança é traduzida como o Ein
+
+![Alt text](image-11.png) -> ![Alt text](image-12.png)
+
+![Alt text](image-13.png)
+
+- medida de erro entre a minha hipótese, que depende do w, aplicada ao xn e ao yn
+- maximizar a verossimilhança é como minimizar o erro dentro da amostra (Ein)
+- o w é a pontuação de risco, se for muito positivo é muito provável, se for negativo é muito improvável
+  - conclusão com base no valor de yn
+  - se wT é positivo e yn for +1, então a expressão (-yn wT xn) é muito negativa, portanto 'e' será muito pequeno e a contribuição para o erro é pequena, as previsões estão certas
+  - se o sinal for direfente: se wT for muito positivo e yn for -1, ou o contrário, a exponencial será positiva e o erro será enorme
+
+### Learning algorithm
+
+- como posso minimizar o Ein?
+- solução iterativa
+- medida de erro para a regressão logística:
+
+![Alt text](image-14.png)
+
+- função convexa tem um mínimo
+- gradiente descendente: método geral para otimização não linear
+- inicia em um ponto w(0)
+- dá um passo (pequeno) e tenta achar uma melhoria
+- queremos achar o mínimo Ein através da escolha apropriada do w
+- n + coeficiente de aprendizagem: varia do quão perto está do mínimo
+
+![Alt text](image-15.png)
+![Alt text](image-16.png)
+
+- retorna pesos w
+
+## SVM
+
+videoaula: https://www.youtube.com/watch?v=eHsErlPJWUU&list=PLD63A284B7615313A&index=14&ab_channel=caltech
+
+- método de classificação mais bem sucedido em ML
+- conjunto de dados linearmente separável
+- existe vantagem de escolher uma linha ou outra?
+- margem de erro nas retas, queremos obter a melhor
+
+![Alt text](image-19.png)
+
+- qual 'w' maximiza a margem?
+
+- vamos analisar as dicotomias e as suas margens
+
+![Alt text](image-20.png)
+
+- margens maiores implicam menos dicotomias possíveis, restringimos a função de crescimento, resulta em uma dimensão VC menor.
+
+### Encontrando w com uma margem grande
+
+- margem: distância do ponto até o plano (hiperplano)
+- duas técnicas preliminares:
+  - normalizar w
+
+  stopped at https://youtu.be/eHsErlPJWUU?t=803
