@@ -311,7 +311,7 @@ stopped: https://youtu.be/qSTHZvN8hzs?t=1661
 
 - retorna pesos w
 
-## SVM
+## SVM - Support Vector Machines
 
 videoaula: https://www.youtube.com/watch?v=eHsErlPJWUU&list=PLD63A284B7615313A&index=14&ab_channel=caltech
 
@@ -335,5 +335,50 @@ videoaula: https://www.youtube.com/watch?v=eHsErlPJWUU&list=PLD63A284B7615313A&i
 - margem: distância do ponto até o plano (hiperplano)
 - duas técnicas preliminares:
   - normalizar w
+  - equação do plano é: wTx + b = 0
 
-  stopped at https://youtu.be/eHsErlPJWUU?t=803
+- w é ortogonal a cada vetor do plano, portanto é ortogonal ao plano
+- distância entre xn e o plano
+
+![Alt text](image-22.png)
+
+![Alt text](image-23.png)
+
+### Problema da otimização
+
+![Alt text](image-24.png)
+
+- trocamos a fórmula para não usar o min
+
+![Alt text](image-26.png)
+
+- obteremos o plano de separação com a melhor margem possível ao maximizar
+- estamos tentando minimizar wTw (w^2) e a restrição é Ein
+
+### Programa quadrático
+
+- os alphas minizimizam a função
+
+![Alt text](image-27.png)
+
+- o programa quadrático devolve um vetor de alphas
+- os alphas são >= 0
+- o vetor de alphas que estão exatamente na borda da margem é chamado de vetor suporte
+
+![Alt text](image-28.png)
+
+![Alt text](image-29.png)
+
+![Alt text](image-30.png)
+
+- os alphas que não estão na borda tem alpha = 0
+
+- com o vetor de alphas obtemos o vetor w
+
+![Alt text](image-31.png)
+
+- agora podemos encontrar b (bias)
+  - consideramos qualquer vetor de suporte e para qualquer um temos a equação válida:
+
+  ![Alt text](image-32.png)
+
