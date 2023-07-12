@@ -1,3 +1,17 @@
+## Ideas
+
+- Good afternoon
+
+- I'm great and you?
+
+- sorry, I dont have any camera in my computer
+
+- sorry, I didn't understand what you said
+
+- I already worked with Word, PowerPoint, Excel and Outlook when I studied business administration. And I still use these tools for some activities.
+
+- BI reports: I know it is used for creating reports and provide data insights.
+
 ## Tell me about yourself // introduce yourself
 
 First of all, thank you for the opportunity, and I'm very pleased to be here. 
@@ -8,13 +22,17 @@ Throughout my degree in computer science, I am gaining valuable experiences in d
 
 In my studies in business administration I developed a business plan in a fictitious company. In this project I worked with the financial, marketing and human resources of this company.
 
-Well, I consider myself a very motivated and driven individual with a passion for continuous growth and learning.
+So, I have experience of working with other people in a team.
+
+Well, I consider myself a very motivated with a passion for continuous growth and learning.
 
 I adapt quickly to challenges, problems and I have great problems solving abilities.
 
 I am confident in my ability to contribute to the success of a company, team or organization.
 
 I believe in maintaining a positive and collaborative work ethic.
+
+I am a positive person who always embraces change.
 
 I will be more than happy to bring my diverse skill set to make a meaningful impact in this role.
 
@@ -49,9 +67,9 @@ You should also hire me because I am very positive about change.
 
 ## Tell me about a conflict or a challenge you faced at work and how did you deal with it
 
-My colleague and I were tasked to work on a team together to develop a interface for a microwave in Human-Computer Interaction class. 
+In my previouos project development, my colleague and I were tasked to work on a team together to develop a interface for a website in Human-Computer Interaction class. 
 
-When we sat down for our first meeting to develop the interface, we realized that we had different visions and ideas. And then we didn't know how to handle it.
+When we sat down for our first meeting to develop the interface, we realized that we had different visions and ideas. I wanted something more interactive and he wanted something more direct. And then we didn't know how to handle it.
 
 What we decided to do was calling our team and ask them what type of interface they thought would be most helpful in the project.
 
@@ -59,7 +77,7 @@ And we noticed that it was a 50 50 split. That ended up working out great for us
 
 Even though it was a little hard at the start in the end my colleague and I were able to present a really nice piece of material to our team.
 
---------
+-------- ####################
 
 I would deal with the conflict myself in a professional mature manner. 
 
@@ -78,14 +96,21 @@ I am resourceful and I will never give up without trying every alternative I can
 
 Something that I've been complimented on the past is my attitude. No matter what's going on, I always try to bring positive energy to the team and I've also been told this is something that people really appreciate.
 
+-----
+
+I would describe myself as productive, self-motivated and positive.
 
 ## What are your greatest weaknesses
 
 There is a lot of different things that I wanna improve upon but if I had to choose one is that I find it quite difficult to say no to people, which means sometimes I take too much work and get overwhelmed.
 
-I am working on my ways to be more mindful in situations like this.
+But I am working on my ways to be more mindful in situations like this.
 
 So for example, when someone asks for my help, I analyse my current workload to see if I can help without impacting my work.
+
+## How to communicate with your manager who gave you impossible deadline?
+
+To deal with tight or impossible deadlines, I have to understand what will be possible to complete efficiently. So I will consistently communicate with everyone involved in the project and manage my time efficiently. By doing these things, I can produce high quality work while getting my task done on time.
 
 ## What type of work environment do you dislike working in?
 
@@ -120,3 +145,8 @@ I believe that working in Intel would allow me to learn from experienced profess
 I am actively job searching right now, and Intel was one of my first searches to see if there were any internship. So I went on the Intel website and found the internship.
 
 I reviewed the job description and immediately caught my attention because it matches my profile, so I applied to learn more about the job opportunity.
+
+## Do you have any question for us
+
+Can you share more about the day-to-day responsibilities of this role?
+
