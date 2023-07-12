@@ -30,7 +30,36 @@ Whenever challenges arise, I focus more on finding a solution.
 
 Ultimately, I believe that trust, respect and a shared commitment are key to building and maintaining a strong team, am I am excited to be able to bring all that I know about working with teams to this position.
 
+
+## What is a project you have worked on that you are proud of
+
+One of the projects I worked on was the creation of a fictitious company, this company was a creator of digital games and technologies. And I worked with the company's management information like marketing, human resources and business, and as I love technology, I also created some games for the company. And in the end we presented this company on a stand at a marketing fair for several people. I really loved this project.
+
+## Why Should I hire you?
+
+You should hire me for several reasons.
+
+The first one is because I love what I do. I am passionate about technology and this type of work.
+
+That means everything will be done to a high standard.
+
+You should also hire me because I already have the skills, qualities and qualifications to match the job description. So I can come into the team and have an immediate and positive impact.
+
+You should also hire me because I am very positive about change.
+
 ## Tell me about a conflict or a challenge you faced at work and how did you deal with it
+
+My colleague and I were tasked to work on a team together to develop a interface for a microwave in Human-Computer Interaction class. 
+
+When we sat down for our first meeting to develop the interface, we realized that we had different visions and ideas. And then we didn't know how to handle it.
+
+What we decided to do was calling our team and ask them what type of interface they thought would be most helpful in the project.
+
+And we noticed that it was a 50 50 split. That ended up working out great for us, because we decided to move forward with a 50 50 split type of content to meet the needs of different types of interfaces. 
+
+Even though it was a little hard at the start in the end my colleague and I were able to present a really nice piece of material to our team.
+
+--------
 
 I would deal with the conflict myself in a professional mature manner. 
 
@@ -39,14 +68,16 @@ To begin with, I would assess my own words and actions to make sure I wasn't con
 I would then sit down with my co-worker in private, find out how they felt about the conflict and then find and friendly way forward we were both comfortable with and that was in the best interest of our team.
 
 ## What are your greatest strengths
+## Describe a time you used your greatest strength
 
 I've been told that I'm really dependable, they can always count on me to get the job done right and on time and that always means a lot to me when I hear that.
 
-One of my greatest strengths is tenacity. If I have a goal, I will do whatever it takes to get there and I awlays believe that there is a solution.
+One of my greatest strengths is tenacity. If I have a goal, I will do whatever it takes to get there and I always believe that there is a solution.
 
 I am resourceful and I will never give up without trying every alternative I can.
 
-Something that I've been complimented on the past is my attitude. No matter what's going on, I always try to bring positive energy to the team and I've also been told this is something that people really appreciate
+Something that I've been complimented on the past is my attitude. No matter what's going on, I always try to bring positive energy to the team and I've also been told this is something that people really appreciate.
+
 
 ## What are your greatest weaknesses
 
@@ -56,9 +87,17 @@ I am working on my ways to be more mindful in situations like this.
 
 So for example, when someone asks for my help, I analyse my current workload to see if I can help without impacting my work.
 
+## What type of work environment do you dislike working in?
+
+I can be productive in most work environments as long as the mentality is positive and teamwork is encouraged. I cannot work in an environment that is constantly negative.
+
+## Who has inspired you in your life and why?
+
+My mother inspired me a lot. Even though these days she is no longer here, I still remember when she told me never to compare myself with anyone and always try to be better than me every day. She faced a lot of difficulties in her life. And that's why my mother is my inspiration.
+
 ## Where do you see yourself in five years?
 
-You know, it's hard to know what life is going to look like in five years. I mean we've seen how unpredictable the world can be!
+You know, it's hard to know what life is going to look like in five years. 
 
 But while I like to maintain flexibility and an open mind, I do have specific goals and ambitions.
 
@@ -66,11 +105,15 @@ One thing that I know is that I'm really passionate about production. I'm obsess
 
 5 years from now I would love to be leading a team and spend my days taking projects from ideation to success.
 
+## Why Intel?
+
 ## Why are you interested in this position?
 
-I am interested in this position because Intel company is a well-respected and successful organization.
+I'm really interested in Intel because I'm passionate about technology, and Intel is constantly leading the way in innovation and it is one of the most innovative companies in the industry. 
 
-I believe that working here would allow me to learn from experienced professionals and contribute to the team. Additionally the position aligns with my career goals and interests.
+Working at Intel would give me the opportunity to be part of a team that is making a real difference in the world, and I'm excited to be part of that.
+
+I believe that working in Intel would allow me to learn from experienced professionals and contribute to the team. And the position aligns with my career goals,  interests and my profile.
 
 ## How did you hear about this position?
 
