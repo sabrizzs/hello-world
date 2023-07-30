@@ -1,15 +1,5 @@
 ## Ideas
 
-- Good afternoon
-
-- I'm great and you?
-
-- sorry, I dont have any camera in my computer
-
-- sorry, I didn't understand what you said
-
-- I already worked with Word, PowerPoint, Excel and Outlook when I studied business administration. And I still use these tools for some activities.
-
 - BI reports: I know it is used for creating reports and provide data insights.
 
 ## Tell me about yourself // introduce yourself
