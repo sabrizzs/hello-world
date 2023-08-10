@@ -4,23 +4,33 @@
     - v.push_back(x)
     - v.size()
     - vector<int> v
+
+- operações
+    - expoente: pow(x,z): x^z
  
 - classe
 
-'''
-class Solution {
-public:
-    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        class Solution {
+        public:
+            ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
         
-    }
-};
-'''
+            }
+        };
 
-Two Sum (#1)
+- lista ligada
 
-Median of Two Sorted Arrays * & (#4)
+         ListNode *result = new ListNode();
 
-Longest Palindromic Substring (#5)
+
+https://leetcode.com/list/954v5ops/
+
+### Two Sum (#1) OK 
+
+### Median of Two Sorted Arrays * & (#4) REVISAR
+
+Percorrer a lista até o final mas para cada número seguinte multiplicar por 10 (decimal). //mudei a lógica pois essa não funciona para números muito grandes.
+
+### Longest Palindromic Substring (#5)
 
 String to Integer (atoi) (#8)
 
