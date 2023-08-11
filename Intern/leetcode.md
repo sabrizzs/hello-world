@@ -1,9 +1,19 @@
 ## C++
 
+- string
+    - string.size()
+
+- stack
+    - stack<char> st
+    - st.pop(): remove elemento
+    - st.top(): mostra o top da stack
+    - st.push(): insere elemento
+    - st.empty()
+
 - vector
+    - vector<int> v
     - v.push_back(x)
     - v.size()
-    - vector<int> v
 
 - operações
     - expoente: pow(x,z): x^z
@@ -24,21 +34,23 @@
 
 https://leetcode.com/list/954v5ops/
 
-### Two Sum (#1) OK 
+### Two Sum (#1) (EASY) OK 
 
-### Median of Two Sorted Arrays * & (#4) REVISAR
+### Add Two Numbers (MEDIUM) OK REVISAR
 
 Percorrer a lista até o final mas para cada número seguinte multiplicar por 10 (decimal). //mudei a lógica pois essa não funciona para números muito grandes.
 
-### Longest Palindromic Substring (#5)
+Median of Two Sorted Arrays * & (#4) (HARD)
 
-String to Integer (atoi) (#8)
+Longest Palindromic Substring (#5) (MEDIUM)
 
-Integer to Roman (#12)
+String to Integer (atoi) (#8) (MEDIUM)
 
-Roman to Integer (#13)
+Integer to Roman (#12) (MEDIUM) 
 
-Valid Parentheses (#20)
+Roman to Integer (#13) (EASY)
+
+### Valid Parentheses (#20) (EASY) OK
 
 Merge K Sorted Lists (#23)
 
