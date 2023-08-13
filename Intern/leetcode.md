@@ -10,6 +10,64 @@
             return 0;
         }
 
+### História da Amazon
+
+- Criador: Jeff Bezos
+- Líder mundial no e-commerce e em computação em nuvem
+- Também possui serviçoes de assinatura
+- Concorrentes:
+    -  e-commerce: Walmart, eBay
+    -  Serviços de nuvem: Google Cloud, Microsoft Azure
+    -  streaming: Netflix, Spotify
+
+### LeaderShip
+
+- Você pode compartilhar uma situação em que você demonstrou obsessão pelo cliente?
+    - Teve uma época em que eu estava vendendo desenhos online, e tive uma compradora do Canadá que queria um desenho do marido dela e pediu para que eu entregasse antes do aniversário dele, e eu estava de férias viajando com a minha família e eu não podia fazer nas férias pois não tinha material.
+
+### Conceitos
+
+- Sistemas distribuídos
+    - Pertencem a classe de computação paralela
+    - São compostos por diversos componentes computacionais
+        - Nós, que seriam as máquinas físicas ou virtuais em uma rede
+        - Processos
+        - Comunicação por meio de mensagens
+    - Escabilidade, disponibilidade se um computador falhar, consistência
+    - Um exemplo é a AWS (Amazon Web Services)
+        - que provê serviços de computação em nuvem
+        - como infraestrutura de tecnologias, ou banco de dados
+        - exemplo de serviço: data lake: armazena dados em qualquer escala e facilita análises de dados.
+    - Sistema distribuído de armazenamento, índice e consulta: dados acessados e consultados de maneira eficiente
+    - Sistema distribuído multicamadas: divisão do sistema em várias camadas que representam a sua função
+        - Exemplo: aplicativo web: interface, lógica de negócios, acesso de dados.
+     
+- Sistema embarcado
+    - Conjunto de software e hardware desenvolvido para uma única função para um sistema maior
+    - Possuem um conjunto limitado de componentes.
+    - Exemplo: máquinas industriais, hospitalares.
+    - Sem certeza: mas dispositivos da Amazon como kindle.
+ 
+- Internet das Coisas
+    - Objetos físicos do mundo real estão conectados à internet e podem coletar, trocar e transmitir dados.
+    - Os dispositivos possuem sensores, processadores e tecnologias de comunicação.
+    - Atuam em automação e monitoramento.
+    - Exemplo: Alexa em casas automatizadas.
+ 
+- Mineração de Dados
+    - descoberta de padrões a partir de conjuntos de dados
+ 
+- Inteligência artificial
+    - Capacitar computadores a realizar tarefas como raciocínio e tomada de decisão, processamento de linguagem natural, visão computacional.
+
+- Machine Learning (aprendizado de máquina)
+    - Subárea da IA
+    - Algoritmos que permitem que os computadores aprendam a partir de dados
+    - O objetivo é encontrar uma função que recebe um dado, ajusta os parâmetros e tem uma saída prevista.
+    - Exemplo: estimar limite de cartão de acordo com os dados de um cliente.
+
+
+
 ### Estruturas
 
 - Arrays
@@ -36,6 +94,7 @@
         
 - Hash maps
     - semelhante em python
+    - não é util quando ordem importa ou quando a eficiência de memória importa
     - #include <unordered_map>
     - std::unordered_map<std::string, int> age;
     - age.insert({"Chris", 30});
@@ -132,13 +191,39 @@
 
 ### Programação dinâmica
  
-- programação dinâmica
-    - recursão com auxílio de uma tabela
-    - recorrência
+- recursão com auxílio de uma tabela
+- recorrência
+- divisão do problema em problemas menores
+- evita recalcular os mesmos subproblemas
+- tabela de memoização
+
+        função knapsack(capacidade, pesos, valores, n):
+            crie uma matriz dp com dimensões (n + 1) x (capacidade + 1)
+        
+            para i de 0 até n:
+                para w de 0 até capacidade:
+                    se i = 0 ou w = 0:
+                        dp[i][w] = 0
+                    senão se pesos[i - 1] <= w:
+                        dp[i][w] = max(valores[i - 1] + dp[i - 1][w - pesos[i - 1]], dp[i - 1][w])
+                    senão:
+                        dp[i][w] = dp[i - 1][w]
+        
+            retorne dp[n][capacidade]
 
 ### Backtrack
 
-- 
+- Explora todas as possibilidades em busca de uma solução
+
+        procedure backtrack(estado_atual):
+            se o estado_atual é uma solução:
+                adiciona o estado_atual à lista de soluções
+                retorne
+            senão:
+                para cada opção disponível a partir do estado_atual:
+                    adicione a opção ao estado_atual
+                    chame backtrack com o novo estado_atual
+                    remova a última opção do estado_atual
 
 ### Classe e Struct
 
