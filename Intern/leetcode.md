@@ -20,7 +20,37 @@
     -  Serviços de nuvem: Google Cloud, Microsoft Azure
     -  streaming: Netflix, Spotify
 
-### LeaderShip
+### 16 LeaderShip
+
+- Dive Deep (Mergulhar fundo)
+    - Todos são líderes
+    - Situações que não sabemos o contexto: mergulhamos de cabeça para entender o contexto, mesmo que seja difícil e consuma tempo, é preciso entender bem para chegar na melhor solução possível.
+    - Exemplo: fila: se perguntar o porque foi escolhido, saber o que é, entender a decisão, entender profundamente.
+
+- Bias for action (Ter iniciativa)
+    - Riscos calculados
+    - Tomar decisões e saber se são reversíveis ou não
+    - Caso não for reversível é preciso pensar muito bem e conhecer todos os impactos da decisão. Exemplo: linguagem de programação que irá usar, arquitetura, etc.
+    - Se for reversível facilmente, não é necessário saber sobre os mínimos detalhes, pois há muito custo de tempo, as vezes é melhor tomar a decisão e observar os resultados. Exemplo: usar um for ou um while.
+
+- Learn and be Curious
+    - Curiosidade de entender a situação e buscar alternativas para resolver o problema.
+    - Exemplo: sistema falha: curiosidade de saber o que aconteceu e como evitar.
+ 
+- Deliver Results (Entregar resultados)
+    - Não se acomodar com problemas, e entender por que aconteceram
+    - Exemplo: criação de ferramenta de automação: fazer estudo da tarefa ambígua, saber os passos de entrega do plano.
+
+
+
+### Perguntas 
+
+- Exemplos de como reagiu no passado para cada um dos leaderships.
+- Método STAR.
+    - Situação: contexto
+    - Tarefa: qual tarefa e quais expectativas sobre
+    - Ação: o que foi feito, foi necessário aprender algo?
+    - Resultado: benefícios que a açõu trouxe, tempo gasto na tarefa, eficiência, processamento.
 
 - Você pode compartilhar uma situação em que você demonstrou obsessão pelo cliente?
     - Teve uma época em que eu estava vendendo desenhos online, e tive uma compradora do Canadá que queria um desenho do marido dela e pediu para que eu entregasse antes do aniversário dele, e eu estava de férias viajando com a minha família e eu não podia fazer nas férias pois não tinha material.
