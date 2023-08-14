@@ -96,7 +96,11 @@
     - O objetivo é encontrar uma função que recebe um dado, ajusta os parâmetros e tem uma saída prevista.
     - Exemplo: estimar limite de cartão de acordo com os dados de um cliente.
 
-
+- Otimização linear
+    - Metodo de otimizar funcoes lineares, como por exemplo o algoritmo do perceptron que é um algoritmo de aprendizagem binario que busca otimizar a funcao do plano que separa as duas classes
+ 
+- Otimizacao nao linear
+    - Otimiza funcoes nao lineares, por exemplo o metodo de Newton que busca encontrar o maximo e minimo de funcoes por meio de funcoes quadraticas
 
 ### Estruturas
 
