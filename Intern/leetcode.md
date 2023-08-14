@@ -1,4 +1,4 @@
-## C++
+## Técnica
 
         #include <iostream>
         
@@ -19,41 +19,6 @@
     -  e-commerce: Walmart, eBay
     -  Serviços de nuvem: Google Cloud, Microsoft Azure
     -  streaming: Netflix, Spotify
-
-### 16 LeaderShip
-
-- Dive Deep (Mergulhar fundo)
-    - Todos são líderes
-    - Situações que não sabemos o contexto: mergulhamos de cabeça para entender o contexto, mesmo que seja difícil e consuma tempo, é preciso entender bem para chegar na melhor solução possível.
-    - Exemplo: fila: se perguntar o porque foi escolhido, saber o que é, entender a decisão, entender profundamente.
-
-- Bias for action (Ter iniciativa)
-    - Riscos calculados
-    - Tomar decisões e saber se são reversíveis ou não
-    - Caso não for reversível é preciso pensar muito bem e conhecer todos os impactos da decisão. Exemplo: linguagem de programação que irá usar, arquitetura, etc.
-    - Se for reversível facilmente, não é necessário saber sobre os mínimos detalhes, pois há muito custo de tempo, as vezes é melhor tomar a decisão e observar os resultados. Exemplo: usar um for ou um while.
-
-- Learn and be Curious
-    - Curiosidade de entender a situação e buscar alternativas para resolver o problema.
-    - Exemplo: sistema falha: curiosidade de saber o que aconteceu e como evitar.
- 
-- Deliver Results (Entregar resultados)
-    - Não se acomodar com problemas, e entender por que aconteceram
-    - Exemplo: criação de ferramenta de automação: fazer estudo da tarefa ambígua, saber os passos de entrega do plano.
-
-
-
-### Perguntas 
-
-- Exemplos de como reagiu no passado para cada um dos leaderships.
-- Método STAR.
-    - Situação: contexto
-    - Tarefa: qual tarefa e quais expectativas sobre
-    - Ação: o que foi feito, foi necessário aprender algo?
-    - Resultado: benefícios que a açõu trouxe, tempo gasto na tarefa, eficiência, processamento.
-
-- Você pode compartilhar uma situação em que você demonstrou obsessão pelo cliente?
-    - Teve uma época em que eu estava vendendo desenhos online, e tive uma compradora do Canadá que queria um desenho do marido dela e pediu para que eu entregasse antes do aniversário dele, e eu estava de férias viajando com a minha família e eu não podia fazer nas férias pois não tinha material.
 
 ### Conceitos
 
@@ -297,6 +262,117 @@
     - queue
     - explora todos os nós de um nível antes de explorar outro nível
     - caminho mais curto
+
+## Comportamental
+
+### 16 LeaderShip
+
+- Dive Deep (Mergulhar fundo)
+    - Todos são líderes
+    - Situações que não sabemos o contexto: mergulhamos de cabeça para entender o contexto, mesmo que seja difícil e consuma tempo, é preciso entender bem para chegar na melhor solução possível.
+    - Exemplo: fila: se perguntar o porque foi escolhido, saber o que é, entender a decisão, entender profundamente.
+
+- Bias for action (Ter iniciativa)
+    - Riscos calculados
+    - Tomar decisões e saber se são reversíveis ou não
+    - Caso não for reversível é preciso pensar muito bem e conhecer todos os impactos da decisão. Exemplo: linguagem de programação que irá usar, arquitetura, etc.
+    - Se for reversível facilmente, não é necessário saber sobre os mínimos detalhes, pois há muito custo de tempo, as vezes é melhor tomar a decisão e observar os resultados. Exemplo: usar um for ou um while.
+
+- Learn and be Curious
+    - Curiosidade de entender a situação e buscar alternativas para resolver o problema.
+    - Exemplo: sistema falha: curiosidade de saber o que aconteceu e como evitar.
+ 
+- Deliver Results (Entregar resultados)
+    - Não se acomodar com problemas, e entender por que aconteceram
+    - Exemplo: criação de ferramenta de automação: fazer estudo da tarefa ambígua, saber os passos de entrega do plano.
+
+### Situações
+
+Situação 1: Esquema de uma CPU com ajuda do amigo
+* Dive deep (mergulhar fundo), Learn and be Curious
+* Introdução a lógica de computadores
+* Implementar uma CPU em um programa usando
+* Caixas lógicas
+* Circuitos
+* Senti dificuldade por ser o primeiro semestre e não estar familiarizada
+* Pedi ajuda de amigo
+* Ele me disse os atributos do programa
+* Apesar de já poder ter concluído o trabalho não senti que entendi
+* Procurei a Documentação
+* Então entendi e não ficou nenhuma lacuna solta 
+
+Situação 2: EP de SO com risco calculado
+* Bias for action (Ter iniciativa)
+* Trabalho de Sistemas operacionais
+* Mudar as prioridades de processos
+* Tarefa irreversível
+* Se desse um erro o sistema quebraria
+* Estudo aprofundado
+* Matéria difícil
+* Custos muito altos caso desse erro
+
+Situação 3: EP de Tecprog 1 com escolha da implementação
+* Bias for action
+* Projeto de Técnicas de Programação 
+* Mega jogo da velha
+* Duas diferentes Implementações
+* Matriz de arrays, mais simples
+* Dicionário
+* Escolhemos o dicionário
+* Analisamos e era melhor para funções futuras
+* Eficiência
+* Liderança Amazon: Princípio de "Invent and Simplify" (Inventar e Simplificar)
+
+Situação 4: EP de IHC pensando no cliente
+* Obsessão pelo cliente
+* Projeto de Interação humano computador
+* Interface de um Microondas
+* Com apenas um botão
+* Projeto foi crucial para pensar essencialmente no cliente
+* Programador backend está acostumado a criar o código sem pensar na interface
+* Botão giratório com todas as ações 
+* Eficiência
+* Praticidade
+
+Situação 5: EP de Programação Paralela e Concorrente com imprevisto
+* Dive deep: apronfundar na tarefa
+* Tarefa paralelizar dois códigos 
+* Divisão de código entre a dupla
+* Fiz a minha parte porem a minha dupla não concluiu a parte do relatório 
+* No dia de entrega tive que finalizar a parte do relatório dela
+* Eu consegui pois sabia sobre o código dela
+
+Situação 6: Uso de testes automatizados
+* Deliver Results: entender o problema
+* Bias for action: riscos calculados
+* Projeto de Técnicas de programação 
+* Criação de testes automatizados
+* Garante entender o problema
+* Risco calculado: alteramos uma parte, se der errado corrigimos
+* Eficiência
+
+Situação 7: Trabalho em dupla com partes diferentes
+* Dive deep: procurar detalhes 
+* Projeto de técnicas de programação 
+* Implementar códigos para um jogo web
+* Código front end
+* Código back end
+* Trabalho em dupla
+* Minha dupla fez a parte
+* Ao compilar o backend e front end juntos percebi que havia erro de compilação que rodando apenas um dos dois não aparecia
+* Se eu não tivesse visto teríamos entregado errado
+
+### Perguntas 
+
+- Exemplos de como reagiu no passado para cada um dos leaderships.
+- Método STAR.
+    - Situação: contexto
+    - Tarefa: qual tarefa e quais expectativas sobre
+    - Ação: o que foi feito, foi necessário aprender algo?
+    - Resultado: benefícios que a açõu trouxe, tempo gasto na tarefa, eficiência, processamento.
+
+- Você pode compartilhar uma situação em que você demonstrou obsessão pelo cliente?
+    - Teve uma época em que eu estava vendendo desenhos online, e tive uma compradora do Canadá que queria um desenho do marido dela e pediu para que eu entregasse antes do aniversário dele, e eu estava de férias viajando com a minha família e eu não podia fazer nas férias pois não tinha material.
 
 ### Códigos do leetcode
 
