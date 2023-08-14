@@ -181,6 +181,10 @@
     - v.erase(i)
     - sort(v.begin(), v.end())
         - #include <algorithm>
+    - std::find(vec.begin(),
+                 vec.end(), "30");
+      if find == vec.end() "nao encontrou"
+      
 
 - Operações
     - expoente: pow(x,z): x^z
