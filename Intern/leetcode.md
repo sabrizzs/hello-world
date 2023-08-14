@@ -102,6 +102,9 @@
 - Otimizacao nao linear
     - Otimiza funcoes nao lineares, por exemplo o metodo de Newton que busca encontrar o maximo e minimo de funcoes por meio de funcoes quadraticas
 
+- Um dos projetos que fiz:
+    - Comprimir e descomprimir uma imagem. Inicialmente tiramos alguns pixels de uma imagem e realizamos calculos de aproximacao usando os pixels ao redor do que foi retirado para encontrar um novo pixel que melhor se aproxime do anterior. Usamos funcoes numericas como funcoes de interpolacao.
+
 ### Estruturas
 
 - Arrays
