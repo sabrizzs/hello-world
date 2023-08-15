@@ -53,6 +53,7 @@
 
         amostragem:
         f(t) = (f(t) + f(t+1))
+        n/2, n/4, n/8
 
         quantização:
         função numpy
