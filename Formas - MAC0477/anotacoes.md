@@ -15,6 +15,7 @@
         - bordas
         - serrilhado; diminuição da qtd de pixels; aliasing; anti-aliasig
         - piramides de imagens; ex: transmissão de imagens
+    - Processo radiométrico
     - contradomínio: quantização (qnt de cores)
         - diminuição da qtd de cores cria curvas de nível
      
@@ -28,3 +29,34 @@
     - cada célula possui uma aresta de um grafo
     - quare-box
     - grid intersect
+
+### Exerício
+
+- 3 etapas
+    - Gerar o sinal
+        - Gera um numpy array de tamanho 1xN (1D) ou NXN (2D)
+        - Como gerar o sinal
+
+        main:
+        sinal = geraSinal(N) #sintetiza o sinal e volta numpy array
+        piramide(sinal)
+        quantizacoes(sinal)
+
+        1D:
+        gerar senoide de N pontos
+        com frequência w (omega)
+        SIN(2pi.w.t/N)
+        retorna a senoide como numpy
+
+        2D:
+        imagem com cada linha sendo uma senoide
+
+        amostragem:
+        f(t) = (f(t) + f(t+1))
+
+        quantização:
+        função numpy
+  
+
+    - Gerar a pirâmie
+    - Gerar as quantizaçõe
