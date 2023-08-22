@@ -61,3 +61,46 @@
 
     - Gerar a pirâmie
     - Gerar as quantizaçõe
+
+22 de agosto
+
+- 4-neighborhood
+- 8-neighborhood
+    - há vizinhos com distancia diagonal
+- dependendo da implementação o número de objetos é diferente
+- **labeling algorithm**
+    - rotula objetos diferentes
+ 
+## Processamento de imagens
+
+Dados -> Imagens: CG, síntese de imagens, visualização
+
+Dados -> Dados: processamento de dados
+
+Imagens -> Dados: visão
+
+Imagens -> Dados: processamento de dados
+
+- Transformações T
+    - Io -> T -> Is
+    - Pontuais de intensidade
+        - O valor de saída depende do pixel de entrada
+    - Locais
+        - O valor do pixel de saída depende do pixel de entrada e da vizinhança dele
+
+- Histograma não é utilizado para caracterizar formas
+- log: valores pequenos são espalhados rapidamente
+    - contraste em regiões escuras
+    - saturação em regiões claras
+ 
+### Ex 3
+
+- Transformar a imagem em float e somar 0.1 para não ter log de 0
+- O mesmo com a soma, para não somar mais que 256 e subtrair menos que 0
+- 
+ 
+
+
+
+
+
