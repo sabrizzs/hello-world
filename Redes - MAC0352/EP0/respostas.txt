@@ -12,8 +12,9 @@ Endereço MAC de origem: 54:13:79:ed:3a:c5
 Endereço MAC de destino: 10:c1:72:c6:19:5e
 Protocolo da camada de aplicação: TCP
 
-O tempo necessário foi de 0.08313680s para fazer a transferência do arquivo.
+O tempo necessário foi de 0.083136820s para fazer a transferência do arquivo.
 Tamanho real do arquivo copiado do servidor do IME-USP: 10 bytes.
 Quantidade de bytes enviados do servidor para o meu computador: 6.080 bytes.
-Sobrecarga = ((6.080 bytes - 10 bytes) / 10 bytes) * 100 = 60.700%
+Cálculo da sobrecarga: ((6.080 bytes - 10 bytes) / 10 bytes) * 100 = 60.700%
+A transferencia via HTTPS gerou uma sobrecarga de 60.700% a mais de bytes.
 
