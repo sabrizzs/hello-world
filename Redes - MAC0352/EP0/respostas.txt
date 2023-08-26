@@ -1,17 +1,19 @@
 O site responsável por esse segmento de tráfego é o site do Coursera. O tráfego esta utilizando o protocolo DNS e nas informações há uma solicitação para o domínio www.coursera.org, o que indica o site responsável pelo segmento.
-
 Endereço IP fonte: 192.168.100.128
 Endereço IP destino: 8.8.8.8
 Endereço MAC de origem: 54:13:79:ed:3a:c5
 Endereço MAC de destino: 10:c1:72:c6:19:5e
 Protocolo da camada de aplicação: DNS
 
-
 Um navegador web foi responsável por esse segmento, pois o tráfego está utilizando o protocolo TCP com a porta de destino 443. Isso sugere que seja uma conexão HTTPS, que é associada à comunicação entre um navegador web e um servidor web.
-
 Endereço IP fonte: 192.168.100.128
 Endereço IP destino: 108.139.166.39
 Endereço MAC de origem: 54:13:79:ed:3a:c5
 Endereço MAC de destino: 10:c1:72:c6:19:5e
 Protocolo da camada de aplicação: TCP
+
+O tempo necessário foi de 0.08313680s para fazer a transferência do arquivo.
+Tamanho real do arquivo copiado do servidor do IME-USP: 10 bytes.
+Quantidade de bytes enviados do servidor para o meu computador: 6.080 bytes.
+Sobrecarga = ((6.080 bytes - 10 bytes) / 10 bytes) * 100 = 60.700%
 
