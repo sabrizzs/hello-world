@@ -97,9 +97,49 @@ Imagens -> Dados: processamento de dados
 
 - Transformar a imagem em float e somar 0.1 para não ter log de 0
 - O mesmo com a soma, para não somar mais que 256 e subtrair menos que 0
-- 
- 
 
+29 de agosto
+
+- Transformações locais
+    - Shift variant
+    - Shift invariant
+        - linear: T(af + bg) = aT(f) + bT(g)
+            - todo filtro linear é implementada com uma convolução
+            - toda **convolução** gera um filtro linear
+        - não-linear
+            - filtro da mediana
+
+- Filtro da média
+    - define uma região (janela/kernel/núcleo/operador) em volta do pixel
+    - valor do pixel de saída é igual a média dos pixels na janela
+    - pesos
+    - borrar imagem
+    - produto escalar entre dois vetores
+ 
+- Free variable trasnformations
+    -  Deslocamento:
+    -  adicionar move a função para a esquerda
+    -  subtrair move a função para a direita
+    -  desloca janela ao longo da imagem; translações em x e y
+    -  Mudança de escala:
+    -  espalha o sinal (ex: a = 1/2)
+    -  encolhe o sinal (ex: a = 2)
+    -  multiplicação por -1: reflexão
+    -  desvio padrão da gaussiana
+
+- Convolution
+    - * = operação entre dois sinais
+    - gera um sinal
+    - série de produtos escalares/internos
+    - comutativa: tanto faz quem é a imagem (g(t)) ou filtro (h(T-t))
+ 
+### Ex 4
+
+- G(o, o): numero aleatorio com distribuição normal para cada sin(t)
+- função de convolução
+- 1) h(t): filtro da média
+- 2) h(t): gaussiana
+- para cada sinal usa os 3 filtros 
 
 
 
