@@ -66,3 +66,11 @@ Função: O amqp-declare-queue é usado para declarar uma fila em um servidor AM
 Uso típico: amqp-declare-queue -d -q myqueue
 
 ### Informações de implementação
+
+Implementar as funções do AMQP (utilitários, etc)
+
+• Declaração da fila; 
+• Conexao de vários clientes simultaneamente (cada cliente simultâneo pode publicar ou requisitar mensagens da mesma fila ou de filas distintas);
+• Inscrição de cliente em uma fila e consequente envio das mensagens desta fila para o cliente respeitando o esquema de Round Robin caso mais de um cliente esteja conectado na mesma fila;
+• Publicação de mensagem em uma fila;
+• Desconexão de cliente.
