@@ -144,5 +144,14 @@ Imagens -> Dados: processamento de dados
 ## 12 de setembro
 
 - Filtros gaussianos: mais importãncia para quem está perto do meio; média.
+- Quando funções gaussianas se encontram, significa que o produto escalar das duas funções é o máximo, com isso encontramos objetos
+- Template matching
 
+- Correlation
+    - operador bolinha
+    - asterisco: complexo conjulgado (para números complexos)
+        - faz com que a correlação não seja comutativa
+    - encontra regiões parecidas em imagens
+ 
+- Object detection: yolo v2
 
