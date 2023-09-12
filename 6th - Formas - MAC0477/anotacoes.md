@@ -155,3 +155,7 @@ Imagens -> Dados: processamento de dados
  
 - Object detection: yolo v2
 
+### Ex 5
+
+
+
