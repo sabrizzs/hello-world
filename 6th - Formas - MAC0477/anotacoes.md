@@ -155,7 +155,10 @@ Imagens -> Dados: processamento de dados
  
 - Object detection: yolo v2
 
-### Ex 5
+### EP
+
+- 1 parte: gera dataset .zip com diretórios e csv
+- 3 parte: le nuvem e roda
 
 
 
