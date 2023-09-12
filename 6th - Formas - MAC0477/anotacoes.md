@@ -1,6 +1,6 @@
-15 de agosto
+## 15 de agosto
 
-## SHAPE ACQUISITION AND PROCESSING (chap3.pdf)
+### SHAPE ACQUISITION AND PROCESSING (chap3.pdf)
 
 ### Image Formation
 
@@ -62,7 +62,7 @@
     - Gerar a pirâmie
     - Gerar as quantizaçõe
 
-22 de agosto
+## 22 de agosto
 
 - 4-neighborhood
 - 8-neighborhood
@@ -71,7 +71,7 @@
 - **labeling algorithm**
     - rotula objetos diferentes
  
-## Processamento de imagens
+### Processamento de imagens
 
 Dados -> Imagens: CG, síntese de imagens, visualização
 
@@ -98,7 +98,7 @@ Imagens -> Dados: processamento de dados
 - Transformar a imagem em float e somar 0.1 para não ter log de 0
 - O mesmo com a soma, para não somar mais que 256 e subtrair menos que 0
 
-29 de agosto
+## 29 de agosto
 
 - Transformações locais
     - Shift variant
@@ -130,7 +130,7 @@ Imagens -> Dados: processamento de dados
 - Convolution
     - * = operação entre dois sinais
     - gera um sinal
-    - série de produtos escalares/internos
+    - com tal fixo: série de produtos escalares/internos
     - comutativa: tanto faz quem é a imagem (g(t)) ou filtro (h(T-t))
  
 ### Ex 4
@@ -141,6 +141,8 @@ Imagens -> Dados: processamento de dados
 - 2) h(t): gaussiana
 - para cada sinal usa os 3 filtros 
 
+## 12 de setembro
 
+- Filtros gaussianos: mais importãncia para quem está perto do meio; média.
 
 
