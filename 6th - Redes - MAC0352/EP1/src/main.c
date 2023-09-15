@@ -173,18 +173,24 @@ int main (int argc, char **argv) {
             while ((n=read(connfd, recvline, MAXLINE)) > 0) {
                 recvline[n]=0;
                 printf("[Cliente conectado no processo filho %d enviou:] ",getpid());
+                
                 if ((fputs(recvline,stdout)) == EOF) {
                     perror("fputs :( \n");
                     exit(6);
                 }
-                printf("teste");
-                if(strncmp(recvline, "amqp-publish", 12) == 0) {
-                    printf("Comando amqp-publish detectado\n")
-                    //process_amqp_publish_command(recvline);
-                }
-
+                
                 write(connfd, recvline, strlen(recvline));
 
+                if(strncmp(recvline, "amqp-publish", 12) == 0) {
+                    printf("amqp-publish command\n")
+                    //process_amqp_publish_command(recvline);
+                } else if(strncmp(recvline, "amqp-consume", 12) == 0) {
+                    printf("amqp-consume command\n")
+      
+                } else if(strncmp(recvline, "amqp-declare-queue", 18) == 0) {
+                    printf("amqp-declare-queue command\n")
+                    
+                }
                 
             }
             /* ========================================================= */
