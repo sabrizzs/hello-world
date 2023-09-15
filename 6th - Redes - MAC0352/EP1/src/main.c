@@ -177,12 +177,15 @@ int main (int argc, char **argv) {
                     perror("fputs :( \n");
                     exit(6);
                 }
-                write(connfd, recvline, strlen(recvline));
-                
+
                 if (strncmp(recvline, "amqp-publish", 12) == 0) {
                     printf("Comando amqp-publish detectado\n")
                     //process_amqp_publish_command(recvline);
                 }
+
+                write(connfd, recvline, strlen(recvline));
+
+                
             }
             /* ========================================================= */
             /* ========================================================= */
