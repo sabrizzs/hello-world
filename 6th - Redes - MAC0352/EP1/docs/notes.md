@@ -99,5 +99,8 @@ Isso inclui a criação de novas conexões, o gerenciamento de conexões ativas 
   
 Se necessário, funções para implementar políticas de troca que determinam como as mensagens são roteadas entre filas.
 
+- Cada mensagem tem um header:
+
+
 
 
