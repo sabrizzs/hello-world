@@ -67,10 +67,37 @@ Uso típico: amqp-declare-queue -d -q myqueue
 
 ### Informações de implementação
 
-Implementar as funções do AMQP (utilitários, etc)
+- **Declaração de Fila (Queue Declaration):**
+  
+Função para permitir que os clientes declarem filas.
+Essa função deve receber os parâmetros relevantes para a declaração da fila, como o nome da fila e as opções de configuração.
+Ela deve criar a fila no servidor e definir suas propriedades conforme especificado pelo cliente.
 
-• Declaração da fila; 
-• Conexao de vários clientes simultaneamente (cada cliente simultâneo pode publicar ou requisitar mensagens da mesma fila ou de filas distintas);
-• Inscrição de cliente em uma fila e consequente envio das mensagens desta fila para o cliente respeitando o esquema de Round Robin caso mais de um cliente esteja conectado na mesma fila;
-• Publicação de mensagem em uma fila;
-• Desconexão de cliente.
+- **Publicação de Mensagem (Message Publishing):**
+  
+Função para permitir que os clientes publiquem mensagens em uma fila específica.
+Essa função deve receber a mensagem do cliente, a fila de destino e quaisquer outros parâmetros relevantes.
+Ela deve adicionar a mensagem à fila de destino para posterior entrega aos consumidores.
+
+- **Inscrição em Fila (Queue Subscription):**
+  
+Função para permitir que os clientes se inscrevam em uma fila para receber mensagens.
+Essa função deve associar o cliente à fila de destino, permitindo que ele receba mensagens dessa fila.
+Se múltiplos clientes se inscreverem na mesma fila, você deve implementar um esquema de Round Robin para entregar mensagens alternadamente.
+
+- **Entrega de Mensagens (Message Delivery):**
+  
+Função que gerencia a entrega de mensagens aos clientes inscritos em uma fila.
+Ela deve garantir que as mensagens sejam entregues aos clientes inscritos de acordo com as políticas de entrega, como o esquema Round Robin mencionado.
+
+- **Gerenciamento de Conexões (Connection Management):**
+  
+Funções para lidar com a abertura e fechamento de conexões de clientes.
+Isso inclui a criação de novas conexões, o gerenciamento de conexões ativas e o tratamento de desconexões inesperadas.
+
+- **Implementação de Políticas de Troca (Exchange Policies):**
+  
+Se necessário, funções para implementar políticas de troca que determinam como as mensagens são roteadas entre filas.
+
+
+
