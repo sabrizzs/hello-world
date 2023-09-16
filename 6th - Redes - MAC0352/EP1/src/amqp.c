@@ -3,27 +3,47 @@
 
 #include "amqp.h"
 
-// Implementação das funções das mensagens
-
+/* Cabeçalho do protocolo AMQP */
 void initializeAMQPConnection(AMQPConnectionMessage *connection) {
-    strcpy(connection->protocol_name, "AMQP"); 
-    connection->major_version = 0;
-    connection->minor_version = 9;
+    strcpy(connection->protocol_name, "AMQP");
+    connection->major_id = 0;
+    connection->minor_id = 0;
+    connection->major_version = 9;
+    connection->minor_version = 1;
 }
 
-void initializeAMQPQueueDeclare(AMQPQueueDeclareMessage *queueDeclare) {
+/* Negociação do protocolo AMQP */
+int protocolNegotiation(int clientSocket) {
+    // Envia o cabeçalho de protocolo AMQP para o cliente
+    AMQPConnectionMessage connectionMessage;
+    initializeAMQPConnection(&connectionMessage);
+    send(clientSocket, &connectionMessage, sizeof(AMQPConnectionMessage), 0);
+
+    // Recebe o cabeçalho de protocolo do cliente
+    AMQPConnectionMessage clientConnectionMessage;
+    recv(clientSocket, &clientConnectionMessage, sizeof(AMQPConnectionMessage), 0);
+
+    // Verificar a compatibilidade das versões
+    if (strcmp(clientConnectionMessage.protocol_name, "AMQP") == 0 &&
+        clientConnectionMessage.major_version == 0 &&
+        clientConnectionMessage.minor_version == 9) {
+        // As versões são compatíveis, a negociação foi bem-sucedida
+        return 1;
+    } else {
+        // As versões não são compatíveis, encerrar a conexão
+        return 0;
+    }
+}
+
+
+/* Inicializa uma mensagem de método para declarar fila */
+void initializeAMQPQueueDeclare(AMQPMessageHeader *queueDeclare) {
     queueDeclare->channel = 1; // Canal AMQP
-    queueDeclare->frame_size = 0; // Tamanho do quadro (frame)
-    queueDeclare->class_id = 50; // ID da classe (declaração de fila)
+    queueDeclare->msg_type = 1; // Mensagem de método
+    queueDeclare->length = 5; 
 }
 
-void initializeAMQPPublish(AMQPPublishMessage *publish) {
-    publish->channel = 1; // Canal AMQP
-    publish->frame_size = 0; // Tamanho do quadro (frame)
-    publish->class_id = 60; // ID da classe (publicação)
-}
-
-// Função para processar o comando "amqp-publish"
+/* Processa o comando "amqp-publish" */
 void amqp_publish_command(char *recvline) {
     printf("Processing amqp-publish command\n");
     AMQPConnectionMessage connectionMessage;

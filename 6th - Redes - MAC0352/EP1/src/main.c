@@ -186,6 +186,7 @@ int main (int argc, char **argv) {
                 if(strncmp(recvline, "amqp-publish", 12) == 0) {
                     printf("amqp-publish command\n");
                     amqp_publish_command(recvline);
+                    protocolNegotiation(connfd);
                     
                 } else if(strncmp(recvline, "amqp-consume", 12) == 0) {
                     printf("amqp-consume command\n");

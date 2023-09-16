@@ -3,40 +3,37 @@
 
 #include <stdint.h>
 
-// Estrutura das mensagens
+/* Estrutura das mensagens */
 
-// Mensagem de conexão: primeira mensagem enviada após a conexão TCP ser estabelecida
+/* Tipos de mensagens AMQP */
+typedef enum {
+    METHOD = 1,  // Mensagem de Método: afetam o estado do servidor (queue, exchange, publish, etc)
+    HEADER = 2,
+    CONTENT = 4, // Mensagem de Conteúdo: corpo real das mensagens
+    HEARTBEAT = 8 // Mensagem de Heartbeat: mantém conexão ativa
+} AMQPMessageType;
+
+/* Protocol header */
 typedef struct {
-    char protocol_name[8];
+    char protocol_name[4];
+    uint8_t major_id;
+    uint8_t minor_id;
     uint8_t major_version;
     uint8_t minor_version;
 } AMQPConnectionMessage;
 
-// Mensagem de declaração de fila: criação de nova fila no servidor
+/* Message header */
 typedef struct {
+    uint8_t msg_type;
     uint16_t channel;
-    uint32_t frame_size;
-    uint16_t class_id;
-} AMQPQueueDeclareMessage;
+    uint32_t length;
+} AMQPMessageHeader;
 
-// Mensagem de publicação: usada para enviar uma mensagem para uma fila específica
-typedef struct {
-    uint16_t channel;
-    uint32_t frame_size;
-    uint16_t class_id;
-} AMQPPublishMessage;
-
-
-// Protótipos das funções relacionadas ao AMQP
 void initializeAMQPConnection(AMQPConnectionMessage *connection);
-void initializeAMQPQueueDeclare(AMQPQueueDeclareMessage *queueDeclare);
-void initializeAMQPPublish(AMQPPublishMessage *publish);
 
-
-//typedef struct publish_packet{
-
-// Função para processar o comando "amqp-publish"
 void amqp_publish_command(char *recvline);
+
+int protocolNegotiation(int clientSocket);
 
 //void amqp_consume_command(const char *command); 
 
