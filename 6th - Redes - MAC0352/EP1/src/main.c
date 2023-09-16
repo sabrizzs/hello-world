@@ -183,7 +183,8 @@ int main (int argc, char **argv) {
 
                 if(strncmp(recvline, "amqp-publish", 12) == 0) {
                     printf("amqp-publish command\n")
-                    //process_amqp_publish_command(recvline);
+                    amqp_publish_command(recvline);
+                    
                 } else if(strncmp(recvline, "amqp-consume", 12) == 0) {
                     printf("amqp-consume command\n")
       

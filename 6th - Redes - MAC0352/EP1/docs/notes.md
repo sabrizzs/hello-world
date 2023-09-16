@@ -99,8 +99,24 @@ Isso inclui a criação de novas conexões, o gerenciamento de conexões ativas 
   
 Se necessário, funções para implementar políticas de troca que determinam como as mensagens são roteadas entre filas.
 
+<<<<<<< Updated upstream
 - Cada mensagem tem um header:
 
 
+=======
+##############
+
+- **Definir a Estrutura de Mensagens AMQP:** Você precisará criar estruturas de dados para representar os diferentes tipos de mensagens AMQP, como mensagens de conexão, mensagens de declaração de filas, mensagens de publicação e assim por diante. Essas estruturas de dados devem ser usadas para serializar e desserializar as mensagens.
+
+- **Negociação de Conexão:** Implemente a lógica para a negociação de conexão AMQP. Isso inclui o aperto de mão inicial, onde o servidor e o cliente concordam com a versão do protocolo a ser usada.
+
+- **Gerenciamento de Canais:** O protocolo AMQP permite que várias operações ocorram em canais separados. Implemente a lógica para criar, selecionar e fechar canais.
+
+- **Declaração de Filas:** Implemente a capacidade de o cliente declarar filas, definindo seus atributos, como nome, durabilidade, argumentos, etc.
+
+- **Publicação de Mensagens:** Implemente a capacidade de o cliente publicar mensagens em filas.
+
+- **Consumo de Mensagens:** Implemente a capacidade de o cliente consumir mensagens de filas e entregar essas mensagens aos consumidores registrados.
+>>>>>>> Stashed changes
 
 
