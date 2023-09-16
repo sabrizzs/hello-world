@@ -24,9 +24,9 @@ int protocolNegotiation(int clientSocket) {
     recv(clientSocket, &clientConnectionMessage, sizeof(AMQPConnectionMessage), 0);
 
     // Verificar a compatibilidade das versões
-    if (strcmp(clientConnectionMessage.protocol_name, "AMQP") == 0 &&
-        clientConnectionMessage.major_version == 0 &&
-        clientConnectionMessage.minor_version == 9) {
+    if (strcmp(clientConnectionMessage.protocol_name, "AMQP") == 0) {//&&
+        //clientConnectionMessage.major_version == 0 &&
+        //clientConnectionMessage.minor_version == 9) {
         // As versões são compatíveis, a negociação foi bem-sucedida
         printf("As versões são compatíveis.");
         return 1;
