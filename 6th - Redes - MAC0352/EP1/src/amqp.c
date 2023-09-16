@@ -25,5 +25,6 @@ void amqp_publish_command(char *recvline) {
     printf("Processing amqp-publish command\n");
     AMQPConnectionMessage connectionMessage;
     initializeAMQPConnection(&connectionMessage);
+    return;
 }
 

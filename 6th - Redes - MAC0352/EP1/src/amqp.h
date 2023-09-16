@@ -38,7 +38,6 @@ void initializeAMQPPublish(AMQPPublishMessage *publish);
 // Função para processar o comando "amqp-publish"
 void amqp_publish_command(char *recvline);
 
-
 //void amqp_consume_command(const char *command); 
 
 //void amqp_declare_queue_command(const char *command); 
