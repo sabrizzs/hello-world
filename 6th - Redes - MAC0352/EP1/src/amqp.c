@@ -1,3 +1,6 @@
+#include <string.h>
+#include <stdio.h>
+
 #include "amqp.h"
 
 // Implementação das funções das mensagens
