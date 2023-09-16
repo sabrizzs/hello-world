@@ -36,11 +36,8 @@ void initializeAMQPPublish(AMQPPublishMessage *publish);
 //typedef struct publish_packet{
 
 // Função para processar o comando "amqp-publish"
-void amqp_publish_command(char *recvline) {
-    printf("Processing amqp-publish command\n");
-    AMQPConnectionMessage connectionMessage;
-    initializeAMQPConnection(&connectionMessage);
-}
+void amqp_publish_command(char *recvline);
+
 
 //void amqp_consume_command(const char *command); 
 

@@ -20,7 +20,10 @@ void initializeAMQPPublish(AMQPPublishMessage *publish) {
     publish->class_id = 60; // ID da classe (publicação)
 }
 
-void amqp_publish_command(const char *command) {
-    return;
+// Função para processar o comando "amqp-publish"
+void amqp_publish_command(char *recvline) {
+    printf("Processing amqp-publish command\n");
+    AMQPConnectionMessage connectionMessage;
+    initializeAMQPConnection(&connectionMessage);
 }
 
