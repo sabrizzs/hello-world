@@ -28,9 +28,11 @@ int protocolNegotiation(int clientSocket) {
         clientConnectionMessage.major_version == 0 &&
         clientConnectionMessage.minor_version == 9) {
         // As versões são compatíveis, a negociação foi bem-sucedida
+        printf("As versões são compatíveis.");
         return 1;
     } else {
         // As versões não são compatíveis, encerrar a conexão
+        printf("As versões não são compatíveis.");
         return 0;
     }
 }
