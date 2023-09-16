@@ -1,8 +1,9 @@
 CC = gcc
 CFLAGS = -Wall -Wextra
-TARGET = meu_servidor
-SRCS = main.c amqp.c
-HEADERS = amqp.h
+TARGET = main
+SRC_DIR = src
+SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/amqp.c
+HEADERS = $(SRC_DIR)/amqp.h
 
 $(TARGET): $(SRCS) $(HEADERS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(SRCS)
@@ -13,3 +14,4 @@ clean:
 .PHONY: all clean
 
 all: $(TARGET)
+
