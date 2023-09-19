@@ -160,5 +160,54 @@ Imagens -> Dados: processamento de dados
 - 1 parte: gera dataset .zip com diretórios e csv
 - 3 parte: le nuvem e roda
 
+## 19 de setembro
 
+[****](https://www.minijogos.com.br/jogo/the-great-kitchen-escape)
 
+- Template matching
+- produto escalar
+- Reconhecimento de formas:
+    - Região 2D (f(x,y))
+    - Contorno 1D (x(t), y(t
+- Fourier
+    - Domínio do sinal: transformações levam o sinal até outro domínio que facilita certas coisas
+        - Transformada
+    - Para transmitir um cosseno, basta transmitir a frequência
+        - Um gráfico com picos de acordo com o número de frequências
+        - Representação do domínio mais barata
+        - Transformada do cosseno
+    - Qualquer sinal pode ser representado por uma combinação linear de senos e cossenos
+    - Sinal discreto (t não é real) e finito
+
+English version
+
+- Template matching
+- Scalar product
+- Shape recognition
+    - 2D Region
+    - 1D Contour
+
+- Fourier
+    - Signal domain: transformations take the signal to another domain that facilitates certain things
+        - Transform
+    - To transmit a cosine, just transmit the frequency
+        - Cheapiest domain representation
+        - Cosine transform
+    - Any signal can be represented by a linear combination of sine and cosines
+    - Discrete and finite signal (t isn't real)
+    - 3 Fourier transform
+        - Fourier series
+        - Continuous Fourier Transform
+        - Discrete fourier transform (FFT)
+    - Fourier analysis
+        - The only thing that needs to be stored is the a and b
+        - sysntesis: linear combination of sines and cosines
+        - to calculate the coeficients a and b: intern products of input signal and sine and cosines
+        - an and bn are g(t): coordinates of the vector in a intern product
+        - base change matrix
+        - fourier pair
+     
+- Fourier and convolution
+    - Convolution theorem
+
+slide 115
