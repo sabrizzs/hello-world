@@ -11,7 +11,7 @@ typedef enum {
     HEADER = 2,
     CONTENT = 4, // Mensagem de Conteúdo: corpo real das mensagens
     HEARTBEAT = 8 // Mensagem de Heartbeat: mantém conexão ativa
-} AMQPMessageType;
+} MessageType;
 
 /* Protocol header */
 typedef struct {
@@ -20,16 +20,22 @@ typedef struct {
     uint8_t minor_id;
     uint8_t major_version;
     uint8_t minor_version;
-} AMQPConnectionMessage;
+} ProtocolHeader;
 
 /* Message header */
 typedef struct {
     uint8_t msg_type;
     uint16_t channel;
     uint32_t length;
-} AMQPMessageHeader;
+} Message;
 
-void initializeAMQPConnection(AMQPConnectionMessage *connection);
+typedef struct {
+    char * data;
+    int size;
+} Packet;
+
+
+void initializeAMQPConnection(ProtocolHeader *connection);
 
 void amqp_publish_command(char *recvline);
 
