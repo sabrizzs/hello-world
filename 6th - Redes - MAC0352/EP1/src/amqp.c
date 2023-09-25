@@ -17,25 +17,37 @@ int protocolNegotiation(int clientSocket) {
     // Envia o cabeçalho de protocolo AMQP para o cliente
     AMQPConnectionMessage connectionMessage;
     initializeAMQPConnection(&connectionMessage);
-    send(clientSocket, &connectionMessage, sizeof(AMQPConnectionMessage), 0);
+    // send(clientSocket, &connectionMessage, sizeof(AMQPConnectionMessage), 0);
 
     // Recebe o cabeçalho de protocolo do cliente
     AMQPConnectionMessage clientConnectionMessage;
-    recv(clientSocket, &clientConnectionMessage, sizeof(AMQPConnectionMessage), 0);
+    ssize_t bytesRead = read(clientSocket, &clientConnectionMessage, sizeof(AMQPConnectionMessage));
+
+    if (bytesRead == -1) {
+        perror("Error reading from socket");
+        return 0; // Tratamento de erro, a leitura falhou
+    }
 
     // Verificar a compatibilidade das versões
-    if (strcmp(clientConnectionMessage.protocol_name, "AMQP") == 0) {//&&
+    if (strcmp(clientConnectionMessage.protocol_name, connectionMessage.protocol_name) == 0) {//&&
         //clientConnectionMessage.major_version == 0 &&
         //clientConnectionMessage.minor_version == 9) {
         // As versões são compatíveis, a negociação foi bem-sucedida
         printf("As versões são compatíveis.");
+        printf("Protocol Name: %s\n", clientConnectionMessage.protocol_name);
         return 1;
     } else {
         // As versões não são compatíveis, encerrar a conexão
         printf("As versões não são compatíveis.");
+        printf("Protocol Name: %s\n", clientConnectionMessage.protocol_name);
+        printf("Número de caracteres em protocol_name: %zu\n", strlen(clientConnectionMessage.protocol_name));
+        printf("Número de caracteres em protocol_name: %zu\n", strlen(connectionMessage.protocol_name));
+
+
         return 0;
     }
 }
+
 
 
 /* Inicializa uma mensagem de método para declarar fila */
