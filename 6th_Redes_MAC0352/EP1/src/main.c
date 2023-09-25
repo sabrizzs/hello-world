@@ -181,10 +181,9 @@ int main (int argc, char **argv) {
                     exit(6);
                 }
                 
-                write(connfd, recvline, strlen(recvline));
+                startConnection(connfd);
 
-                
-                
+                // write(connfd, recvline, strlen(recvline));      
             }
             /* ========================================================= */
             /* ========================================================= */
