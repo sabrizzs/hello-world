@@ -1,6 +1,0 @@
-EP1 FTP https://github.com/AkumaEX/MAC0352-EP1/tree/master
-EP1 MQTT https://gitlab.com/TGuerrero_/mac0352/-/blob/main/EP1/src/broker.c?ref_type=heads
-EP1 MQTT https://github.com/jaehnri/MAC0352/tree/main/EP1/src
-EP1 AMQP https://github.com/lucasoshiro/amqp_broker
-EP1 MQTT https://github.com/wangwillian0/MAC0352-MQTT-server/blob/main/broker.c
-EP1 MQTT https://github.com/LucaDillenburg/MAC0352-EP1
