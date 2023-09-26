@@ -4,20 +4,22 @@
 #include "amqp.h"
 #include "packets.h"
 
+#include "hardcode.h"
+
 void processAMQPMessage() {
     printf("processAMQPMessage\n");
     return;
 }
 
-void startConnection(int connfd) {
-    int state = STATE_CONNECTION_START;
+int AMQPConnection(int connfd, int state) {
     switch (state) {
         case STATE_CONNECTION_START:
             // Connection start process
             printf("State: STATE_CONNECTION_START\n");
+            //write(connfd, CONNECTION_START_PKT, SZ_CONNECTION_START_PKT - 1);
             write(connfd, CONNECTION_START_PACKET, CONNECTION_START_PACKET_SIZE - 1);
+            printf("teste\n");
             state++;
-            printf(state);
             break;
         case STATE_CONNECTION_TUNE:
             // Connection tune process
@@ -43,4 +45,5 @@ void startConnection(int connfd) {
             processAMQPMessage();
             break;
     }
+    return state;
 }

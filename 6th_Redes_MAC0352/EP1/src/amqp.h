@@ -8,6 +8,6 @@
 
 void processAMQPMessage();
 
-void startConnection(int connfd);
+int AMQPConnection(int connfd, int state);
 
 #endif // AMQP_H
