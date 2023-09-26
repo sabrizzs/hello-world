@@ -1,0 +1,13 @@
+AMQP broker
+
+- O publisher não manda a mensagem diretamente para a fila e sim para o exchange.
+
+- O exchange comanda para qual fila a mensagem deve ir.
+
+- Routing key: usada em exchanges
+
+- Binding associa o exchange a uma fila: como mensagens que chegam ao exchange devem ser entregues a essa fila
+
+- Existe mais de uma fila?
+
+- Message Queue Properties: name, exclusive, durable
