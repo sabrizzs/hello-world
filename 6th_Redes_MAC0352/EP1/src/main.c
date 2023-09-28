@@ -177,8 +177,6 @@ int main (int argc, char **argv) {
                 recvline[n]=0;
                 printf("[Cliente conectado no processo filho %d enviou:] ",getpid());
                 
-                printf("recvline: %s\n", recvline);
-
                 unsigned char classValue = recvline[8];
                 unsigned char methodValue = recvline[10];
 
