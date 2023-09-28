@@ -67,6 +67,6 @@ enum amqp_method{
 
 void processAMQPMessage();
 
-int AMQPConnection(int connfd, int classValue, int methodValue);
+void AMQPConnection(int connfd, int classValue, int methodValue);
 
 #endif // AMQP_H

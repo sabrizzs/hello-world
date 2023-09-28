@@ -9,7 +9,7 @@ void processAMQPMessage() {
     return;
 }
 
-int AMQPConnection(int connfd, int classValue, int methodValue) {
+void AMQPConnection(int connfd, int classValue, int methodValue) {
     switch (classValue) {
         case CONNECTION:
             switch (methodValue){
@@ -98,5 +98,4 @@ int AMQPConnection(int connfd, int classValue, int methodValue) {
             }
             break;
     }
-    return state;
 }
