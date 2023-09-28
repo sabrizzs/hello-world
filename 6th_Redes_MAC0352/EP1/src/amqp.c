@@ -11,7 +11,8 @@ void processAMQPMessage() {
 
 void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodValue) {
     printf("AMQPConnection function\n");
-    printf("classValue: %s, methodValue: %s\n", classValue, methodValue);
+    printf("classValue: %u, methodValue: %u\n", classValue, methodValue);
+    printf("teste %u", CONNECTION_TUNE);
     switch (classValue) {
         case CONNECTION:
             printf("case CONNECTION\n");
