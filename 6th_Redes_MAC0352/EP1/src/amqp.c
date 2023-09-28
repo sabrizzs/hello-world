@@ -45,6 +45,9 @@ void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodVa
                     printf("Servidor enviou o método CONNECTION_CLOSE_OK\n");
                     write(connfd, PACKET_CONNECTION_CLOSE_OK, PACKET_CONNECTION_CLOSE_OK_SIZE - 1);
                     break;
+                default:
+                    printf("Método desconhecido\n");
+                    break;
             }
             break;
         case CHANNEL:
@@ -63,6 +66,9 @@ void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodVa
                     printf("Servidor enviou o método CHANNEL_CLOSE_OK\n");
                     write(connfd, PACKET_CHANNEL_CLOSE_OK, PACKET_CHANNEL_CLOSE_OK_SIZE - 1);
                     break;
+                default:
+                    printf("Método desconhecido\n");
+                    break;
             }
             break;
         case QUEUE:
@@ -73,6 +79,9 @@ void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodVa
                 case QUEUE_DECLARE_OK:
                     printf("Servidor enviou o método QUEUE_DECLARE_OK\n");
                     write(connfd, PACKET_QUEUE_DECLARE_OK, PACKET_QUEUE_DECLARE_OK_SIZE - 1);
+                    break;
+                default:
+                    printf("Método desconhecido\n");
                     break;
             }
             break;
@@ -98,7 +107,13 @@ void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodVa
                 case BASIC_ACK:
                     printf("Cliente enviou o método BASIC_ACK\n");
                     break;
+                default:
+                    printf("Método desconhecido\n");
+                    break;
             }
+            break;
+        default:
+            printf("Classe desconhecida\n");
             break;
     }
 }
