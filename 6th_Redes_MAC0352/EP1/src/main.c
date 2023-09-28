@@ -180,6 +180,8 @@ int main (int argc, char **argv) {
                 unsigned char classValue = recvline[8];
                 unsigned char methodValue = recvline[10];
 
+                printf("classValue: %u, methodValue: %u\n", classValue, methodValue);
+
                 AMQPConnection(connfd, classValue, methodValue);
 
                 // write(connfd, recvline, strlen(recvline));      

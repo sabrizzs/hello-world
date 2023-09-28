@@ -10,8 +10,10 @@ void processAMQPMessage() {
 }
 
 void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodValue) {
+    printf("AMQPConnection function\n");
     switch (classValue) {
         case CONNECTION:
+            printf("case CONNECTION\n");
             switch (methodValue){
                 case CONNECTION_START:
                     printf("Servidor enviou o método CONNECTION_START\n");
