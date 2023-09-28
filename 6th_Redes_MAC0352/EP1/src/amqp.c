@@ -10,9 +10,6 @@ void processAMQPMessage() {
 }
 
 void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodValue) {
-    printf("AMQPConnection function\n");
-    printf("classValue: %x, methodValue: %x\n", classValue, methodValue);
-
     switch (classValue) {
         case CONNECTION:
             printf("case CONNECTION\n");
@@ -24,18 +21,12 @@ void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodVa
                     break;
                 case CONNECTION_TUNE_OK:
                     printf("Cliente enviou o método CONNECTION_TUNE_OK\n");
-                    break;
-                /*case CONNECTION_OPEN:
                     printf("Cliente enviou o método CONNECTION_OPEN\n");
-                    break;*/
-                case CONNECTION_OPEN_OK:
                     printf("Servidor enviou o método CONNECTION_OPEN_OK\n");
                     write(connfd, PACKET_CONNECTION_OPEN_OK, PACKET_CONNECTION_OPEN_OK_SIZE - 1);
                     break;
-                /*case CONNECTION_CLOSE:
+                case CONNECTION_CLOSE:
                     printf("Cliente enviou o método CONNECTION_CLOSE\n");
-                    break;*/
-                case CONNECTION_CLOSE_OK:
                     printf("Servidor enviou o método CONNECTION_CLOSE_OK\n");
                     write(connfd, PACKET_CONNECTION_CLOSE_OK, PACKET_CONNECTION_CLOSE_OK_SIZE - 1);
                     break;
@@ -46,17 +37,13 @@ void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodVa
             break;
         case CHANNEL:
             switch (methodValue){
-                /*case CHANNEL_OPEN:
+                case CHANNEL_OPEN:
                     printf("Cliente enviou o método CHANNEL_OPEN\n");
-                    break;*/
-                case CHANNEL_OPEN_OK:
                     printf("Servidor enviou o método CHANNEL_OPEN_OK\n");
                     write(connfd, PACKET_CHANNEL_OPEN_OK, PACKET_CHANNEL_OPEN_OK_SIZE - 1);
                     break;
-                /*case CHANNEL_CLOSE:
+                case CHANNEL_CLOSE:
                     printf("Cliente enviou o método CHANNEL_CLOSE\n");
-                    break;*/
-                case CHANNEL_CLOSE_OK: 
                     printf("Servidor enviou o método CHANNEL_CLOSE_OK\n");
                     write(connfd, PACKET_CHANNEL_CLOSE_OK, PACKET_CHANNEL_CLOSE_OK_SIZE - 1);
                     break;
@@ -67,10 +54,8 @@ void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodVa
             break;
         case QUEUE:
             switch(methodValue){
-                /*case QUEUE_DECLARE:
+                case QUEUE_DECLARE:
                     printf("Cliente enviou o método QUEUE_DECLARE\n");
-                    break;*/
-                case QUEUE_DECLARE_OK:
                     printf("Servidor enviou o método QUEUE_DECLARE_OK\n");
                     write(connfd, PACKET_QUEUE_DECLARE_OK, PACKET_QUEUE_DECLARE_OK_SIZE - 1);
                     break;
