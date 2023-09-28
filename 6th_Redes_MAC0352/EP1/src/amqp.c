@@ -12,7 +12,35 @@ void processAMQPMessage() {
 void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodValue) {
     printf("AMQPConnection function\n");
     printf("classValue: %u, methodValue: %u\n", classValue, methodValue);
-    printf("teste %u", CONNECTION_TUNE);
+
+    printf("Classes:\n");
+    printf("CONNECTION: %x\n", CONNECTION);
+    printf("CHANNEL: %x\n", CHANNEL);
+    printf("QUEUE: %x\n", QUEUE);
+    printf("BASIC: %x\n", BASIC);
+    
+    printf("\nMethods:\n");
+    printf("CONNECTION_START: %x\n", CONNECTION_START);
+    printf("CONNECTION_START_OK: %x\n", CONNECTION_START_OK);
+    printf("CONNECTION_TUNE: %x\n", CONNECTION_TUNE);
+    printf("CONNECTION_TUNE_OK: %x\n", CONNECTION_TUNE_OK);
+    printf("CONNECTION_OPEN: %x\n", CONNECTION_OPEN);
+    printf("CONNECTION_OPEN_OK: %x\n", CONNECTION_OPEN_OK);
+    printf("CONNECTION_CLOSE: %x\n", CONNECTION_CLOSE);
+    printf("CONNECTION_CLOSE_OK: %x\n", CONNECTION_CLOSE_OK);
+    printf("CHANNEL_OPEN: %x\n", CHANNEL_OPEN);
+    printf("CHANNEL_OPEN_OK: %x\n", CHANNEL_OPEN_OK);
+    printf("CHANNEL_CLOSE: %x\n", CHANNEL_CLOSE);
+    printf("CHANNEL_CLOSE_OK: %x\n", CHANNEL_CLOSE_OK);
+    printf("QUEUE_DECLARE: %x\n", QUEUE_DECLARE);
+    printf("QUEUE_DECLARE_OK: %x\n", QUEUE_DECLARE_OK);
+    printf("BASIC_PUBLISH: %x\n", BASIC_PUBLISH);
+    printf("BASIC_QOS: %x\n", BASIC_QOS);
+    printf("BASIC_QOS_OK: %x\n", BASIC_QOS_OK);
+    printf("BASIC_CONSUME: %x\n", BASIC_CONSUME);
+    printf("BASIC_CONSUME_OK: %x\n", BASIC_CONSUME_OK);
+    printf("BASIC_ACK: %x\n", BASIC_ACK);
+    
     switch (classValue) {
         case CONNECTION:
             printf("case CONNECTION\n");
