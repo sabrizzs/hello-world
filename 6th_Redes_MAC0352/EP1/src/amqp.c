@@ -11,7 +11,7 @@ void processAMQPMessage() {
 
 void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodValue) {
     printf("AMQPConnection function\n");
-    printf("classValue: %u, methodValue: %u\n", classValue, methodValue);
+    printf("classValue: %x, methodValue: %x\n", classValue, methodValue);
 
     printf("Classes:\n");
     printf("CONNECTION: %x\n", CONNECTION);
@@ -40,7 +40,7 @@ void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodVa
     printf("BASIC_CONSUME: %x\n", BASIC_CONSUME);
     printf("BASIC_CONSUME_OK: %x\n", BASIC_CONSUME_OK);
     printf("BASIC_ACK: %x\n", BASIC_ACK);
-    
+
     switch (classValue) {
         case CONNECTION:
             printf("case CONNECTION\n");
