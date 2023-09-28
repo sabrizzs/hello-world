@@ -17,16 +17,14 @@ void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodVa
         case CONNECTION:
             printf("case CONNECTION\n");
             switch (methodValue){
-                /*case CONNECTION_START_OK:
+                case CONNECTION_START_OK:
                     printf("Cliente enviou o método CONNECTION_START_OK\n");
-                    break;*/
-                case CONNECTION_TUNE:
                     printf("Servidor enviou o método CONNECTION_TUNE\n");
                     write(connfd, PACKET_CONNECTION_TUNE, PACKET_CONNECTION_TUNE_SIZE - 1);
                     break;
-                /*case CONNECTION_TUNE_OK:
+                case CONNECTION_TUNE_OK:
                     printf("Cliente enviou o método CONNECTION_TUNE_OK\n");
-                    break;*/
+                    break;
                 /*case CONNECTION_OPEN:
                     printf("Cliente enviou o método CONNECTION_OPEN\n");
                     break;*/
