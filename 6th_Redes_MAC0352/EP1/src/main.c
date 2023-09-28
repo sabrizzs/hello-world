@@ -179,6 +179,7 @@ int main (int argc, char **argv) {
                 printf("[Cliente conectado no processo filho %d enviou:] ",getpid());
                 
                 printf(" Estado atual: %d", state);
+                printf(" [8]: %d, [10]: %d", recvline[8], recvline[10]);
                 state = AMQPConnection(connfd, state);
 
                 // write(connfd, recvline, strlen(recvline));      
