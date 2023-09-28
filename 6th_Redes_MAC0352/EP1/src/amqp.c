@@ -4,45 +4,98 @@
 #include "amqp.h"
 #include "packets.h"
 
-#include "hardcode.h"
-
 void processAMQPMessage() {
     printf("processAMQPMessage\n");
     return;
 }
 
-int AMQPConnection(int connfd, int state) {
-    switch (state) {
-        case STATE_CONNECTION_START:
-            // Connection start process
-            printf("State: STATE_CONNECTION_START\n");
-            //write(connfd, CONNECTION_START_PKT, SZ_CONNECTION_START_PKT - 1);
-            write(connfd, CONNECTION_START_PACKET, CONNECTION_START_PACKET_SIZE - 1);
-            printf("teste\n");
-            state++;
+int AMQPConnection(int connfd, int state, int classValue, int methodValue) {
+    switch (classValue) {
+        case CONNECTION:
+            switch (methodValue){
+                case CONNECTION_START:
+                    printf("Servidor enviou o método CONNECTION_START\n");
+                    write(connfd, PACKET_CONNECTION_START, PACKET_CONNECTION_START_SIZE - 1);
+                    printf("teste\n");
+                    break;
+                case CONNECTION_START_OK:
+                    printf("Cliente enviou o método CONNECTION_START_OK\n");
+                    break;
+                case CONNECTION_TUNE:
+                    printf("Servidor enviou o método CONNECTION_TUNE\n");
+                    write(connfd, PACKET_CONNECTION_TUNE, PACKET_CONNECTION_TUNE_SIZE - 1);
+                    break;
+                case CONNECTION_TUNE_OK:
+                    printf("Cliente enviou o método CONNECTION_TUNE_OK\n");
+                    break;
+                case CONNECTION_OPEN:
+                    printf("Cliente enviou o método CONNECTION_OPEN\n");
+                    break;
+                case CONNECTION_OPEN_OK:
+                    printf("Servidor enviou o método CONNECTION_OPEN_OK\n");
+                    write(connfd, PACKET_CONNECTION_OPEN_OK, PACKET_CONNECTION_OPEN_OK_SIZE - 1);
+                    break;
+                case CONNECTION_CLOSE:
+                    printf("Cliente enviou o método CONNECTION_CLOSE\n");
+                    break;
+                case CONNECTION_CLOSE_OK:
+                    printf("Servidor enviou o método CONNECTION_CLOSE_OK\n");
+                    write(connfd, PACKET_CONNECTION_CLOSE_OK, PACKET_CONNECTION_CLOSE_OK_SIZE - 1);
+                    break;
+            }
             break;
-        case STATE_CONNECTION_TUNE:
-            // Connection tune process
-            printf("State: STATE_CONNECTION_TUNE\n");
-            write(connfd, CONNECTION_TUNE_PACKET, CONNECTION_TUNE_PACKET_SIZE - 1);
-            state++;
+        case CHANNEL:
+            switch (methodValue){
+                case CHANNEL_OPEN:
+                    printf("Cliente enviou o método CHANNEL_OPEN\n");
+                    break;
+                case CHANNEL_OPEN_OK:
+                    printf("Servidor enviou o método CHANNEL_OPEN_OK\n");
+                    write(connfd, PACKET_CHANNEL_OPEN_OK, PACKET_CHANNEL_OPEN_OK_SIZE - 1);
+                    break;
+                case CHANNEL_CLOSE:
+                    printf("Cliente enviou o método CHANNEL_CLOSE\n");
+                    break;
+                case CHANNEL_CLOSE_OK: 
+                    printf("Servidor enviou o método CHANNEL_CLOSE_OK\n");
+                    write(connfd, PACKET_CHANNEL_CLOSE_OK, PACKET_CHANNEL_CLOSE_OK_SIZE - 1);
+                    break;
+            }
             break;
-        case STATE_CONNECTION_OPEN:
-            // Connection open process
-            printf("State: STATE_CONNECTION_OPEN\n");
-            write(connfd, CONNECTION_OPEN_PACKET_OK, CONNECTION_OPEN_PACKET_OK_SIZE - 1);
-            state++;
+        case QUEUE:
+            switch(methodValue){
+                case QUEUE_DECLARE:
+                    printf("Cliente enviou o método QUEUE_DECLARE\n");
+                    break;
+                case QUEUE_DECLARE_OK:
+                    printf("Servidor enviou o método QUEUE_DECLARE_OK\n");
+                    write(connfd, PACKET_QUEUE_DECLARE_OK, PACKET_QUEUE_DECLARE_OK_SIZE - 1);
+                    break;
+            }
             break;
-        case STATE_CHANNEL_OPEN:
-            // Channel open process
-            printf("State: STATE_CHANNEL_OPEN\n");
-            write(connfd, CHANNEL_OPEN_PACKET_OK, CHANNEL_OPEN_PACKET_OK_SIZE - 1);
-            state++;
-            break;
-        default:
-            // Process AMQP messages
-            printf("State: Default (Processing AMQP messages)\n");
-            processAMQPMessage();
+        case BASIC:
+            switch(methodValue){
+                case BASIC_PUBLISH:
+                    printf("Cliente enviou o método BASIC_PUBLISH\n");
+                    break;
+                case BASIC_QOS:
+                    printf("Cliente enviou o método BASIC_QOS\n");
+                    break;
+                case BASIC_QOS_OK:
+                    printf("Servidor enviou o método BASIC_QOS_OK\n");
+                    //write();
+                    break;
+                case BASIC_CONSUME:
+                    printf("Cliente enviou o método BASIC_CONUME\n");
+                    break;
+                case BASIC_CONSUME_OK:
+                    printf("Servidor enviou o método BASIC_CONSUME_OK\n");
+                    //write();
+                    break;
+                case BASIC_ACK:
+                    printf("Cliente enviou o método BASIC_ACK\n");
+                    break;
+            }
             break;
     }
     return state;

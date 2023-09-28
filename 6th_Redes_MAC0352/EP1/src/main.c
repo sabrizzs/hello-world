@@ -173,14 +173,14 @@ int main (int argc, char **argv) {
              * para que este servidor consiga interpretar comandos AMQP
              */
 
-            int state = STATE_CONNECTION_START;
             while ((n=read(connfd, recvline, MAXLINE)) > 0) {
                 recvline[n]=0;
                 printf("[Cliente conectado no processo filho %d enviou:] ",getpid());
                 
-                printf(" Estado atual: %d", state);
-                printf(" [8]: %d, [10]: %d", recvline[8], recvline[10]);
-                state = AMQPConnection(connfd, state);
+                int classValue = recvline[8];
+                int methodValue = recvline[10];
+
+                AMQPConnection(connfd, classValue, methodValue);
 
                 // write(connfd, recvline, strlen(recvline));      
             }
