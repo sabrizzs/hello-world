@@ -16,11 +16,6 @@ void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodVa
         case CONNECTION:
             printf("case CONNECTION\n");
             switch (methodValue){
-                case CONNECTION_START:
-                    printf("Servidor enviou o método CONNECTION_START\n");
-                    write(connfd, PACKET_CONNECTION_START, PACKET_CONNECTION_START_SIZE - 1);
-                    printf("teste\n");
-                    break;
                 case CONNECTION_START_OK:
                     printf("Cliente enviou o método CONNECTION_START_OK\n");
                     break;
@@ -113,7 +108,8 @@ void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodVa
             }
             break;
         default:
-            printf("Classe desconhecida\n");
+            printf("Servidor enviou o método CONNECTION_START\n");
+            write(connfd, PACKET_CONNECTION_START, PACKET_CONNECTION_START_SIZE - 1);
             break;
     }
 }
