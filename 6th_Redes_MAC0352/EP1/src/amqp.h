@@ -33,8 +33,6 @@
 #define BASIC_DELIVER 0x3c
 #define BASIC_ACK 0x50
 
-void processAMQPMessage();
-
 void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodValue);
 
 #endif // AMQP_H

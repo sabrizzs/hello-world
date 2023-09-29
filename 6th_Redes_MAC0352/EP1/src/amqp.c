@@ -4,15 +4,9 @@
 #include "amqp.h"
 #include "packets.h"
 
-void processAMQPMessage() {
-    printf("processAMQPMessage\n");
-    return;
-}
-
 void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodValue) {
     switch (classValue) {
         case CONNECTION:
-            printf("case CONNECTION\n");
             switch (methodValue){
                 case CONNECTION_START_OK:
                     printf("Cliente enviou o método CONNECTION_START_OK\n");
