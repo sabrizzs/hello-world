@@ -60,26 +60,24 @@ void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodVa
             break;
         case BASIC:
             switch(methodValue){
-                /*case BASIC_PUBLISH:
+                case BASIC_PUBLISH:
                     printf("Cliente enviou o método BASIC_PUBLISH\n");
-                    break;*/
-                /*case BASIC_QOS:
+                    break;
+                case BASIC_QOS:
                     printf("Cliente enviou o método BASIC_QOS\n");
-                    break;*/
-                case BASIC_QOS_OK:
                     printf("Servidor enviou o método BASIC_QOS_OK\n");
-                    //write();
+                    write(connfd, PACKET_BASIC_QOS_OK, PACKET_BASIC_QOS_OK_SIZE - 1);
                     break;
-                /*case BASIC_CONSUME:
+                case BASIC_CONSUME:
                     printf("Cliente enviou o método BASIC_CONUME\n");
-                    break;*/
-                case BASIC_CONSUME_OK:
                     printf("Servidor enviou o método BASIC_CONSUME_OK\n");
-                    //write();
+                    write(connfd, PACKET_BASIC_CONSUME_OK, PACKET_BASIC_CONSUME_OK_SIZE - 1);
+                    printf("Servidor enviou o método BASIC_DELIVER\n");
+                    write(connfd, PACKET_BASIC_DELIVER, PACKET_BASIC_DELIVER_SIZE - 1);
                     break;
-                /*case BASIC_ACK:
+                case BASIC_ACK:
                     printf("Cliente enviou o método BASIC_ACK\n");
-                    break;*/
+                    break;
                 default:
                     printf("Método desconhecido\n");
                     break;
