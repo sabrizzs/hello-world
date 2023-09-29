@@ -30,6 +30,7 @@
 #define BASIC_QOS_OK 0xb
 #define BASIC_CONSUME 0x14
 #define BASIC_CONSUME_OK 0x15
+#define BASIC_DELIVER 0x3c
 #define BASIC_ACK 0x50
 
 void processAMQPMessage();
