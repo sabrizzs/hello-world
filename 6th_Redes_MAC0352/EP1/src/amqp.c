@@ -4,6 +4,12 @@
 #include "amqp.h"
 #include "packets.h"
 
+/*  
+TO DO:
+- mudar de unsigned char para u_int8_t
+- ler inicialmente o protocol header com connection start
+- guardar cada frame em pedaços, pois o cliente pode mandar dois métodos (no caso connection tune ok)
+*/
 void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodValue) {
     switch (classValue) {
         case CONNECTION:

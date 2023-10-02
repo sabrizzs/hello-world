@@ -52,6 +52,7 @@ const size_t PACKET_CHANNEL_OPEN_OK_SIZE = 17;
 const char PACKET_CHANNEL_CLOSE_OK[] = "\x01\x00\x01\x00\x00\x00\x04\x00\x14\x00\x29\xce";
 const size_t PACKET_CHANNEL_CLOSE_OK_SIZE = 13;
 
+/* Modificar */
 const char PACKET_QUEUE_DECLARE_OK[] = "\x01\x00\x01\x00\x00\x00\x11\x00\x32\x00\x0b\x04\x66\x69\x6c\x61" \
 "\x00\x00\x00\x00\x00\x00\x00\x00\xce";
 const size_t PACKET_QUEUE_DECLARE_OK_SIZE = 26;

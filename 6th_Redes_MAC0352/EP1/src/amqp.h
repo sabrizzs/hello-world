@@ -1,6 +1,8 @@
 #ifndef AMQP_H
 #define AMQP_H
 
+#include <stdint.h> //
+
 /* Classes */
 #define CONNECTION 0xa
 #define CHANNEL 0x14
@@ -32,6 +34,16 @@
 #define BASIC_CONSUME_OK 0x15
 #define BASIC_DELIVER 0x3c
 #define BASIC_ACK 0x50
+
+/*struct AMQPFrame{
+    u_int8_t type;
+    u_int16_t channel;
+    u_int32_t size;
+    u_int16_t class_id;
+    u_int16_t method_id;
+};
+
+readAMQPFrame(int connfd)*/
 
 void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodValue);
 
