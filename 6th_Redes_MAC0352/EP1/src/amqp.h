@@ -47,7 +47,7 @@ void print(char *recvline, ssize_t length);
 
 int sendProtocolHeader(int connfd, char *recvline);
 
-void readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame);
+int readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame);
 
 void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id);
 

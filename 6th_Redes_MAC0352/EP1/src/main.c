@@ -180,7 +180,8 @@ int main (int argc, char **argv) {
                 }
 
                 struct AMQPFrame frame;
-                readAMQPFrame(connfd, recvline, &frame);
+                int n = readAMQPFrame(connfd, recvline, &frame);
+                if(n == 0) break;
 
                 AMQPConnection(connfd, recvline, frame.size, frame.class_id, frame.method_id);
  
