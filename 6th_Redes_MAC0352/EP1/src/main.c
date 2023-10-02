@@ -182,7 +182,7 @@ int main (int argc, char **argv) {
                 struct AMQPFrame frame;
                 readAMQPFrame(connfd, recvline, &frame);
 
-                AMQPConnection(connfd, frame.class_id, frame.method_id);
+                AMQPConnection(connfd, recvline, frame.class_id, frame.method_id);
  
             }
             /* ========================================================= */
