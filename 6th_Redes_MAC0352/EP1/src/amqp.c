@@ -6,9 +6,9 @@
 
 /*  
 TO DO:
-- mudar de unsigned char para u_int8_t
-- ler inicialmente o protocol header com connection start
-- guardar cada frame em pedaços, pois o cliente pode mandar dois métodos (no caso connection tune ok)
+- declarar nome da fila
+- publish
+- consume
 */
 
 void print(char *recvline, ssize_t length) {
