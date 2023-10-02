@@ -32,11 +32,11 @@ void readAMQPFrame(int connfd, const char *recvline, struct AMQPFrame *frame){
     read(connfd, recvline, 11);
     print(recvline, 11);
 
-    frame->type = (uint8_t)recvline[0];
-    frame->channel = ((uint16_t)recvline[1] << 8) | (uint16_t)recvline[2];
-    frame->size = ((uint32_t)recvline[3] << 24) | ((uint32_t)recvline[4] << 16) | ((uint32_t)recvline[5] << 8) | (uint32_t)recvline[6];
-    frame->class_id = ((uint16_t)recvline[7] << 8) | (uint16_t)recvline[8];
-    frame->method_id = ((uint16_t)recvline[9] << 8) | (uint16_t)recvline[10];
+    frame->type = (u_int8_t)recvline[0];
+    frame->channel = ((u_int16_t)recvline[1] << 8) | (u_int16_t)recvline[2];
+    frame->size = ((u_int32_t)recvline[3] << 24) | ((u_int32_t)recvline[4] << 16) | ((u_int32_t)recvline[5] << 8) | (u_int32_t)recvline[6];
+    frame->class_id = ((u_int16_t)recvline[7] << 8) | (u_int16_t)recvline[8];
+    frame->method_id = ((u_int16_t)recvline[9] << 8) | (u_int16_t)recvline[10];
 
     printf("AMQP Frame\n");
     printf("Type: %u\n", frame->type);
@@ -46,7 +46,7 @@ void readAMQPFrame(int connfd, const char *recvline, struct AMQPFrame *frame){
     printf("Method ID: %u\n", frame->method_id);
 }
 
-void AMQPConnection(int connfd, uint16_t class_id, uint16_t method_id){
+void AMQPConnection(int connfd, u_int16_t class_id, u_int16_t method_id){
     switch (class_id) {
         case CONNECTION:
             switch (method_id){
