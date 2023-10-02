@@ -49,6 +49,6 @@ int sendProtocolHeader(int connfd, const char *recvline);
 
 void readAMQPFrame(int connfd, const char *recvline, struct AMQPFrame *frame);
 
-void AMQPConnection(int connfd, uint16_t class_id, uint16_t method_id);
+void AMQPConnection(int connfd, u_int16_t class_id, u_int16_t method_id);
 
 #endif // AMQP_H
