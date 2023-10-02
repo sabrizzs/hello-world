@@ -43,12 +43,12 @@ struct AMQPFrame{
     u_int16_t method_id;
 };
 
-void print(const char *recvline, ssize_t length);
+void print(char *recvline, ssize_t length);
 
-int sendProtocolHeader(int connfd, const char *recvline);
+int sendProtocolHeader(int connfd, char *recvline);
 
-void readAMQPFrame(int connfd, const char *recvline, struct AMQPFrame *frame);
+void readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame);
 
-void AMQPConnection(int connfd, u_int16_t class_id, u_int16_t method_id);
+void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id);
 
 #endif // AMQP_H
