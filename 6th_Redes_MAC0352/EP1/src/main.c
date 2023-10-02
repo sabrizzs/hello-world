@@ -176,7 +176,7 @@ int main (int argc, char **argv) {
             while(1){
                 //recvline[n]=0;
                 if(!connectionStart){
-                    connectionStart = sendProtocolHeader(int connfd);
+                    connectionStart = sendProtocolHeader(connfd, recvline);
                 }
                 /*
                 printf("[Cliente conectado no processo filho %d enviou:] ",getpid());
