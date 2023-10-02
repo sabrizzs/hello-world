@@ -45,10 +45,6 @@
 
 readAMQPFrame(int connfd)*/
 
-void print(const char *recvline, ssize_t length);
-
-int sendProtocolHeader(int connfd, const char *recvline);
-
 void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodValue);
 
 #endif // AMQP_H

@@ -172,26 +172,21 @@ int main (int argc, char **argv) {
             /* TODO: É esta parte do código que terá que ser modificada
              * para que este servidor consiga interpretar comandos AMQP
              */
-            int connectionStart = 0;
-            while(1){
-                //recvline[n]=0;
-                if(!connectionStart){
-                    connectionStart = sendProtocolHeader(int connfd);
-                }
-                /*
+
+            while ((n=read(connfd, recvline, MAXLINE)) > 0) {
+                recvline[n]=0;
                 printf("[Cliente conectado no processo filho %d enviou:] ",getpid());
                 
                 printf("Dados recebidos do cliente (%zd bytes): ", n);
                 for (ssize_t i = 0; i < n; i++) {
                     printf("%02x ", (unsigned char)recvline[i]);
                 }
-                printf("\n");*/
+                printf("\n");
 
                 /* 
                 CONNECTION START 
                 servidor manda as coisas
                 */
-                
 
                 /* 
                 Cliente manda mais coisae leio type, length, class, method
@@ -200,7 +195,7 @@ int main (int argc, char **argv) {
                 unsigned char classValue = recvline[8];
                 unsigned char methodValue = recvline[10];
 
-                //AMQPConnection(connfd, classValue, methodValue);
+                AMQPConnection(connfd, classValue, methodValue);
  
             }
             /* ========================================================= */

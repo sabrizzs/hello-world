@@ -10,24 +10,6 @@ TO DO:
 - ler inicialmente o protocol header com connection start
 - guardar cada frame em pedaços, pois o cliente pode mandar dois métodos (no caso connection tune ok)
 */
-
-void print(const char *recvline, ssize_t length) {
-    printf("Dados recebidos do cliente (%zd bytes): ", length);
-    for (ssize_t i = 0; i < length; i++) {
-        printf("%02x ", (unsigned char)recvline[i]);
-    }
-    printf("\n");
-}
-
-int sendProtocolHeader(int connfd, const char *recvline){
-    printf("Cliente enviou o método CONNECTION_START\n");
-    read(connfd, recvline, 8);
-    print(recvline, 8);
-    printf("Servidor enviou o método CONNECTION_START\n");
-    write(connfd, PACKET_CONNECTION_START, PACKET_CONNECTION_START_SIZE - 1);
-    return 1; 
-}
-
 void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodValue) {
     switch (classValue) {
         case CONNECTION:
