@@ -28,10 +28,28 @@ int sendProtocolHeader(int connfd, const char *recvline){
     return 1; 
 }
 
-void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodValue) {
-    switch (classValue) {
+void readAMQPFrame(int connfd, const char *recvline, struct AMQPFrame *frame){
+    read(connfd, recvline, 11);
+    print(recvline, 11);
+
+    frame->type = (uint8_t)recvline[0];
+    frame->channel = ((uint16_t)recvline[1] << 8) | (uint16_t)recvline[2];
+    frame->size = ((uint32_t)recvline[3] << 24) | ((uint32_t)recvline[4] << 16) | ((uint32_t)recvline[5] << 8) | (uint32_t)recvline[6];
+    frame->class_id = ((uint16_t)recvline[7] << 8) | (uint16_t)recvline[8];
+    frame->method_id = ((uint16_t)recvline[9] << 8) | (uint16_t)recvline[10];
+
+    printf("AMQP Frame\n");
+    printf("Type: %u\n", frame->type);
+    printf("Channel: %u\n", frame->channel);
+    printf("Size: %u\n", frame->size);
+    printf("Class ID: %u\n", frame->class_id);
+    printf("Method ID: %u\n", frame->method_id);
+}
+
+void AMQPConnection(int connfd, uint16_t class_id, uint16_t method_id){
+    switch (class_id) {
         case CONNECTION:
-            switch (methodValue){
+            switch (method_id){
                 case CONNECTION_START_OK:
                     printf("Cliente enviou o método CONNECTION_START_OK\n");
                     printf("Servidor enviou o método CONNECTION_TUNE\n");
@@ -54,7 +72,7 @@ void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodVa
             }
             break;
         case CHANNEL:
-            switch (methodValue){
+            switch (method_id){
                 case CHANNEL_OPEN:
                     printf("Cliente enviou o método CHANNEL_OPEN\n");
                     printf("Servidor enviou o método CHANNEL_OPEN_OK\n");
@@ -71,7 +89,7 @@ void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodVa
             }
             break;
         case QUEUE:
-            switch(methodValue){
+            switch(method_id){
                 case QUEUE_DECLARE:
                     printf("Cliente enviou o método QUEUE_DECLARE\n");
                     printf("Servidor enviou o método QUEUE_DECLARE_OK\n");
@@ -83,7 +101,7 @@ void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodVa
             }
             break;
         case BASIC:
-            switch(methodValue){
+            switch(method_id){
                 case BASIC_PUBLISH:
                     printf("Cliente enviou o método BASIC_PUBLISH\n");
                     break;
@@ -106,10 +124,6 @@ void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodVa
                     printf("Método desconhecido\n");
                     break;
             }
-            break;
-        default:
-            printf("Servidor enviou o método CONNECTION_START\n");
-            write(connfd, PACKET_CONNECTION_START, PACKET_CONNECTION_START_SIZE - 1);
             break;
     }
 }

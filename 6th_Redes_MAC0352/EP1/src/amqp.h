@@ -35,7 +35,7 @@
 #define BASIC_DELIVER 0x3c
 #define BASIC_ACK 0x50
 
-/*struct AMQPFrame{
+struct AMQPFrame{
     u_int8_t type;
     u_int16_t channel;
     u_int32_t size;
@@ -43,12 +43,12 @@
     u_int16_t method_id;
 };
 
-readAMQPFrame(int connfd)*/
-
 void print(const char *recvline, ssize_t length);
 
 int sendProtocolHeader(int connfd, const char *recvline);
 
-void AMQPConnection(int connfd, unsigned char classValue, unsigned char methodValue);
+void readAMQPFrame(int connfd, const char *recvline, struct AMQPFrame *frame);
+
+void AMQPConnection(int connfd, uint16_t class_id, uint16_t method_id);
 
 #endif // AMQP_H

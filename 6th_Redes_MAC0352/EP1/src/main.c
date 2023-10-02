@@ -178,29 +178,11 @@ int main (int argc, char **argv) {
                 if(!connectionStart){
                     connectionStart = sendProtocolHeader(connfd, recvline);
                 }
-                /*
-                printf("[Cliente conectado no processo filho %d enviou:] ",getpid());
-                
-                printf("Dados recebidos do cliente (%zd bytes): ", n);
-                for (ssize_t i = 0; i < n; i++) {
-                    printf("%02x ", (unsigned char)recvline[i]);
-                }
-                printf("\n");*/
 
-                /* 
-                CONNECTION START 
-                servidor manda as coisas
-                */
-                
+                struct AMQPFrame frame;
+                readAMQPFrame(connfd, recvline, &frame);
 
-                /* 
-                Cliente manda mais coisae leio type, length, class, method
-                */
-
-                unsigned char classValue = recvline[8];
-                unsigned char methodValue = recvline[10];
-
-                //AMQPConnection(connfd, classValue, methodValue);
+                AMQPConnection(connfd, frame.class_id, frame.method_id);
  
             }
             /* ========================================================= */
