@@ -1,7 +1,7 @@
 #ifndef AMQP_H
 #define AMQP_H
 
-#include <stdint.h> //
+#include <sys/types.h>
 
 /* Classes */
 #define CONNECTION 0xa
