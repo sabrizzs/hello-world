@@ -110,6 +110,7 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
             switch(method_id){
                 case BASIC_PUBLISH:
                     printf("Cliente enviou o método BASIC_PUBLISH\n");
+                    read(connfd, recvline, size-3);
                     break;
                 case BASIC_QOS:
                     printf("Cliente enviou o método BASIC_QOS\n");
