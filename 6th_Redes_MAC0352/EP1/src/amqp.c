@@ -29,21 +29,18 @@ int sendProtocolHeader(int connfd, char *recvline){
 }
 
 void readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame){
-    read(connfd, recvline, 11);
+    ssize_t n = read(connfd, recvline, 11);
     print(recvline, 11);
+
+    if(n == 0) return 0;
 
     frame->type = (u_int8_t)recvline[0];
     frame->channel = ((u_int16_t)recvline[1] << 8) | (u_int16_t)recvline[2];
     frame->size = ((u_int32_t)recvline[3] << 24) | ((u_int32_t)recvline[4] << 16) | ((u_int32_t)recvline[5] << 8) | (u_int32_t)recvline[6];
     frame->class_id = ((u_int16_t)recvline[7] << 8) | (u_int16_t)recvline[8];
     frame->method_id = ((u_int16_t)recvline[9] << 8) | (u_int16_t)recvline[10];
-
-    /*printf("AMQP Frame\n");
-    printf("Type: %u\n", frame->type);
-    printf("Channel: %u\n", frame->channel);
-    printf("Size: %u\n", frame->size);
-    printf("Class ID: %u\n", frame->class_id);
-    printf("Method ID: %u\n", frame->method_id);*/
+    
+    return 1;
 }
 
 void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id){
