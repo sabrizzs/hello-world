@@ -15,7 +15,7 @@ TO DO:
 
 struct queues queues_data;
 
-void print(char *recvline, ssize_t length) {
+void print(char *recvline, ssize_t length){
     printf("Dados recebidos do cliente (%zd bytes): ", length);
     for (ssize_t i = 0; i < length; i++) {
         printf("%02x ", (unsigned char)recvline[i]);
@@ -23,17 +23,25 @@ void print(char *recvline, ssize_t length) {
     printf("\n");
 }
 
-/*void printQueues(const struct queue *q) {
-    if (q->size == 0) {
-        printf("Não há filas na estrutura.\n");
-        return;
-    }
+void print_queues_data(){
+    for (int i = 0; i < MAXQUEUESIZE; i++) {
+        printf("Queue %d:\n", i);
+        printf("Name: %s\n", queues_data.queues[i].name);
+        printf("Number of Messages: %d\n", queues_data.queues[i].numMessages);
 
-    printf("Filas disponíveis:\n");
-    for (int i = 0; i < q->size; i++) {
-        printf("Fila %d: %s\n", i + 1, q->name[i]);
+        for (int j = 0; j < MAXMESSAGENUMBER; j++) {
+            printf("Message %d:\n", j);
+            printf("Data: %s\n", queues_data.queues[i].messages[j].data);
+            printf("Number of Consumers: %d\n", queues_data.queues[i].messages[j].numConsumers);
+
+            printf("Consumers: ");
+            for (int k = 0; k < MAXCONSUMERNUMBER; k++) {
+                printf("%d ", queues_data.queues[i].messages[j].consumers[k]);
+            }
+            printf("\n");
+        }
     }
-}*/
+}
 
 void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id){
     switch (class_id) {
@@ -198,6 +206,8 @@ void initialize_queues_data(){
             memcpy(queues_data.queues[i].messages[j].consumers, consumers, MAXCONSUMERNUMBER * sizeof(int));
         }
     }
+
+    print_queues_data();
 }
 
 
