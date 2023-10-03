@@ -30,7 +30,7 @@ int sendProtocolHeader(int connfd, char *recvline){
 }
 
 int readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame){
-    ssize_t n = read(connfd, recvline, 11);
+    ssize_t n = read(connfd, recvline, 10);
     print(recvline, 11);
     if(n == 0) return 0;
 
