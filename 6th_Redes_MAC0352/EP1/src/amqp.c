@@ -46,10 +46,8 @@ int readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame){
 /* Modificar */
 void readData(char *name, char *recvline, int start){
     int j = 0;
-    const char *ptr = recvline + start;
-    while (*ptr != '\0' && *ptr != 206) {
-        name[j++] = *ptr;
-        ptr++;
+    for(int i = start; (recvline[i] != 0) || (recvline[i] == 206); i++){
+        name[j++] = recvline[i];
     }
     name[j] = '\0';
 }
