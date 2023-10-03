@@ -23,25 +23,46 @@ void print(char *recvline, ssize_t length){
     printf("\n");
 }
 
-void print_queues_data(){
+void print_queues_data() {
     for (int i = 0; i < MAXQUEUESIZE; i++) {
+        if (queues_data.queues[i].name[0] == '\0') {
+            continue;  // Pula filas vazias
+        }
+
         printf("Queue %d:\n", i);
         printf("Name: %s\n", queues_data.queues[i].name);
+
+        if (queues_data.queues[i].numMessages == 0) {
+            continue;  // Pula filas sem mensagens
+        }
+
         printf("Number of Messages: %d\n", queues_data.queues[i].numMessages);
 
         for (int j = 0; j < MAXMESSAGENUMBER; j++) {
+            if (queues_data.queues[i].messages[j].data[0] == '\0') {
+                continue;  // Pula mensagens vazias
+            }
+
             printf("Message %d:\n", j);
             printf("Data: %s\n", queues_data.queues[i].messages[j].data);
+
+            if (queues_data.queues[i].messages[j].numConsumers == 0) {
+                continue;  // Pula mensagens sem consumidores
+            }
+
             printf("Number of Consumers: %d\n", queues_data.queues[i].messages[j].numConsumers);
 
             printf("Consumers: ");
             for (int k = 0; k < MAXCONSUMERNUMBER; k++) {
-                printf("%d ", queues_data.queues[i].messages[j].consumers[k]);
+                if (queues_data.queues[i].messages[j].consumers[k] != 0) {
+                    printf("%d ", queues_data.queues[i].messages[j].consumers[k]);
+                }
             }
             printf("\n");
         }
     }
 }
+
 
 void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id){
     switch (class_id) {
