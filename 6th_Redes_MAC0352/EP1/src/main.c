@@ -173,7 +173,7 @@ int main (int argc, char **argv) {
              * para que este servidor consiga interpretar comandos AMQP
              */
             int connectionStart = 0;
-            while(1){
+            for(::){
                 //recvline[n]=0;
                 if(!connectionStart){
                     connectionStart = sendProtocolHeader(connfd, recvline);

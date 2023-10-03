@@ -3,6 +3,8 @@
 
 #include <sys/types.h>
 
+#define MAXQUEUENAMESIZE 100
+
 /* Classes */
 #define CONNECTION 0xa
 #define CHANNEL 0x14

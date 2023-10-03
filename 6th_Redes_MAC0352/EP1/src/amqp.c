@@ -43,6 +43,23 @@ int readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame){
     return 1;
 }
 
+/* Modificar */
+void readData(char *name, char *recvline, int start){
+    int j = 0;
+    const char *ptr = recvline + start;
+    while (*ptr != '\0' && *ptr != 206) {
+        name[j++] = *ptr;
+        ptr++;
+    }
+    name[j] = '\0';
+}
+
+void queueMethod(char *recvline, u_int32_t size){
+    char queueName[MAXQUEUENAMESIZE];
+    readData(queueName, recvline, size);
+    printf("Nome da fila: %s\n", queueName);
+}
+
 void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id){
     switch (class_id) {
         case CONNECTION:
@@ -95,10 +112,11 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
             break;
         case QUEUE:
             switch(method_id){
-                case QUEUE_DECLARE:
+                 case QUEUE_DECLARE:
                     printf("Cliente enviou o método QUEUE_DECLARE\n");
                     read(connfd, recvline, size-3);
                     printf("Servidor enviou o método QUEUE_DECLARE_OK\n");
+                    queueMethod(recvline, size);
                     write(connfd, PACKET_QUEUE_DECLARE_OK, PACKET_QUEUE_DECLARE_OK_SIZE - 1);
                     break;
                 default:
