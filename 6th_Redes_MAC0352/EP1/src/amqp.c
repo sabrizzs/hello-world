@@ -43,10 +43,17 @@ int readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame){
     return 1;
 }
 
+void copyAndPrintRecvLine(const char *recvline, ssize_t length) {
+    char buffer[length + 1];  // +1 para o caractere nulo
+    memcpy(buffer, recvline, length);
+    buffer[length] = '\0';  // Adiciona um caractere nulo ao final para formar uma string válida
+    printf("Conteúdo copiado de recvline: %s\n", buffer);
+}
+
 /* Modificar */
 void readData(char *name, char *recvline, int start){
     int j = 0;
-    for(int i = start; (recvline[i] != 0); i++){
+    for(int i = start; (recvline[i] != 0) || (recvline[i] == 206); i++){
         name[j++] = recvline[i];
     }
     name[j] = '\0';
@@ -56,6 +63,7 @@ void queueMethod(char *recvline, u_int32_t size){
     char queueName[MAXQUEUENAMESIZE];
     readData(queueName, recvline, size);
     printf("Nome da fila: %s\n", queueName);
+    copyAndPrintRecvLine(recvline, size);
 }
 
 void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id){
