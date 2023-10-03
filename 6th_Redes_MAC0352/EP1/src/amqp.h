@@ -50,19 +50,19 @@ struct AMQPFrame{
 };
 
 struct message{
-    char *data[MAXMESSAGESIZE];
-    int *consumers[MAXCONSUMERNUMBER];
+    char data[MAXMESSAGESIZE];
+    int consumers[MAXCONSUMERNUMBER];
     int numConsumers;
 };
 
 struct queue{
-    char *name[MAXQUEUENAMESIZE];
-    struct message *messages[MAXMESSAGENUMBER];
+    char name[MAXQUEUENAMESIZE];
+    struct message messages[MAXMESSAGENUMBER];
     int numMessages;
 };
 
 struct queues{
-    struct queue *queues[MAXQUEUESIZE];
+    struct queue queues[MAXQUEUESIZE];
     int numQueues;
 };
 
