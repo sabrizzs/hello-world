@@ -169,6 +169,7 @@ void queueMethod(char *recvline, u_int32_t size){
     printf("Nome da fila: %s\n", queueName);
 
     addQueue(queueName);
+    print_queues_data();
     
 }
 
@@ -199,7 +200,7 @@ void initializeQueuesData(){
     }
 }
 
-void addQueue(const char *queue_name) {
+void addQueue(const char *queue_name){
     for (int i = 0; i < MAXQUEUESIZE; i++) {
         if (strcmp(queues_data.queues[i].name, queue_name) == 0) {
             printf("A fila '%s' já existe.\n", queue_name);
