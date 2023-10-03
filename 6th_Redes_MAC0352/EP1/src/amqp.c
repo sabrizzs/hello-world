@@ -63,7 +63,7 @@ void queueMethod(char *recvline, u_int32_t size){
     char queueName[MAXQUEUENAMESIZE];
     readData(queueName, recvline, size);
     printf("Nome da fila: %s\n", queueName);
-    copyAndPrintRecvLine(recvline, size);
+    copyAndPrintRecvLine(recvline, 100);
 }
 
 void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id){
