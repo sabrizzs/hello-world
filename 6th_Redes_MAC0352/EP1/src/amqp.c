@@ -12,7 +12,7 @@ TO DO:
 - mudar packet do rabbit
 */
 
-queue queues;
+struct queue queues;
 
 void print(char *recvline, ssize_t length) {
     printf("Dados recebidos do cliente (%zd bytes): ", length);
