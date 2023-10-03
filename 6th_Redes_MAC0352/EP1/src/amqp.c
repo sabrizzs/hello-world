@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#include <sys/mman.h>
 #include "amqp.h"
 #include "packets.h"
 
@@ -12,7 +13,7 @@ TO DO:
 - mudar packet do rabbit
 */
 
-struct queues queues_data
+struct queues queues_data;
 
 void print(char *recvline, ssize_t length) {
     printf("Dados recebidos do cliente (%zd bytes): ", length);
