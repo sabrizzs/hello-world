@@ -49,14 +49,6 @@ struct AMQPFrame{
     u_int16_t method_id;
 };
 
-/* Modificar */
-/*typedef struct{
-    char**  name;
-    char*** messages;
-    int***  consumers;
-    int size;
-}queue;*/
-
 struct message{
     char data[MAXMESSAGESIZE];
     int consumers[MAXCONSUMERNUMBER];
@@ -69,8 +61,8 @@ struct queue{
     int numMessages;
 };
 
-struct queueCollection{
-    queue queues[MAXQUEUESIZE];
+struct queues{
+    struct queue queues[MAXQUEUESIZE];
     int numQueues;
 };
 
@@ -84,5 +76,9 @@ int sendProtocolHeader(int connfd, char *recvline);
 int readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame);
 
 void queueMethod(char *recvline, u_int32_t size);
+
+void* malloc_shared_data(size_t size);
+
+void initialize_structure_queues_data(struct queues *queues_data);
 
 #endif // AMQP_H
