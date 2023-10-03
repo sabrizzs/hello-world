@@ -190,8 +190,8 @@ void initialize_queues_data(){
             char *message_data = (char*)malloc_shared_data(MAXMESSAGESIZE);
             strcpy(message_data, "");
             strncpy(queues_data.queues[i].messages[j].data, message_data, MAXMESSAGESIZE - 1);
-            queues_data->queues[i].messages[j].data[MAXMESSAGESIZE - 1] = '\0';
-            queues_data->queues[i].messages[j].numConsumers = 0;
+            queues_data.queues[i].messages[j].data[MAXMESSAGESIZE - 1] = '\0';
+            queues_data.queues[i].messages[j].numConsumers = 0;
 
             int *consumers = (int*)malloc_shared_data(MAXCONSUMERNUMBER * sizeof(int));
             memset(consumers, 0, MAXCONSUMERNUMBER * sizeof(int));
