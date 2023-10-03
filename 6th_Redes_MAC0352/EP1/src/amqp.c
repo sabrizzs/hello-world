@@ -12,51 +12,14 @@ TO DO:
 - mudar packet do rabbit
 */
 
+queue queues;
+
 void print(char *recvline, ssize_t length) {
     printf("Dados recebidos do cliente (%zd bytes): ", length);
     for (ssize_t i = 0; i < length; i++) {
         printf("%02x ", (unsigned char)recvline[i]);
     }
     printf("\n");
-}
-
-int sendProtocolHeader(int connfd, char *recvline){
-    printf("Cliente enviou o método CONNECTION_START\n");
-    read(connfd, recvline, 8);
-    print(recvline, 8);
-    printf("Servidor enviou o método CONNECTION_START\n");
-    write(connfd, PACKET_CONNECTION_START, PACKET_CONNECTION_START_SIZE - 1);
-    return 1; 
-}
-
-int readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame){
-    ssize_t n = read(connfd, recvline, 11);
-    print(recvline, 11);
-    if(n == 0) return 0;
-
-    frame->type = (u_int8_t)recvline[0];
-    frame->channel = ((u_int16_t)recvline[1] << 8) | (u_int16_t)recvline[2];
-    frame->size = ((u_int32_t)recvline[3] << 24) | ((u_int32_t)recvline[4] << 16) | ((u_int32_t)recvline[5] << 8) | (u_int32_t)recvline[6];
-    frame->class_id = ((u_int16_t)recvline[7] << 8) | (u_int16_t)recvline[8];
-    frame->method_id = ((u_int16_t)recvline[9] << 8) | (u_int16_t)recvline[10];
-    
-    return 1;
-}
-
-/* Modificar */
-void readData(char *name, char *recvline, int start){
-    int j = 0;
-    for(int i = start; (recvline[i] != 0) || (recvline[i] == 206); i++){
-        name[j++] = recvline[i];
-    }
-    name[j] = '\0';
-}
-
-void queueMethod(char *recvline, u_int32_t size){
-    char queueName[MAXQUEUENAMESIZE];
-    //readData(queueName, recvline, 3);
-    memcpy(queueName, recvline + 3, size);
-    printf("Nome da fila: %s\n", queueName);
 }
 
 void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id){
@@ -154,3 +117,37 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
             break;
     }
 }
+
+int sendProtocolHeader(int connfd, char *recvline){
+    printf("Cliente enviou o método CONNECTION_START\n");
+    read(connfd, recvline, 8);
+    print(recvline, 8);
+    printf("Servidor enviou o método CONNECTION_START\n");
+    write(connfd, PACKET_CONNECTION_START, PACKET_CONNECTION_START_SIZE - 1);
+    return 1; 
+}
+
+int readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame){
+    ssize_t n = read(connfd, recvline, 11);
+    print(recvline, 11);
+    if(n == 0) return 0;
+
+    frame->type = (u_int8_t)recvline[0];
+    frame->channel = ((u_int16_t)recvline[1] << 8) | (u_int16_t)recvline[2];
+    frame->size = ((u_int32_t)recvline[3] << 24) | ((u_int32_t)recvline[4] << 16) | ((u_int32_t)recvline[5] << 8) | (u_int32_t)recvline[6];
+    frame->class_id = ((u_int16_t)recvline[7] << 8) | (u_int16_t)recvline[8];
+    frame->method_id = ((u_int16_t)recvline[9] << 8) | (u_int16_t)recvline[10];
+    
+    return 1;
+}
+
+/* Queue */
+void queueMethod(char *recvline, u_int32_t size){
+    char queueName[MAXQUEUENAMESIZE];
+    memcpy(queueName, recvline + 3, size);
+    printf("Nome da fila: %s\n", queueName);
+}
+
+/* Publisher */
+
+/* Consumer */

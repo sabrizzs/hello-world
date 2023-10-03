@@ -4,6 +4,7 @@
 #include <sys/types.h>
 
 #define MAXQUEUENAMESIZE 100
+#define MAXQUEUESIZE 100
 
 /* Classes */
 #define CONNECTION 0xa
@@ -45,12 +46,20 @@ struct AMQPFrame{
     u_int16_t method_id;
 };
 
+struct queue{
+    char**  name;
+    char*** messages;
+    int***  consumers;
+};
+
 void print(char *recvline, ssize_t length);
+
+void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id);
 
 int sendProtocolHeader(int connfd, char *recvline);
 
 int readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame);
 
-void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id);
+void queueMethod(char *recvline, u_int32_t size);
 
 #endif // AMQP_H
