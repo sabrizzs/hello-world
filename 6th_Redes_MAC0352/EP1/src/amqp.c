@@ -181,12 +181,12 @@ void* malloc_shared_data(size_t size){
 void initialize_queues_data(struct queues *queues_data){
     for (int i = 0; i < MAXQUEUESIZE; i++){      
         queues_data->queues[i]->name = (char*)malloc_shared_data(MAXQUEUENAMESIZE);
-        strcpy(queues_data->queues[i].name, "");
+        strcpy(queues_data->queues[i]->name, "");
         queues_data->queues[i]->numMessages = 0;
 
         for (int j = 0; j < MAXMESSAGENUMBER; j++){           
             queues_data->queues[i]->messages[j]->data = (char*)malloc_shared_data(MAXMESSAGESIZE);
-            strcpy(queues_data->queues[i]->messages[j].data, "");
+            strcpy(queues_data->queues[i]->messages[j]->data, "");
             queues_data->queues[i]->messages[j]->numConsumers = 0;
 
             queues_data->queues[i]->messages[j]->consumers = (int*)malloc_shared_data(MAXCONSUMERNUMBER * sizeof(int));
