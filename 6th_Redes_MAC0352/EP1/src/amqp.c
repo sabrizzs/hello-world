@@ -206,8 +206,6 @@ void initialize_queues_data(){
             memcpy(queues_data.queues[i].messages[j].consumers, consumers, MAXCONSUMERNUMBER * sizeof(int));
         }
     }
-
-    print_queues_data();
 }
 
 
