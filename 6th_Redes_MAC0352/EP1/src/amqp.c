@@ -52,12 +52,11 @@ void copyAndPrintRecvLine(const char *recvline, ssize_t length) {
 
 /* Modificar */
 void readData(char *name, char *recvline, int start){
-    /*int j = 0;
+    int j = 0;
     for(int i = start; (recvline[i] != 0) || (recvline[i] == 206); i++){
         name[j++] = recvline[i];
-    }*/
-    memcpy(name, recvline + start, 99);
-    name[100] = '\0';
+    }
+    name[j] = '\0';
 }
 
 void queueMethod(char *recvline, u_int32_t size){
