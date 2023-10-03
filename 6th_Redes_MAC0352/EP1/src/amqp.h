@@ -81,4 +81,6 @@ void* malloc_shared_data(size_t size);
 
 void initialize_structure_queues_data();
 
+void addQueue(const char *queue_name);
+
 #endif // AMQP_H
