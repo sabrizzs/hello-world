@@ -5,6 +5,9 @@
 
 #define MAXQUEUENAMESIZE 100
 #define MAXQUEUESIZE 100
+#define MAXMESSAGESIZE 100
+#define MAXCONSUMERNUMBER 100
+#define MAXMESSAGENUMBER 100
 
 /* Classes */
 #define CONNECTION 0xa
@@ -46,11 +49,31 @@ struct AMQPFrame{
     u_int16_t method_id;
 };
 
-struct queue{
+/* Modificar */
+/*typedef struct{
     char**  name;
     char*** messages;
     int***  consumers;
+    int size;
+}queue;*/
+
+struct message{
+    char data[MAXMESSAGESIZE];
+    int consumers[MAXCONSUMERNUMBER];
+    int numConsumers;
 };
+
+struct queue{
+    char name[MAXQUEUENAMESIZE];
+    struct message messages[MAXMESSAGENUMBER];
+    int numMessages;
+};
+
+struct queueCollection{
+    queue queues[MAXQUEUESIZE];
+    int numQueues;
+};
+
 
 void print(char *recvline, ssize_t length);
 

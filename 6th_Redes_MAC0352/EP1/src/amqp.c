@@ -12,7 +12,7 @@ TO DO:
 - mudar packet do rabbit
 */
 
-struct queue queues;
+
 
 void print(char *recvline, ssize_t length) {
     printf("Dados recebidos do cliente (%zd bytes): ", length);
@@ -20,6 +20,18 @@ void print(char *recvline, ssize_t length) {
         printf("%02x ", (unsigned char)recvline[i]);
     }
     printf("\n");
+}
+
+void printQueues(const struct queue *q) {
+    if (q->size == 0) {
+        printf("Não há filas na estrutura.\n");
+        return;
+    }
+
+    printf("Filas disponíveis:\n");
+    for (int i = 0; i < q->size; i++) {
+        printf("Fila %d: %s\n", i + 1, q->name[i]);
+    }
 }
 
 void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id){
@@ -146,6 +158,18 @@ void queueMethod(char *recvline, u_int32_t size){
     char queueName[MAXQUEUENAMESIZE];
     memcpy(queueName, recvline + 3, size);
     printf("Nome da fila: %s\n", queueName);
+
+    /*int i;
+    for (i = 0; i < MAXQUEUESIZE; i++) {
+        if (strcmp(queues.name[i], "") == 0) {
+            strcpy(queues.name[i], queueName);
+            printf("Fila %s adicionada.\n", queueName);
+            break;
+        }
+    }
+    if (i == MAXQUEUESIZE) {
+        printf("Não foi possível adicionar a fila. Limite de filas atingido.\n");
+    }*/
 }
 
 /* Publisher */

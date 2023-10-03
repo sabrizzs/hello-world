@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "amqp.h": "c",
+        "string.h": "c",
+        "typeinfo": "c"
+    }
+}
