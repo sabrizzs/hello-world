@@ -120,7 +120,7 @@ int main (int argc, char **argv) {
     printf("[Para finalizar, pressione CTRL+c ou rode um kill ou killall]\n");
    
     /* EP1 */
-    initialize_queues_data();
+    initializeQueuesData();
 
     /* O servidor no final das contas é um loop infinito de espera por
      * conexões e processamento de cada uma individualmente

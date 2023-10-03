@@ -168,46 +168,58 @@ void queueMethod(char *recvline, u_int32_t size){
     memcpy(queueName, recvline + 3, size);
     printf("Nome da fila: %s\n", queueName);
 
-    /*int i;
-    for (i = 0; i < MAXQUEUESIZE; i++) {
-        if (strcmp(queues.name[i], "") == 0) {
-            strcpy(queues.name[i], queueName);
-            printf("Fila %s adicionada.\n", queueName);
-            break;
-        }
-    }
-    if (i == MAXQUEUESIZE) {
-        printf("Não foi possível adicionar a fila. Limite de filas atingido.\n");
-    }*/
+    addQueue(queueName);
+    
 }
 
-void* malloc_shared_data(size_t size){
+void* mallocSharedData(size_t size){
     void* m = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS,0,0);
     return m;
 }
 
-void initialize_queues_data(){
+void initializeQueuesData(){
     for (int i = 0; i < MAXQUEUESIZE; i++){      
-        char *queue_name = (char*)malloc_shared_data(MAXQUEUENAMESIZE);
+        char *queue_name = (char*)mallocSharedData(MAXQUEUENAMESIZE);
         strcpy(queue_name, "");
         strncpy(queues_data.queues[i].name, queue_name, MAXQUEUENAMESIZE - 1);
         queues_data.queues[i].name[MAXQUEUENAMESIZE - 1] = '\0';
         queues_data.queues[i].numMessages = 0;
 
         for (int j = 0; j < MAXMESSAGENUMBER; j++){           
-            char *message_data = (char*)malloc_shared_data(MAXMESSAGESIZE);
+            char *message_data = (char*)mallocSharedData(MAXMESSAGESIZE);
             strcpy(message_data, "");
             strncpy(queues_data.queues[i].messages[j].data, message_data, MAXMESSAGESIZE - 1);
             queues_data.queues[i].messages[j].data[MAXMESSAGESIZE - 1] = '\0';
             queues_data.queues[i].messages[j].numConsumers = 0;
 
-            int *consumers = (int*)malloc_shared_data(MAXCONSUMERNUMBER * sizeof(int));
+            int *consumers = (int*)mallocSharedData(MAXCONSUMERNUMBER * sizeof(int));
             memset(consumers, 0, MAXCONSUMERNUMBER * sizeof(int));
             memcpy(queues_data.queues[i].messages[j].consumers, consumers, MAXCONSUMERNUMBER * sizeof(int));
         }
     }
 }
 
+void addQueue(const char *queue_name) {
+    for (int i = 0; i < MAXQUEUESIZE; i++) {
+        if (strcmp(queues_data.queues[i].name, queue_name) == 0) {
+            printf("A fila '%s' já existe.\n", queue_name);
+            return;  // Fila já existe, não é adicionada novamente
+        }
+    }
+
+    // A fila não existe, encontra um espaço vazio para adicionar
+    for (int i = 0; i < MAXQUEUESIZE; i++) {
+        if (strcmp(queues_data.queues[i].name, "") == 0) {
+            strncpy(queues_data.queues[i].name, queue_name, MAXQUEUENAMESIZE - 1);
+            queues_data.queues[i].name[MAXQUEUENAMESIZE - 1] = '\0';
+            printf("Fila '%s' adicionada.\n", queue_name);
+            return;  // Fila adicionada com sucesso
+        }
+    }
+
+    printf("Não foi possível adicionar a fila. Limite de filas atingido.\n");
+    return;  // Limite de filas atingido, não foi possível adicionar
+}
 
 
 /* Publisher */
