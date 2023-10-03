@@ -79,6 +79,6 @@ void queueMethod(char *recvline, u_int32_t size);
 
 void* malloc_shared_data(size_t size);
 
-void initialize_structure_queues_data(struct queues *queues_data);
+void initialize_structure_queues_data();
 
 #endif // AMQP_H

@@ -119,6 +119,9 @@ int main (int argc, char **argv) {
     printf("[Servidor no ar. Aguardando conexões na porta %s]\n",argv[1]);
     printf("[Para finalizar, pressione CTRL+c ou rode um kill ou killall]\n");
    
+    /* EP1 */
+    initialize_queues_data();
+
     /* O servidor no final das contas é um loop infinito de espera por
      * conexões e processamento de cada uma individualmente
      */

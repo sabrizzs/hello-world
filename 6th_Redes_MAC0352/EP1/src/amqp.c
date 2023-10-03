@@ -178,7 +178,7 @@ void* malloc_shared_data(size_t size){
     return m;
 }
 
-void initialize_queues_data(struct queues *queues_data){
+void initialize_queues_data(){
     for (int i = 0; i < MAXQUEUESIZE; i++){      
         char *queue_name = (char*)malloc_shared_data(MAXQUEUENAMESIZE);
         strcpy(queue_name, "");
