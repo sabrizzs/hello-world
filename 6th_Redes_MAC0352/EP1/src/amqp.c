@@ -30,7 +30,7 @@ int sendProtocolHeader(int connfd, char *recvline){
 }
 
 int readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame){
-    ssize_t n = read(connfd, recvline, 10);
+    ssize_t n = read(connfd, recvline, 11);
     print(recvline, 11);
     if(n == 0) return 0;
 
@@ -56,8 +56,8 @@ void readData(char *name, char *recvline, int start){
     for(int i = start; (recvline[i] != 0) || (recvline[i] == 206); i++){
         name[j++] = recvline[i];
     }*/
-    memcpy(name, recvline + start, 30);
-    name[30] = '\0';
+    memcpy(name, recvline + start, 99);
+    name[100] = '\0';
 }
 
 void queueMethod(char *recvline, u_int32_t size){
