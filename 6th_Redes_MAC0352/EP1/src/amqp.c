@@ -61,7 +61,7 @@ void readData(char *name, char *recvline, int start){
 
 void queueMethod(char *recvline, u_int32_t size){
     char queueName[MAXQUEUENAMESIZE];
-    readData(queueName, recvline, size);
+    readData(queueName, recvline, 3);
     printf("Nome da fila: %s\n", queueName);
     copyAndPrintRecvLine(recvline, 100);
 }
