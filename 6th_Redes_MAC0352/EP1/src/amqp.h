@@ -87,4 +87,6 @@ void addQueue(const char *queue_name);
 
 void publishMethod(int connfd, char *recvline, u_int32_t size);
 
+void addMessage(const char *queueName, const char *message);
+
 #endif // AMQP_H
