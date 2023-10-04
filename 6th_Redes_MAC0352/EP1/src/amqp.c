@@ -7,6 +7,8 @@
 /*  
 TO DO:
 - arrumar queue que esta desaparecendo com os dados dps da conexão fechar
+    - declarar como extern
+    - funções void
 - publish
 - consume
 - mudar packet do rabbit

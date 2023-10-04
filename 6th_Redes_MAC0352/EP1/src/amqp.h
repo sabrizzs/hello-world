@@ -69,6 +69,7 @@ struct queues{
     int numQueues;
 };
 
+extern struct queues queues_data;
 
 void print(char *recvline, ssize_t length);
 
