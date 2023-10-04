@@ -305,9 +305,11 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
 void addMessage(const char *queueName, const char *message){
     // Procura pela fila com o nome especificado
     for(int i = 0; i < MAXQUEUESIZE; i++){
-        if(strcmp(queues_data.queues[i].name, queueName) == 0) {
+        if(strcmp(queues_data.queues[i].name, queueName) == 0){
+            printf("A fila '%s' foi encontrada.\n", queueName);
             // Verifica se a fila não está cheia de mensagens
             if(queues_data.queues[i].numMessages < MAXMESSAGENUMBER){
+                printf("A fila '%s' não está cheia.\n", queueName);
                 // Encontra a primeira posição vazia para a mensagem
                 for(int j = 0; j < MAXMESSAGENUMBER; j++){
                     if(strcmp(queues_data.queues[i].messages[j].data, "") == 0){
