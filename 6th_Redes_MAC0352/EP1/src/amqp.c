@@ -303,6 +303,8 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
 }
 
 void addMessage(const char *queueName, const char *message){
+    printf("Dados da fila: \n");
+    print_queues_data();
     // Procura pela fila com o nome especificado
     for(int i = 0; i < MAXQUEUESIZE; i++){
         if(strcmp(queues_data.queues[i].name, queueName) == 0){

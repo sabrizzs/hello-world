@@ -4,6 +4,7 @@
         "string.h": "c",
         "typeinfo": "c",
         "compare": "c",
-        "type_traits": "c"
+        "type_traits": "c",
+        "stdio.h": "c"
     }
 }
