@@ -198,7 +198,7 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     frame.class_id = 50;
     frame.method_id = 11;
 
-    char packet[MAXLINE];
+    char packet[MAXSIZE];
     int packetSize = 0;
 
     memcpy(packet + packetSize, (char *)&frame.type, sizeof(frame.type));

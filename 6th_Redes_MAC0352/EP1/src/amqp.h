@@ -9,6 +9,8 @@
 #define MAXCONSUMERNUMBER 100
 #define MAXMESSAGENUMBER 100
 
+#define MAXSIZE 4096
+
 /* Classes */
 #define CONNECTION 0xa
 #define CHANNEL 0x14
