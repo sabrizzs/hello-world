@@ -189,6 +189,7 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     printf("Nome da fila: %s\n", queueName);
 
     addQueue(queueName);
+    printf("Dados da fila: \n");
     print_queues_data();
 
     struct AMQPFrame frame;
@@ -234,14 +235,14 @@ void* mallocSharedData(size_t size){
 }
 
 void initializeQueuesData(){
-    for (int i = 0; i < MAXQUEUESIZE; i++){      
-        char *queue_name = (char*)mallocSharedData(MAXQUEUENAMESIZE);
-        strcpy(queue_name, "");
-        strncpy(queues_data.queues[i].name, queue_name, MAXQUEUENAMESIZE - 1);
+    for(int i = 0; i < MAXQUEUESIZE; i++){      
+        char *queueName = (char*)mallocSharedData(MAXQUEUENAMESIZE);
+        strcpy(queueName, "");
+        strncpy(queues_data.queues[i].name, queueName, MAXQUEUENAMESIZE - 1);
         queues_data.queues[i].name[MAXQUEUENAMESIZE - 1] = '\0';
         queues_data.queues[i].numMessages = 0;
 
-        for (int j = 0; j < MAXMESSAGENUMBER; j++){           
+        for(int j = 0; j < MAXMESSAGENUMBER; j++){           
             char *message_data = (char*)mallocSharedData(MAXMESSAGESIZE);
             strcpy(message_data, "");
             strncpy(queues_data.queues[i].messages[j].data, message_data, MAXMESSAGESIZE - 1);
@@ -255,18 +256,18 @@ void initializeQueuesData(){
     }
 }
 
-void addQueue(const char *queue_name){
-    for (int i = 0; i < MAXQUEUESIZE; i++) {
-        if (strcmp(queues_data.queues[i].name, queue_name) == 0) {
-            printf("A fila '%s' já existe.\n", queue_name);
+void addQueue(const char *queueName){
+    for(int i = 0; i < MAXQUEUESIZE; i++){
+        if(strcmp(queues_data.queues[i].name, queueName) == 0){
+            printf("A fila '%s' já existe.\n", queueName);
             return; 
         }
     }
-    for (int i = 0; i < MAXQUEUESIZE; i++) {
-        if (strcmp(queues_data.queues[i].name, "") == 0) {
-            strncpy(queues_data.queues[i].name, queue_name, MAXQUEUENAMESIZE - 1);
+    for(int i = 0; i < MAXQUEUESIZE; i++){
+        if(strcmp(queues_data.queues[i].name, "") == 0){
+            strncpy(queues_data.queues[i].name, queueName, MAXQUEUENAMESIZE - 1);
             queues_data.queues[i].name[MAXQUEUENAMESIZE - 1] = '\0';
-            printf("Fila '%s' adicionada.\n", queue_name);
+            printf("Fila '%s' adicionada.\n", queueName);
             return; 
         }
     }
@@ -287,14 +288,46 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
     read(connfd,recvline, 4); //content header lenght 4 hex bytes
     u_int32_t length = ntohl(*((u_int32_t*)recvline));
 
-    read(connfd,recvline, length + 1 + 3);
+    read(connfd,recvline, length + 4);
     read(connfd,recvline, 4);//content body length
     length = ntohl(*((u_int32_t*)recvline));
   
     read(connfd,recvline, length + 1);
     memcpy(messageData, recvline, size);
-    messageData[size] = '\0';
+    /* Mensagem com um caractere desconhecido no final */
     printf("Mensagem: %s\n", messageData);
+
+    addMessage(queueName, messageData);
+    printf("Dados da fila: \n");
+    print_queues_data();
 }
+
+void addMessage(const char *queueName, const char *message){
+    // Procura pela fila com o nome especificado
+    for(int i = 0; i < MAXQUEUESIZE; i++){
+        if(strcmp(queues_data.queues[i].name, queueName) == 0) {
+            // Verifica se a fila não está cheia de mensagens
+            if(queues_data.queues[i].numMessages < MAXMESSAGENUMBER){
+                // Encontra a primeira posição vazia para a mensagem
+                for(int j = 0; j < MAXMESSAGENUMBER; j++){
+                    if(strcmp(queues_data.queues[i].messages[j].data, "") == 0){
+                        // Copia a mensagem para a fila
+                        strncpy(queues_data.queues[i].messages[j].data, message, MAXMESSAGESIZE - 1);
+                        queues_data.queues[i].messages[j].data[MAXMESSAGESIZE - 1] = '\0';
+                        queues_data.queues[i].numMessages++;
+                        printf("Mensagem adicionada à fila '%s'.\n", queueName);
+                        return;
+                    }
+                }
+            }else{
+                printf("A fila '%s' está cheia. Não é possível adicionar mais mensagens.\n", queueName);
+                return;
+            }
+        }
+    }
+
+    printf("A fila '%s' não foi encontrada. A mensagem não foi adicionada.\n", queueName);
+}
+
 
 /* Consume */
