@@ -25,7 +25,7 @@ void print(char *recvline, ssize_t length){
 }
 
 void print_queues_data(){
-    printf("Name test: %s\n",sharedQueuesData.queues[0].name);
+    printf("Name test: %s\n",sharedQueuesData->queues[0].name);
 
     for (int i = 0; i < MAXQUEUESIZE; i++) {
         if (queues_data.queues[i].name[0] == '\0') {
