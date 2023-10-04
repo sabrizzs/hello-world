@@ -280,18 +280,21 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
     char messageData[MAXMESSAGESIZE];
 
     read(connfd, recvline, size-3);
-    memcpy(queueName, recvline + 3, size);
+    memcpy(queueName, recvline + 4, size);
     printf("Nome da fila: %s\n", queueName);
 
-    /*get_string(qName, recvline, 4, recvline[3]);
     read(connfd,recvline, 3); //content header type + channel
     read(connfd,recvline, 4); //content header lenght 4 hex bytes
     u_int32_t length = ntohl(*((u_int32_t*)recvline));
+
     read(connfd,recvline, length+1+3);
     read(connfd,recvline, 4);//content body length
     length = ntohl(*((u_int32_t*)recvline));
+  
     read(connfd,recvline, length +1);
-    get_string(payload,recvline,0, length);*/
+    get_string(payload,recvline,0, length);
+    memcpy(messageData, recvline, size);
+    printf("Mensagem: %s\n", messageData);
 
 }
 
