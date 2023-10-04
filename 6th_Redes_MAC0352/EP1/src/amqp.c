@@ -234,7 +234,7 @@ struct queues* sharedQueuesData;
 
 // Inicializa a região de memória compartilhada para os dados das filas
 void initializeSharedQueuesData() {
-    sharedQueuesData = (struct queues*)mmap(NULL, sizeof(struct Queues), 
+    sharedQueuesData = (struct queues*)mmap(NULL, sizeof(struct queues), 
                                             PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
     if (sharedQueuesData == MAP_FAILED) {
         perror("Erro ao criar memória compartilhada");
