@@ -2,6 +2,7 @@
 #define AMQP_H
 
 #include <sys/types.h>
+#include <sys/mman.h>
 
 #define MAXQUEUENAMESIZE 100
 #define MAXQUEUESIZE 100

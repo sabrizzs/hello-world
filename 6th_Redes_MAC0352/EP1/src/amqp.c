@@ -1,7 +1,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#include <sys/mman.h>
 #include "amqp.h"
 #include "packets.h"
 
@@ -237,6 +236,12 @@ void* mallocSharedData(size_t size){
 }
 
 void initializeQueuesData(){
+
+    int fd = shm_open("/my_queues_data", O_CREAT | O_RDWR, 0666);
+    ftruncate(fd, sizeof(struct queues));
+    queues_data = (struct queues*)mmap(NULL, sizeof(struct queues), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    close(fd);
+
     for(int i = 0; i < MAXQUEUESIZE; i++){      
         char *queueName = (char*)mallocSharedData(MAXQUEUENAMESIZE);
         strcpy(queueName, "");
@@ -260,17 +265,13 @@ void initializeQueuesData(){
 
 void freeQueuesData(){
     for (int i = 0; i < MAXQUEUESIZE; i++) {
-        // Libera a memória alocada para o nome da fila
         munmap(queues_data.queues[i].name, MAXQUEUENAMESIZE);
         
         for (int j = 0; j < MAXMESSAGENUMBER; j++) {
-            // Libera a memória alocada para as mensagens da fila
             munmap(queues_data.queues[i].messages[j].data, MAXMESSAGESIZE);
-            // Libera a memória alocada para o array de consumidores
             munmap(queues_data.queues[i].messages[j].consumers, MAXCONSUMERNUMBER * sizeof(int));
         }
     }
-    // Libera a memória alocada para o array de nomes de filas
     munmap(queues_data.queues, MAXQUEUESIZE * sizeof(struct queue));
 }
 
