@@ -23,6 +23,8 @@ void print(char *recvline, ssize_t length){
 }
 
 void print_queues_data(){
+    printf("Name test: %s\n",sharedQueuesData.queues[0].name);
+
     for (int i = 0; i < MAXQUEUESIZE; i++) {
         if (queues_data.queues[i].name[0] == '\0') {
             continue;  // Pula filas vazias
@@ -242,6 +244,7 @@ void initializeSharedQueuesData() {
     }
     // Inicialize os dados das filas conforme necessário
     memset(sharedQueuesData, 0, sizeof(struct queues));
+    strncpy(sharedQueuesData.queues[0].name, "queueName", MAXQUEUENAMESIZE - 1);
 }
 
 void* mallocSharedData(size_t size){
