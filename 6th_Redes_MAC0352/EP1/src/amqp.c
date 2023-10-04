@@ -14,6 +14,8 @@ TO DO:
 
 struct queues queues_data;
 
+struct queues* sharedQueuesData;
+
 void print(char *recvline, ssize_t length){
     printf("Dados recebidos do cliente (%zd bytes): ", length);
     for (ssize_t i = 0; i < length; i++) {
@@ -232,8 +234,6 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     write(connfd, packet, packetSize);
 }
 
-struct queues* sharedQueuesData;
-
 // Inicializa a região de memória compartilhada para os dados das filas
 void initializeSharedQueuesData() {
     sharedQueuesData = (struct queues*)mmap(NULL, sizeof(struct queues), 
@@ -244,7 +244,7 @@ void initializeSharedQueuesData() {
     }
     // Inicialize os dados das filas conforme necessário
     memset(sharedQueuesData, 0, sizeof(struct queues));
-    strncpy(sharedQueuesData.queues[0].name, "queueName", MAXQUEUENAMESIZE - 1);
+    strncpy(sharedQueuesData->queues[0].name, "queueName", MAXQUEUENAMESIZE - 1);
 }
 
 void* mallocSharedData(size_t size){
