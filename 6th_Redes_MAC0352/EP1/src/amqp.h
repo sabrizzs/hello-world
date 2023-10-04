@@ -77,7 +77,7 @@ int sendProtocolHeader(int connfd, char *recvline);
 
 int readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame);
 
-void queueMethod(char *recvline, u_int32_t size);
+void queueMethod(int connfd, char *recvline, u_int32_t size);
 
 void* malloc_shared_data(size_t size);
 
