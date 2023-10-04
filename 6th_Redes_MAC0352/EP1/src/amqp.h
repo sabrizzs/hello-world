@@ -83,6 +83,8 @@ void* mallocSharedData(size_t size);
 
 void initializeQueuesData();
 
+void freeQueuesData();
+
 void addQueue(const char *queue_name);
 
 void publishMethod(int connfd, char *recvline, u_int32_t size);

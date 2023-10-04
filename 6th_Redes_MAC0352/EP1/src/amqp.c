@@ -7,6 +7,7 @@
 
 /*  
 TO DO:
+- arrumar queue que esta desaparecendo com os dados
 - publish
 - consume
 - mudar packet do rabbit
@@ -87,6 +88,7 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
                     read(connfd, recvline, size-3);
                     printf("Servidor enviou o método CONNECTION_CLOSE_OK\n");
                     write(connfd, PACKET_CONNECTION_CLOSE_OK, PACKET_CONNECTION_CLOSE_OK_SIZE - 1);
+                    freeQueuesData();
                     break;
                 default:
                     printf("Método CONNECTION desconhecido\n");
@@ -255,6 +257,23 @@ void initializeQueuesData(){
         }
     }
 }
+
+void freeQueuesData(){
+    for (int i = 0; i < MAXQUEUESIZE; i++) {
+        // Libera a memória alocada para o nome da fila
+        munmap(queues_data.queues[i].name, MAXQUEUENAMESIZE);
+        
+        for (int j = 0; j < MAXMESSAGENUMBER; j++) {
+            // Libera a memória alocada para as mensagens da fila
+            munmap(queues_data.queues[i].messages[j].data, MAXMESSAGESIZE);
+            // Libera a memória alocada para o array de consumidores
+            munmap(queues_data.queues[i].messages[j].consumers, MAXCONSUMERNUMBER * sizeof(int));
+        }
+    }
+    // Libera a memória alocada para o array de nomes de filas
+    munmap(queues_data.queues, MAXQUEUESIZE * sizeof(struct queue));
+}
+
 
 void addQueue(const char *queueName){
     for(int i = 0; i < MAXQUEUESIZE; i++){
