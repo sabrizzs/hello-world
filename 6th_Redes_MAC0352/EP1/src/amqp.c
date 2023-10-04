@@ -291,10 +291,9 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
     read(connfd,recvline, 4);//content body length
     length = ntohl(*((u_int32_t*)recvline));
   
-    read(connfd,recvline, length +1);
+    read(connfd,recvline, length);
     memcpy(messageData, recvline, size);
     printf("Mensagem: %s\n", messageData);
-
 }
 
 /* Consume */
