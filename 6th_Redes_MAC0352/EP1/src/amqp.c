@@ -125,6 +125,7 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
                     printf("Servidor enviou o método QUEUE_DECLARE_OK\n");
                     queueMethod(connfd, recvline, size);
                     //write(connfd, PACKET_QUEUE_DECLARE_OK, PACKET_QUEUE_DECLARE_OK_SIZE - 1);
+                    initializeSharedQueuesData();
                     break;
                 default:
                     printf("Método QUEUE desconhecido\n");
@@ -235,7 +236,7 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
 }
 
 // Inicializa a região de memória compartilhada para os dados das filas
-void initializeSharedQueuesData() {
+void initializeSharedQueuesData(){
     sharedQueuesData = (struct queues*)mmap(NULL, sizeof(struct queues), 
                                             PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
     if (sharedQueuesData == MAP_FAILED) {
