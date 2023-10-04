@@ -201,29 +201,29 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     char packet[MAXLINE];
     int packetSize = 0;
 
-    memcpy(packet + *packetSize, (char *)&frame.type, sizeof(frame.type));
-    *packetSize += sizeof(frame.type);
-    memcpy(packet + *packetSize, (char *)&frame.channel, sizeof(frame.channel));
-    *packetSize += sizeof(frame.channel);
-    memcpy(packet + *packetSize, (char *)&frame.size, sizeof(frame.size));
-    *packetSize += sizeof(frame.size);
-    memcpy(packet + *packetSize, (char *)&frame.class_id, sizeof(frame.class_id));
-    *packetSize += sizeof(frame.class_id);
-    memcpy(packet + *packetSize, (char *)&frame.method_id, sizeof(frame.method_id));
-    *packetSize += sizeof(frame.method_id);
+    memcpy(packet + packetSize, (char *)&frame.type, sizeof(frame.type));
+    packetSize += sizeof(frame.type);
+    memcpy(packet + packetSize, (char *)&frame.channel, sizeof(frame.channel));
+    packetSize += sizeof(frame.channel);
+    memcpy(packet + packetSize, (char *)&frame.size, sizeof(frame.size));
+    packetSize += sizeof(frame.size);
+    memcpy(packet + packetSize, (char *)&frame.class_id, sizeof(frame.class_id));
+    packetSize += sizeof(frame.class_id);
+    memcpy(packet + packetSize, (char *)&frame.method_id, sizeof(frame.method_id));
+    packetSize += sizeof(frame.method_id);
 
     u_int8_t len = strlen(queueName);
     u_int32_t v3 = htonl(0);
-    memcpy(packet+*packetSize,(char*)&(len),sizeof(len)); 
-    *packetSize+= sizeof(len);
-    memcpy(packet+*packetSize,queueName, len); 
-    *packetSize+= len;
-    memcpy(packet+*packetSize,(char*)&(v3),sizeof(v3)); 
-    *packetSize+= sizeof(v3);
-    memcpy(packet+*packetSize,(char*)&(v3),sizeof(v3)); 
-    *packetSize+= sizeof(v3);
-    memcpy(packet+*packetSize, "\xce",1); 
-    *packetSize+=1;
+    memcpy(packet+packetSize,(char*)&(len),sizeof(len)); 
+    packetSize+= sizeof(len);
+    memcpy(packet+packetSize,queueName, len); 
+    packetSize+= len;
+    memcpy(packet+packetSize,(char*)&(v3),sizeof(v3)); 
+    packetSize+= sizeof(v3);
+    memcpy(packet+packetSize,(char*)&(v3),sizeof(v3)); 
+    packetSize+= sizeof(v3);
+    memcpy(packet+packetSize, "\xce",1); 
+    packetSize+=1;
 
     write(connfd, packet, packetSize);
 }
