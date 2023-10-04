@@ -23,7 +23,7 @@ void print(char *recvline, ssize_t length){
     printf("\n");
 }
 
-void print_queues_data() {
+void print_queues_data(){
     for (int i = 0; i < MAXQUEUESIZE; i++) {
         if (queues_data.queues[i].name[0] == '\0') {
             continue;  // Pula filas vazias
@@ -62,7 +62,6 @@ void print_queues_data() {
         }
     }
 }
-
 
 void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id){
     switch (class_id) {
@@ -225,24 +224,20 @@ void addQueue(const char *queue_name){
     for (int i = 0; i < MAXQUEUESIZE; i++) {
         if (strcmp(queues_data.queues[i].name, queue_name) == 0) {
             printf("A fila '%s' já existe.\n", queue_name);
-            return;  // Fila já existe, não é adicionada novamente
+            return; 
         }
     }
-
-    // A fila não existe, encontra um espaço vazio para adicionar
     for (int i = 0; i < MAXQUEUESIZE; i++) {
         if (strcmp(queues_data.queues[i].name, "") == 0) {
             strncpy(queues_data.queues[i].name, queue_name, MAXQUEUENAMESIZE - 1);
             queues_data.queues[i].name[MAXQUEUENAMESIZE - 1] = '\0';
             printf("Fila '%s' adicionada.\n", queue_name);
-            return;  // Fila adicionada com sucesso
+            return; 
         }
     }
-
     printf("Não foi possível adicionar a fila. Limite de filas atingido.\n");
-    return;  // Limite de filas atingido, não foi possível adicionar
+    return; 
 }
-
 
 /* Publisher */
 
