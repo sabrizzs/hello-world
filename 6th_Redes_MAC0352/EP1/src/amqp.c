@@ -292,7 +292,6 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
     length = ntohl(*((u_int32_t*)recvline));
   
     read(connfd,recvline, length +1);
-    get_string(payload,recvline,0, length);
     memcpy(messageData, recvline, size);
     printf("Mensagem: %s\n", messageData);
 
