@@ -6,15 +6,13 @@
 
 /*  
 TO DO:
-- arrumar queue que esta desaparecendo com os dados
+- arrumar queue que esta desaparecendo com os dados dps da conexão fechar
 - publish
 - consume
 - mudar packet do rabbit
 */
 
 struct queues queues_data;
-
-struct queues* sharedQueuesData;
 
 void print(char *recvline, ssize_t length){
     printf("Dados recebidos do cliente (%zd bytes): ", length);
@@ -25,8 +23,6 @@ void print(char *recvline, ssize_t length){
 }
 
 void print_queues_data(){
-    printf("Name test: %s\n",sharedQueuesData->queues[0].name);
-
     for (int i = 0; i < MAXQUEUESIZE; i++) {
         if (queues_data.queues[i].name[0] == '\0') {
             continue;  // Pula filas vazias
@@ -125,7 +121,6 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
                     printf("Servidor enviou o método QUEUE_DECLARE_OK\n");
                     queueMethod(connfd, recvline, size);
                     //write(connfd, PACKET_QUEUE_DECLARE_OK, PACKET_QUEUE_DECLARE_OK_SIZE - 1);
-                    initializeSharedQueuesData();
                     break;
                 default:
                     printf("Método QUEUE desconhecido\n");
@@ -235,26 +230,12 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     write(connfd, packet, packetSize);
 }
 
-// Inicializa a região de memória compartilhada para os dados das filas
-void initializeSharedQueuesData(){
-    sharedQueuesData = (struct queues*)mmap(NULL, sizeof(struct queues), 
-                                            PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-    if (sharedQueuesData == MAP_FAILED) {
-        perror("Erro ao criar memória compartilhada");
-        exit(1);
-    }
-    // Inicialize os dados das filas conforme necessário
-    memset(sharedQueuesData, 0, sizeof(struct queues));
-    strncpy(sharedQueuesData->queues[0].name, "queueName", MAXQUEUENAMESIZE - 1);
-}
-
 void* mallocSharedData(size_t size){
     void* m = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS,0,0);
     return m;
 }
 
 void initializeQueuesData(){
-
     for(int i = 0; i < MAXQUEUESIZE; i++){      
         char *queueName = (char*)mallocSharedData(MAXQUEUENAMESIZE);
         strcpy(queueName, "");
@@ -287,7 +268,6 @@ void freeQueuesData(){
     }
     munmap(queues_data.queues, MAXQUEUESIZE * sizeof(struct queue));
 }
-
 
 void addQueue(const char *queueName){
     for(int i = 0; i < MAXQUEUESIZE; i++){
@@ -365,6 +345,5 @@ void addMessage(const char *queueName, const char *message){
 
     printf("A fila '%s' não foi encontrada. A mensagem não foi adicionada.\n", queueName);
 }
-
 
 /* Consume */
