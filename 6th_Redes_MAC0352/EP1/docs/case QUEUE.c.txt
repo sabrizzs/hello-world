@@ -1,0 +1,67 @@
+case QUEUE:
+                            //received queue declare
+                            //send queue declare ok
+                            char qName[MAX_QUEUE_NAME_SIZE];
+                            getQueueName(connfd,recvline,frame_length,qName);
+                            add_queue(qName);
+                            //printf("add_queue: %s\n",queues_data.queue_name[get_id(qName)]);
+                            //print_names();
+                            send_queue_declare_ok(connfd, recvline, frame_length, qName);
+                            break;
+
+void getQueueName(int connfd, char* recvline, uint32_t frame_length, char* qName){
+    read(connfd, recvline, frame_length-3);
+    getString(qName, recvline, 3);
+}
+
+void add_queue(char* queue_name){
+    int i;
+    if((i = get_id(queue_name)) == -1)
+        i = get_id(empty);
+    memcpy(queues_data.queue_name[i], queue_name, strlen(queue_name));
+}
+
+int get_id(char* queue_name){
+    for(int i = 0; i < MAX_QUEUE_SIZE;i++){
+        if(strcmp(queues_data.queue_name[i], queue_name) == 0){
+            return i;
+        }
+    }
+    return -1;
+}
+
+void send_queue_declare_ok(int connfd, char* recvline, u_int32_t frame_length, char* qName){
+    char pkt[MAXLINE];int sz = 0;
+    unparse_frame(pkt,&sz, create_frame(1,1,frame_length+1,50,11));
+    unparse_queue_ok(pkt,&sz, qName);
+    print_hex(pkt, sz);
+    write(connfd, pkt, sz);
+}
+
+void unparse_frame(char *pkt, int*sz, frame a){
+    memcpy(pkt+*sz,(char*)&a.type,sizeof(a.type)); *sz+= sizeof(a.type);
+    memcpy(pkt+*sz,(char*)&a.channel,sizeof(a.channel)); *sz+= sizeof(a.channel);
+    memcpy(pkt+*sz,(char*)&a.length,sizeof(a.length)); *sz+= sizeof(a.length);
+    memcpy(pkt+*sz,(char*)&a.class,sizeof(a.class)); *sz+= sizeof(a.class);
+    memcpy(pkt+*sz,(char*)&a.method,sizeof(a.method)); *sz+= sizeof(a.method);
+}
+
+void unparse_queue_ok(char*pkt, int*sz, char* qName){
+    u_int8_t len = strlen(qName);
+    u_int32_t v3 = htonl(0);
+    memcpy(pkt+*sz,(char*)&(len),sizeof(len)); *sz+= sizeof(len);
+    memcpy(pkt+*sz,qName, len); *sz+= len;
+    memcpy(pkt+*sz,(char*)&(v3),sizeof(v3)); *sz+= sizeof(v3);
+    memcpy(pkt+*sz,(char*)&(v3),sizeof(v3)); *sz+= sizeof(v3);
+    memcpy(pkt+*sz, "\xce",1); *sz+=1;
+}
+
+frame create_frame(u_int8_t t, u_int16_t ch, u_int32_t l, u_int16_t cl, u_int16_t m){
+    frame a;
+    a.type = t;
+    a.channel = htons(ch);
+    a.length = htonl(l);
+    a.class = htons(cl);
+    a.method = htons(m);
+    return a;
+}

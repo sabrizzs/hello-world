@@ -119,8 +119,8 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
                     printf("Cliente enviou o método QUEUE_DECLARE\n");
                     read(connfd, recvline, size);
                     printf("Servidor enviou o método QUEUE_DECLARE_OK\n");
-                    queueMethod(recvline, size);
-                    write(connfd, PACKET_QUEUE_DECLARE_OK, PACKET_QUEUE_DECLARE_OK_SIZE - 1);
+                    queueMethod(connfd, recvline, size);
+                    //write(connfd, PACKET_QUEUE_DECLARE_OK, PACKET_QUEUE_DECLARE_OK_SIZE - 1);
                     break;
                 default:
                     printf("Método desconhecido\n");
@@ -183,14 +183,49 @@ int readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame){
 }
 
 /* Queue */
-void queueMethod(char *recvline, u_int32_t size){
+void queueMethod(int connfd, char *recvline, u_int32_t size){
     char queueName[MAXQUEUENAMESIZE];
     memcpy(queueName, recvline + 3, size);
     printf("Nome da fila: %s\n", queueName);
 
     addQueue(queueName);
     print_queues_data();
-    
+
+    struct AMQPFrame frame;
+    frame.type = 1;
+    frame.channel = 1;
+    frame.size = htonl(size + 1);
+    frame.class_id = 50;
+    frame.method_id = 11;
+
+    char packet[MAXLINE];
+    int packetSize = 0;
+
+    memcpy(packet + *packetSize, (char *)&frame.type, sizeof(frame.type));
+    *packetSize += sizeof(frame.type);
+    memcpy(packet + *packetSize, (char *)&frame.channel, sizeof(frame.channel));
+    *packetSize += sizeof(frame.channel);
+    memcpy(packet + *packetSize, (char *)&frame.size, sizeof(frame.size));
+    *packetSize += sizeof(frame.size);
+    memcpy(packet + *packetSize, (char *)&frame.class_id, sizeof(frame.class_id));
+    *packetSize += sizeof(frame.class_id);
+    memcpy(packet + *packetSize, (char *)&frame.method_id, sizeof(frame.method_id));
+    *packetSize += sizeof(frame.method_id);
+
+    u_int8_t len = strlen(queueName);
+    u_int32_t v3 = htonl(0);
+    memcpy(packet+*packetSize,(char*)&(len),sizeof(len)); 
+    *packetSize+= sizeof(len);
+    memcpy(packet+*packetSize,queueName, len); 
+    *packetSize+= len;
+    memcpy(packet+*packetSize,(char*)&(v3),sizeof(v3)); 
+    *packetSize+= sizeof(v3);
+    memcpy(packet+*packetSize,(char*)&(v3),sizeof(v3)); 
+    *packetSize+= sizeof(v3);
+    memcpy(packet+*packetSize, "\xce",1); 
+    *packetSize+=1;
+
+    write(connfd, packet, packetSize);
 }
 
 void* mallocSharedData(size_t size){

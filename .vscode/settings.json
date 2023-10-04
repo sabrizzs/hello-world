@@ -2,6 +2,8 @@
     "files.associations": {
         "amqp.h": "c",
         "string.h": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "compare": "c",
+        "type_traits": "c"
     }
 }
