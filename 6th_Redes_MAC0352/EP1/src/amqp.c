@@ -12,7 +12,7 @@ TO DO:
 - mudar packet do rabbit
 */
 
-struct queues* queues_data;
+struct queues queues_data;
 
 void print(char *recvline, ssize_t length){
     printf("Dados recebidos do cliente (%zd bytes): ", length);
@@ -230,17 +230,26 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     write(connfd, packet, packetSize);
 }
 
+struct queues* sharedQueuesData;
+
+// Inicializa a região de memória compartilhada para os dados das filas
+void initializeSharedQueuesData() {
+    sharedQueuesData = (struct queues*)mmap(NULL, sizeof(struct Queues), 
+                                            PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+    if (sharedQueuesData == MAP_FAILED) {
+        perror("Erro ao criar memória compartilhada");
+        exit(1);
+    }
+    // Inicialize os dados das filas conforme necessário
+    memset(sharedQueuesData, 0, sizeof(struct queues));
+}
+
 void* mallocSharedData(size_t size){
     void* m = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS,0,0);
     return m;
 }
 
 void initializeQueuesData(){
-
-    /*int fd = shm_open("/my_queues_data", O_CREAT | O_RDWR, 0666);
-    ftruncate(fd, sizeof(struct queues));
-    queues_data = (struct queues*)mmap(NULL, sizeof(struct queues), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-    close(fd);*/
 
     for(int i = 0; i < MAXQUEUESIZE; i++){      
         char *queueName = (char*)mallocSharedData(MAXQUEUENAMESIZE);
