@@ -89,7 +89,7 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
                     write(connfd, PACKET_CONNECTION_CLOSE_OK, PACKET_CONNECTION_CLOSE_OK_SIZE - 1);
                     break;
                 default:
-                    printf("Método desconhecido\n");
+                    printf("Método CONNECTION desconhecido\n");
                     break;
             }
             break;
@@ -108,7 +108,7 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
                     write(connfd, PACKET_CHANNEL_CLOSE_OK, PACKET_CHANNEL_CLOSE_OK_SIZE - 1);
                     break;
                 default:
-                    printf("Método desconhecido\n");
+                    printf("Método CHANNEL desconhecido\n");
                     break;
             }
             break;
@@ -122,7 +122,7 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
                     //write(connfd, PACKET_QUEUE_DECLARE_OK, PACKET_QUEUE_DECLARE_OK_SIZE - 1);
                     break;
                 default:
-                    printf("Método desconhecido\n");
+                    printf("Método QUEUE desconhecido\n");
                     break;
             }
             break;
@@ -151,7 +151,7 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
                     read(connfd, recvline, size-3);
                     break;
                 default:
-                    printf("Método desconhecido\n");
+                    printf("Método BASIC desconhecido\n");
                     break;
             }
             break;
@@ -282,7 +282,7 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
     read(connfd, recvline, size-3);
     memcpy(queueName, recvline + 4, size);
     printf("Nome da fila: %s\n", queueName);
-    
+
     /*read(connfd,recvline, 3); //content header type + channel
     read(connfd,recvline, 4); //content header lenght 4 hex bytes
     u_int32_t length = ntohl(*((u_int32_t*)recvline));
