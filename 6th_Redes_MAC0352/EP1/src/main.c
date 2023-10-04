@@ -181,7 +181,8 @@ int main (int argc, char **argv) {
                 if(!connectionStart){
                     connectionStart = sendProtocolHeader(connfd, recvline);
                 }
-
+                printf("Dados da fila na main.c: \n");
+                print_queues_data();
                 struct AMQPFrame frame;
                 int n = readAMQPFrame(connfd, recvline, &frame);
                 if(n == 0) break;
