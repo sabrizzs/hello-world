@@ -12,7 +12,7 @@ TO DO:
 - mudar packet do rabbit
 */
 
-struct queues queues_data;
+struct queues* queues_data;
 
 void print(char *recvline, ssize_t length){
     printf("Dados recebidos do cliente (%zd bytes): ", length);
@@ -237,10 +237,10 @@ void* mallocSharedData(size_t size){
 
 void initializeQueuesData(){
 
-    int fd = shm_open("/my_queues_data", O_CREAT | O_RDWR, 0666);
+    /*int fd = shm_open("/my_queues_data", O_CREAT | O_RDWR, 0666);
     ftruncate(fd, sizeof(struct queues));
     queues_data = (struct queues*)mmap(NULL, sizeof(struct queues), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-    close(fd);
+    close(fd);*/
 
     for(int i = 0; i < MAXQUEUESIZE; i++){      
         char *queueName = (char*)mallocSharedData(MAXQUEUENAMESIZE);
