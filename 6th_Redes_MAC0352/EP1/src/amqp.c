@@ -130,7 +130,8 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
             switch(method_id){
                 case BASIC_PUBLISH:
                     printf("Cliente enviou o método BASIC_PUBLISH\n");
-                    publishMethod(connfd, recvline, size);
+                    read(connfd, recvline, size-3);
+                    //publishMethod(connfd, recvline, size);
                     break;
                 case BASIC_QOS:
                     printf("Cliente enviou o método BASIC_QOS\n");
@@ -280,10 +281,8 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
     char messageData[MAXMESSAGESIZE];
 
     read(connfd, recvline, size-3);
-    memcpy(queueName, recvline + 4, size);
-    printf("Nome da fila: %s\n", queueName);
-
-    /*read(connfd,recvline, 3); //content header type + channel
+    /*get_string(qName, recvline, 4, recvline[3]);
+    read(connfd,recvline, 3); //content header type + channel
     read(connfd,recvline, 4); //content header lenght 4 hex bytes
     u_int32_t length = ntohl(*((u_int32_t*)recvline));
     read(connfd,recvline, length+1+3);
