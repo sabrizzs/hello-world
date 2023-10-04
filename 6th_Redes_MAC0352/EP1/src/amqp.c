@@ -120,7 +120,7 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
                     read(connfd, recvline, size);
                     printf("Servidor enviou o método QUEUE_DECLARE_OK\n");
                     queueMethod(connfd, recvline, size);
-                    //write(connfd, PACKET_QUEUE_DECLARE_OK, PACKET_QUEUE_DECLARE_OK_SIZE - 1);
+                    write(connfd, PACKET_QUEUE_DECLARE_OK, PACKET_QUEUE_DECLARE_OK_SIZE - 1);
                     break;
                 default:
                     printf("Método desconhecido\n");
@@ -225,7 +225,7 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     memcpy(packet+packetSize, "\xce",1); 
     packetSize+=1;
 
-    write(connfd, packet, packetSize);
+    //write(connfd, packet, packetSize);
 }
 
 void* mallocSharedData(size_t size){

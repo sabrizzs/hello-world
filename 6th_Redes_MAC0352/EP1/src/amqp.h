@@ -79,9 +79,9 @@ int readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame);
 
 void queueMethod(int connfd, char *recvline, u_int32_t size);
 
-void* malloc_shared_data(size_t size);
+void* mallocSharedData(size_t size);
 
-void initialize_structure_queues_data();
+void initializeQueuesData();
 
 void addQueue(const char *queue_name);
 
