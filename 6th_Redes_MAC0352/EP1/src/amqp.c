@@ -327,7 +327,7 @@ void addMessage(const char *queueName, const char *message){
     printf("Dados da fila: \n");
     print_queues_data();
     // Procura pela fila com o nome especificado
-    for(int i = 0; i < MAXQUEUESIZE; i++){
+    /*for(int i = 0; i < MAXQUEUESIZE; i++){
         if(strcmp(queues_data.queues[i].name, queueName) == 0){
             printf("A fila '%s' foi encontrada.\n", queueName);
             // Verifica se a fila não está cheia de mensagens
@@ -349,7 +349,7 @@ void addMessage(const char *queueName, const char *message){
                 return;
             }
         }
-    }
+    }*/
 
     printf("A fila '%s' não foi encontrada. A mensagem não foi adicionada.\n", queueName);
 }
