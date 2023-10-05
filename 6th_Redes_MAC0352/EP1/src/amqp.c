@@ -8,7 +8,6 @@
 TO DO:
 
 - free queues
-- add queues
 - add message
 
 
@@ -228,6 +227,14 @@ void* allocateSharedMemory(size_t size){
     return memory;
 }
 
+void freeSharedMemory(void* memory, size_t size){
+    int err = munmap(memory, size);
+    if (err == -1) {
+        fprintf(stderr, "Couldn't free shared memory.\n");
+        exit(errno);
+    }
+}
+
 void initializeQueuesData(){
     queues.name = allocateSharedMemory(MAXQUEUESIZE * sizeof(char*));
     queues.messages = allocateSharedMemory(MAXQUEUESIZE * sizeof(char**));
@@ -248,19 +255,20 @@ void initializeQueuesData(){
 }
 
 void freeQueuesData(){
-    /*for (int i = 0; i < MAXQUEUESIZE; i++) {
-        munmap(queues.queues[i].name, MAXQUEUENAMESIZE);
-        
-        for (int j = 0; j < MAXMESSAGENUMBER; j++) {
-            munmap(queues.queues[i].messages[j].data, MAXMESSAGESIZE);
-            munmap(queues.queues[i].messages[j].consumers, MAXCONSUMERNUMBER * sizeof(int));
+    for (int i = 0; i < MAXQUEUESIZE; i++){
+        for(int j = 0; j < MAXMESSAGENUMBER; j++){
+            freeSharedMemory(queues.messages[i][j], MAX_MESSAGE_SIZE * sizeof(char));
         }
+        freeSharedMemory(queues.messages[i], MAXMESSAGENUMBER * sizeof(char*));
+        freeSharedMemory(queues.name[i], MAXQUEUENAMESIZE * sizeof(char));
+        freeSharedMemory(queues.consumers[i], MAXCONSUMERNUMBER * sizeof(int*));
     }
-    munmap(queues.queues, MAXQUEUESIZE * sizeof(struct queue));*/
+    freeSharedMemory(queues.name, MAXQUEUESIZE * sizeof(char*));
+    freeSharedMemory(queues.messages, MAXQUEUESIZE * sizeof(char**));
+    freeSharedMemory(queues.consumers, MAXQUEUESIZE * sizeof(int*));
 }
 
 void addQueue(const char *queueName){
-    printf("Na função adicionando fila...\n");
     if (queues.numQueues >= MAXQUEUESIZE) {
         printf("Não foi possível adicionar a fila. Limite de filas atingido.\n");
         return;
@@ -276,7 +284,6 @@ void addQueue(const char *queueName){
     memcpy(queues.name[queues.numQueues], queueName, strlen(queueName));
     printf("Fila '%s' adicionada.\n", queueName);
     queues.numQueues++;
-    printf("Fim da função adicionando fila...\n");
 }
 
 /* Publish */
