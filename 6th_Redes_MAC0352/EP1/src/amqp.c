@@ -26,10 +26,7 @@ void print(char *recvline, ssize_t length){
 }
 
 void print_queues_data(){
-
-
-    
-    /*for (int i = 0; i < MAXQUEUESIZE; i++) {
+    for (int i = 0; i < MAXQUEUESIZE; i++) {
         if (queues_data.queues[i].name[0] == '\0') {
             continue;  // Pula filas vazias
         }
@@ -65,7 +62,7 @@ void print_queues_data(){
             }
             printf("\n");
         }
-    }*/
+    }
 }
 
 void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id){
@@ -236,19 +233,19 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     write(connfd, packet, packetSize);
 }
 
-void* mallocSharedData(size_t size){
-    void* m = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS,0,0);
+void mallocSharedData(size_t size){
+    void m = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS,0,0);
     return m;
 }
 
 void initializeQueuesData(){
 
     queues_data.queues = mallocSharedData(MAXQUEUESIZE * sizeof(char*));
-    //queues_data.queues->name = mallocSharedData(MAXQUEUENAMESIZE * sizeof(char*));
-    //queues_data.queues->messages = mallocSharedData(MAXMESSAGENUMBER * sizeof(char*));
-    //queues_data.queues->messages->data = mallocSharedData(MAXMESSAGESIZE * sizeof(char*));
-    //queues_data.queues->messages->consumers = mallocSharedData(MAXCONSUMERNUMBER * sizeof(char*));
-    /*
+    queues_data.queues.name = mallocSharedData(MAXQUEUENAMESIZE * sizeof(char*));
+    queues_data.queues.messages = mallocSharedData(MAXMESSAGENUMBER * sizeof(char*));
+    queues_data.queues.messages.data = mallocSharedData(MAXMESSAGESIZE * sizeof(char*));
+    queues_data.queues.messages.consumers = mallocSharedData(MAXCONSUMERNUMBER * sizeof(char*));
+
     for (int i = 0; i < MAXQUEUESIZE; i++) {
         strcpy(queues_data.queues[i].name, "");
         queues_data.queues[i].numMessages = 0;
@@ -261,13 +258,32 @@ void initializeQueuesData(){
                 queues_data.queues[i].messages[j].consumers[k] = 0;
             }
         }
-    }*/
+    }
 
     queues_data.numQueues = 0;
+
+    /*for(int i = 0; i < MAXQUEUESIZE; i++){      
+        char *queueName = (char*)mallocSharedData(MAXQUEUENAMESIZE);
+        strcpy(queueName, "");
+        strncpy(queues_data.queues[i].name, queueName, MAXQUEUENAMESIZE - 1);
+        queues_data.queues[i].name[MAXQUEUENAMESIZE - 1] = '\0';
+        queues_data.queues[i].numMessages = 0;
+
+        for(int j = 0; j < MAXMESSAGENUMBER; j++){           
+            char *message_data = (char*)mallocSharedData(MAXMESSAGESIZE);
+            strcpy(message_data, "");
+            strncpy(queues_data.queues[i].messages[j].data, message_data, MAXMESSAGESIZE - 1);
+            queues_data.queues[i].messages[j].data[MAXMESSAGESIZE - 1] = '\0';
+            queues_data.queues[i].messages[j].numConsumers = 0;
+
+            int *consumers = (int*)mallocSharedData(MAXCONSUMERNUMBER * sizeof(int));
+            memset(consumers, 0, MAXCONSUMERNUMBER * sizeof(int));
+            memcpy(queues_data.queues[i].messages[j].consumers, consumers, MAXCONSUMERNUMBER * sizeof(int));
+        }
+    }*/
 }
 
 void freeQueuesData(){
-    /*
     for (int i = 0; i < MAXQUEUESIZE; i++) {
         munmap(queues_data.queues[i].name, MAXQUEUENAMESIZE);
         
@@ -277,20 +293,19 @@ void freeQueuesData(){
         }
     }
     munmap(queues_data.queues, MAXQUEUESIZE * sizeof(struct queue));
-    */
 }
 
 void addQueue(const char *queueName){
     for(int i = 0; i < MAXQUEUESIZE; i++){
-        if(strcmp(queues_data.queues[i]->name, queueName) == 0){
+        if(strcmp(queues_data.queues[i].name, queueName) == 0){
             printf("A fila '%s' já existe.\n", queueName);
             return; 
         }
     }
     for(int i = 0; i < MAXQUEUESIZE; i++){
-        if(strcmp(queues_data.queues[i]->name, "") == 0){
-            strncpy(queues_data.queues[i]->name, queueName, MAXQUEUENAMESIZE - 1);
-            queues_data.queues[i]->name[MAXQUEUENAMESIZE - 1] = '\0';
+        if(strcmp(queues_data.queues[i].name, "") == 0){
+            strncpy(queues_data.queues[i].name, queueName, MAXQUEUENAMESIZE - 1);
+            queues_data.queues[i].name[MAXQUEUENAMESIZE - 1] = '\0';
             printf("Fila '%s' adicionada.\n", queueName);
             return; 
         }
@@ -330,7 +345,7 @@ void addMessage(const char *queueName, const char *message){
     printf("Dados da fila: \n");
     print_queues_data();
     // Procura pela fila com o nome especificado
-    /*for(int i = 0; i < MAXQUEUESIZE; i++){
+    for(int i = 0; i < MAXQUEUESIZE; i++){
         if(strcmp(queues_data.queues[i].name, queueName) == 0){
             printf("A fila '%s' foi encontrada.\n", queueName);
             // Verifica se a fila não está cheia de mensagens
@@ -352,7 +367,7 @@ void addMessage(const char *queueName, const char *message){
                 return;
             }
         }
-    }*/
+    }
 
     printf("A fila '%s' não foi encontrada. A mensagem não foi adicionada.\n", queueName);
 }
