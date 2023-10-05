@@ -258,11 +258,11 @@ void initializeQueuesData(){
     for (int i = 0; i < MAXQUEUESIZE; i++) {
         queues.name[i] = allocateSharedMemory(MAXQUEUENAMESIZE * sizeof(char));
         queues.name[i][0] = 0;
-        queues.messages[i] = malloc_shared_data(MAXMESSAGENUMBER * sizeof(char*));
-        queues.consumers[i] = malloc_shared_data(MAXCONSUMERNUMBER * sizeof(int));
+        queues.messages[i] = allocateSharedMemory(MAXMESSAGENUMBER * sizeof(char*));
+        queues.consumers[i] = allocateSharedMemory(MAXCONSUMERNUMBER * sizeof(int));
 
         for (int j = 0; j < MAXMESSAGENUMBER; j++) {
-            queues.messages[i][j] = malloc_shared_data(MAXMESSAGESIZE * sizeof(char));
+            queues.messages[i][j] = allocateSharedMemory(MAXMESSAGESIZE * sizeof(char));
             queues.messages[i][j][0] = 0;
             queues.consumers[i][j] = 0;
         }

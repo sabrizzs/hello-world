@@ -84,6 +84,8 @@ extern queue queues;
 
 void print(char *recvline, ssize_t length);
 
+void print_queues();
+
 void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id);
 
 int sendProtocolHeader(int connfd, char *recvline);
