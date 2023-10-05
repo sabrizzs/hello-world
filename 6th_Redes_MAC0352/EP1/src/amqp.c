@@ -257,7 +257,7 @@ void initializeQueuesData(){
 void freeQueuesData(){
     for (int i = 0; i < MAXQUEUESIZE; i++){
         for(int j = 0; j < MAXMESSAGENUMBER; j++){
-            freeSharedMemory(queues.messages[i][j], MAX_MESSAGE_SIZE * sizeof(char));
+            freeSharedMemory(queues.messages[i][j], MAXMESSAGESIZE * sizeof(char));
         }
         freeSharedMemory(queues.messages[i], MAXMESSAGENUMBER * sizeof(char*));
         freeSharedMemory(queues.name[i], MAXQUEUENAMESIZE * sizeof(char));
