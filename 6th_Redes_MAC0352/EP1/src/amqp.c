@@ -179,7 +179,7 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     char queueName[MAXQUEUENAMESIZE];
     memcpy(queueName, recvline + 3, size);
     printf("Nome da fila: %s\n", queueName);
-
+    printf("Adicionando fila...\n");
     addQueue(queueName);
     printf("Dados da fila: \n");
     print_queues();
@@ -263,7 +263,7 @@ void freeQueuesData(){
 }
 
 void addQueue(const char *queueName){
-   
+    printf("Na função adicionando fila...\n");
     if (queues.numQueues >= MAXQUEUESIZE) {
         printf("Não foi possível adicionar a fila. Limite de filas atingido.\n");
         return;
@@ -279,7 +279,8 @@ void addQueue(const char *queueName){
     //strncpy(queues.messages[queues.numQueues], queueName, MAXQUEUENAMESIZE - 1);
     //queues.messages[queues.numQueues][MAXQUEUENAMESIZE - 1] = '\0';
     printf("Fila '%s' adicionada.\n", queueName);
-    queues.numQueues++; 
+    queues.numQueues++;
+    printf("Fim da função adicionando fila...\n");
 }
 
 /* Publish */
