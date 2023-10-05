@@ -233,18 +233,19 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     write(connfd, packet, packetSize);
 }
 
-void mallocSharedData(size_t size){
-    m = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS,0,0);
+void* mallocSharedData(size_t size){
+    void* m = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS,0,0);
     return m;
 }
 
 void initializeQueuesData(){
 
-    queues_data.queues = mallocSharedData(MAXQUEUESIZE * sizeof(char*));
+    /*queues_data.queues = mallocSharedData(MAXQUEUESIZE * sizeof(char*));
     queues_data.queues.name = mallocSharedData(MAXQUEUENAMESIZE * sizeof(char*));
     queues_data.queues.messages = mallocSharedData(MAXMESSAGENUMBER * sizeof(char*));
     queues_data.queues.messages.data = mallocSharedData(MAXMESSAGESIZE * sizeof(char*));
     queues_data.queues.messages.consumers = mallocSharedData(MAXCONSUMERNUMBER * sizeof(char*));
+    */
 
     for (int i = 0; i < MAXQUEUESIZE; i++) {
         strcpy(queues_data.queues[i].name, "");
