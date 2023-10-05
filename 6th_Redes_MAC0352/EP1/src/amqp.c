@@ -245,7 +245,7 @@ void initializeQueuesData(){
     queues_data.queues->messages = mallocSharedData(MAXMESSAGENUMBER * sizeof(char*));
     queues_data.queues->messages->data = mallocSharedData(MAXMESSAGESIZE * sizeof(char*));
     queues_data.queues->messages->consumers = mallocSharedData(MAXCONSUMERNUMBER * sizeof(char*));
-
+    /*
     for (int i = 0; i < MAXQUEUESIZE; i++) {
         strcpy(queues_data.queues[i].name, "");
         queues_data.queues[i].numMessages = 0;
@@ -258,7 +258,7 @@ void initializeQueuesData(){
                 queues_data.queues[i].messages[j].consumers[k] = 0;
             }
         }
-    }
+    }*/
 
     queues_data.numQueues = 0;
 }
