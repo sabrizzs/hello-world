@@ -177,7 +177,7 @@ int main (int argc, char **argv) {
              */
             int connectionStart = 0;
             for(;;){
-                //recvline[n]=0;
+                printf("Teste %d", teste);
                 if(!connectionStart){
                     connectionStart = sendProtocolHeader(connfd, recvline);
                 }

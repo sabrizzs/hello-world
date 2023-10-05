@@ -21,6 +21,7 @@ TO DO:
 */
 
 queue queues;
+int teste;
 
 void print(char *recvline, ssize_t length){
     printf("Dados recebidos do cliente (%zd bytes): ", length);
@@ -74,6 +75,7 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
                     read(connfd, recvline, size-3);
                     printf("Servidor enviou o método CONNECTION_CLOSE_OK\n");
                     write(connfd, PACKET_CONNECTION_CLOSE_OK, PACKET_CONNECTION_CLOSE_OK_SIZE - 1);
+                    teste++;
                     //freeQueuesData();
                     break;
                 default:
@@ -235,6 +237,7 @@ void freeSharedMemory(void* memory, size_t size){
 }
 
 void initializeQueuesData(){
+    int teste = 1;
     queues.name = allocateSharedMemory(MAXQUEUESIZE * sizeof(char*));
     queues.messages = allocateSharedMemory(MAXQUEUESIZE * sizeof(char**));
     queues.consumers = allocateSharedMemory(MAXQUEUESIZE * sizeof(int*));
