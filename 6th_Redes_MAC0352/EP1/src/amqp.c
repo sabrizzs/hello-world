@@ -276,8 +276,8 @@ void addQueue(const char *queueName){
         }
     }
 
-    strncpy(queues.messages[queues.numQueues], queueName, MAXQUEUENAMESIZE - 1);
-    queues.messages[queues.numQueues][MAXQUEUENAMESIZE - 1] = '\0';
+    //strncpy(queues.messages[queues.numQueues], queueName, MAXQUEUENAMESIZE - 1);
+    //queues.messages[queues.numQueues][MAXQUEUENAMESIZE - 1] = '\0';
     printf("Fila '%s' adicionada.\n", queueName);
     queues.numQueues++; 
 }
