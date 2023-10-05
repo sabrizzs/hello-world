@@ -44,7 +44,7 @@ void print_queues(){
         printf("Número de mensagens: %d\n", queues.numMessages);
 
         for (int j = 0; j < queues.numMessages; j++) {
-            if(strcmp(queues.messages[i][j], empty) != 0) printf("Mensagem %d: %s\n", j + 1, queues.messages[i][j]);
+            if(strcmp(queues.messages[i][j], "\0") != 0) printf("Mensagem %d: %s\n", j + 1, queues.messages[i][j]);
             if(queues.consumers[i][j] != 0) printf("Consumidor %d: %d\n", j + 1, queues.consumers[i][j]);
         }
     }
