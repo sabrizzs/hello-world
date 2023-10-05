@@ -26,6 +26,9 @@ void print(char *recvline, ssize_t length){
 }
 
 void print_queues_data(){
+
+
+    
     /*for (int i = 0; i < MAXQUEUESIZE; i++) {
         if (queues_data.queues[i].name[0] == '\0') {
             continue;  // Pula filas vazias
@@ -278,7 +281,7 @@ void freeQueuesData(){
 }
 
 void addQueue(const char *queueName){
-    /*for(int i = 0; i < MAXQUEUESIZE; i++){
+    for(int i = 0; i < MAXQUEUESIZE; i++){
         if(strcmp(queues_data.queues[i].name, queueName) == 0){
             printf("A fila '%s' já existe.\n", queueName);
             return; 
