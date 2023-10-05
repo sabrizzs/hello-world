@@ -82,6 +82,8 @@ typedef struct queue{
 
 extern queue queues;
 
+extern int teste;
+
 void print(char *recvline, ssize_t length);
 
 void print_queues();
