@@ -77,12 +77,12 @@ struct message {
 
 struct queue {
     char** name;
-    struct message* messages;
+    struct message** messages;
     int numMessages;
 };
 
 struct queues {
-    struct queue* queues;
+    struct queue** queues;
     int numQueues;
 };
 
