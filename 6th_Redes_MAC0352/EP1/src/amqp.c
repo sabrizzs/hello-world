@@ -240,11 +240,11 @@ void* mallocSharedData(size_t size){
 
 void initializeQueuesData(){
 
-    queues_data.queues = mallocSharedData(MAXQUEUESIZE * sizeof(char*));
-    queues_data.queues->name = mallocSharedData(MAXQUEUENAMESIZE * sizeof(char*));
-    queues_data.queues->messages = mallocSharedData(MAXMESSAGENUMBER * sizeof(char*));
-    queues_data.queues->messages->data = mallocSharedData(MAXMESSAGESIZE * sizeof(char*));
-    queues_data.queues->messages->consumers = mallocSharedData(MAXCONSUMERNUMBER * sizeof(char*));
+    queues_data.queues = (char**)mallocSharedData(MAXQUEUESIZE * sizeof(char*));
+    queues_data.queues->name = (char**)mallocSharedData(MAXQUEUENAMESIZE * sizeof(char*));
+    queues_data.queues->messages = (char**)mallocSharedData(MAXMESSAGENUMBER * sizeof(char*));
+    queues_data.queues->messages->data = (char**)mallocSharedData(MAXMESSAGESIZE * sizeof(char*));
+    queues_data.queues->messages->consumers = (char**)mallocSharedData(MAXCONSUMERNUMBER * sizeof(char*));
 
     for (int i = 0; i < MAXQUEUESIZE; i++) {
         strcpy(queues_data.queues[i].name, "");
