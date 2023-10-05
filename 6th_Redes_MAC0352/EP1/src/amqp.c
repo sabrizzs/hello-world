@@ -26,7 +26,7 @@ void print(char *recvline, ssize_t length){
 }
 
 void print_queues_data(){
-    for (int i = 0; i < MAXQUEUESIZE; i++) {
+    /*for (int i = 0; i < MAXQUEUESIZE; i++) {
         if (queues_data.queues[i].name[0] == '\0') {
             continue;  // Pula filas vazias
         }
@@ -62,7 +62,7 @@ void print_queues_data(){
             }
             printf("\n");
         }
-    }
+    }*/
 }
 
 void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id){
@@ -240,11 +240,11 @@ void* mallocSharedData(size_t size){
 
 void initializeQueuesData(){
 
-    queues_data->queues = mallocSharedData(MAXQUEUESIZE * sizeof(char*));
-    queues_data->queues->name = mallocSharedData(MAXQUEUENAMESIZE * sizeof(char*));
-    queues_data->queues->messages = mallocSharedData(MAXMESSAGENUMBER * sizeof(char*));
-    queues_data->queues->messages->data = mallocSharedData(MAXMESSAGESIZE * sizeof(char*));
-    queues_data->queues->messages->consumers = mallocSharedData(MAXCONSUMERNUMBER * sizeof(char*));
+    queues_data.queues = mallocSharedData(MAXQUEUESIZE * sizeof(char*));
+    //queues_data.queues->name = mallocSharedData(MAXQUEUENAMESIZE * sizeof(char*));
+    //queues_data.queues->messages = mallocSharedData(MAXMESSAGENUMBER * sizeof(char*));
+    //queues_data.queues->messages->data = mallocSharedData(MAXMESSAGESIZE * sizeof(char*));
+    //queues_data.queues->messages->consumers = mallocSharedData(MAXCONSUMERNUMBER * sizeof(char*));
     /*
     for (int i = 0; i < MAXQUEUESIZE; i++) {
         strcpy(queues_data.queues[i].name, "");
@@ -264,6 +264,7 @@ void initializeQueuesData(){
 }
 
 void freeQueuesData(){
+    /*
     for (int i = 0; i < MAXQUEUESIZE; i++) {
         munmap(queues_data.queues[i].name, MAXQUEUENAMESIZE);
         
@@ -273,10 +274,11 @@ void freeQueuesData(){
         }
     }
     munmap(queues_data.queues, MAXQUEUESIZE * sizeof(struct queue));
+    */
 }
 
 void addQueue(const char *queueName){
-    for(int i = 0; i < MAXQUEUESIZE; i++){
+    /*for(int i = 0; i < MAXQUEUESIZE; i++){
         if(strcmp(queues_data.queues[i].name, queueName) == 0){
             printf("A fila '%s' já existe.\n", queueName);
             return; 
@@ -290,7 +292,7 @@ void addQueue(const char *queueName){
             return; 
         }
     }
-    printf("Não foi possível adicionar a fila. Limite de filas atingido.\n");
+    printf("Não foi possível adicionar a fila. Limite de filas atingido.\n");*/
     return; 
 }
 
