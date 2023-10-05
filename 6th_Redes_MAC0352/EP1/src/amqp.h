@@ -76,7 +76,7 @@ typedef struct queue{
     char*** messages;
     int** consumers;
     int numConsumers;
-    int numMeages;
+    int numMessages;
     int numQueues;
 } queue;
 
