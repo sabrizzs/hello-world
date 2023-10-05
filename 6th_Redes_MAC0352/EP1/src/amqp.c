@@ -233,15 +233,25 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     write(connfd, packet, packetSize);
 }
 
-void* mallocSharedData(size_t size){
-    void* m = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS,0,0);
-    return m;
+void mallocSharedData(size_t size){
+    /*void* m = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS,0,0);
+    return m;*/
+    int fd;
+    fd = open("shared_memory", O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+    if (fd == -1) {
+        perror("open");
+        exit(1);
+    }
+
+    return mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
 }
 
 void initializeQueuesData(){
 
-    /*queues_data.queues = mallocSharedData(MAXQUEUESIZE * sizeof(char*));
-    queues_data.queues.name = mallocSharedData(MAXQUEUENAMESIZE * sizeof(char*));
+    queues_data.queues = mallocSharedData(MAXQUEUESIZE * sizeof(char*));
+    memset(queues_data.queues, 0, MAXQUEUESIZE * sizeof(char*));
+
+    /*queues_data.queues.name = mallocSharedData(MAXQUEUENAMESIZE * sizeof(char*));
     queues_data.queues.messages = mallocSharedData(MAXMESSAGENUMBER * sizeof(char*));
     queues_data.queues.messages.data = mallocSharedData(MAXMESSAGESIZE * sizeof(char*));
     queues_data.queues.messages.consumers = mallocSharedData(MAXCONSUMERNUMBER * sizeof(char*));
