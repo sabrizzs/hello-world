@@ -33,43 +33,25 @@ void print(char *recvline, ssize_t length){
 }
 
 void print_queues(){
-    /*for (int i = 0; i < MAXQUEUESIZE; i++) {
-        if (queues.queues[i].name[0] == '\0') {
-            continue;  // Pula filas vazias
-        }
+    if (queues == NULL || queues->numQueues == 0) {
+        printf("A estrutura está vazia ou não foi inicializada.\n");
+        return;
+    }
 
-        printf("Queue %d:\n", i);
-        printf("Name: %s\n", queues.queues[i].name);
+    printf("Número de filas: %d\n", queues->numQueues);
 
-        if (queues.queues[i].numMessages == 0) {
-            continue;  // Pula filas sem mensagens
-        }
+    for (int i = 0; i < queues->numQueues; i++) {
+        printf("Fila %d: %s\n", i + 1, queues->name[i]);
+        printf("Número de mensagens: %d\n", queues->numMessages);
 
-        printf("Number of Messages: %d\n", queues.queues[i].numMessages);
+        for (int j = 0; j < queues->numMessages; j++) {
+            printf("Mensagem %d:\n", j + 1);
 
-        for (int j = 0; j < MAXMESSAGENUMBER; j++) {
-            if (queues.queues[i].messages[j].data[0] == '\0') {
-                continue;  // Pula mensagens vazias
+            for (int k = 0; k < queues->numConsumers; k++) {
+                printf("  Consumidor %d: %d\n", k + 1, queues->consumers[i][j][k]);
             }
-
-            printf("Message %d:\n", j);
-            printf("Data: %s\n", queues.queues[i].messages[j].data);
-
-            if (queues.queues[i].messages[j].numConsumers == 0) {
-                continue;  // Pula mensagens sem consumidores
-            }
-
-            printf("Number of Consumers: %d\n", queues.queues[i].messages[j].numConsumers);
-
-            printf("Consumers: ");
-            for (int k = 0; k < MAXCONSUMERNUMBER; k++) {
-                if (queues.queues[i].messages[j].consumers[k] != 0) {
-                    printf("%d ", queues.queues[i].messages[j].consumers[k]);
-                }
-            }
-            printf("\n");
         }
-    }*/
+    }
 }
 
 void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id){
