@@ -7,7 +7,6 @@
 /*  
 TO DO:
 
-- print queues
 - free queues
 - add queues
 - add message
@@ -264,23 +263,23 @@ void freeQueuesData(){
 }
 
 void addQueue(const char *queueName){
-    /*
-    for(int i = 0; i < MAXQUEUESIZE; i++){
-        if(strcmp(queues.queues[i].name, queueName) == 0){
+   
+    if (queues->numQueues >= MAXQUEUESIZE) {
+        printf("Não foi possível adicionar a fila. Limite de filas atingido.\n");
+        return;
+    }
+
+    for (int i = 0; i < queues->numQueues; i++) {
+        if (strcmp(queues->messages[i], queueName) == 0) {
             printf("A fila '%s' já existe.\n", queueName);
-            return; 
+            return;
         }
     }
-    for(int i = 0; i < MAXQUEUESIZE; i++){
-        if(strcmp(queues.queues[i].name, "") == 0){
-            strncpy(queues.queues[i].name, queueName, MAXQUEUENAMESIZE - 1);
-            queues.queues[i].name[MAXQUEUENAMESIZE - 1] = '\0';
-            printf("Fila '%s' adicionada.\n", queueName);
-            return; 
-        }
-    }
-    printf("Não foi possível adicionar a fila. Limite de filas atingido.\n");*/
-    return; 
+
+    strncpy(queues->messages[queues->numQueues], queueName, MAXQUEUENAMESIZE - 1);
+    queues->messages[queues->numQueues][MAXQUEUENAMESIZE - 1] = '\0';
+    printf("Fila '%s' adicionada.\n", queueName);
+    queues->numQueues++; 
 }
 
 /* Publish */
