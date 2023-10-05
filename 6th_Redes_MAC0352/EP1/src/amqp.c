@@ -32,39 +32,39 @@ void print(char *recvline, ssize_t length){
     printf("\n");
 }
 
-void print_queues_data(){
+void print_queues(){
     /*for (int i = 0; i < MAXQUEUESIZE; i++) {
-        if (queues_data.queues[i].name[0] == '\0') {
+        if (queues.queues[i].name[0] == '\0') {
             continue;  // Pula filas vazias
         }
 
         printf("Queue %d:\n", i);
-        printf("Name: %s\n", queues_data.queues[i].name);
+        printf("Name: %s\n", queues.queues[i].name);
 
-        if (queues_data.queues[i].numMessages == 0) {
+        if (queues.queues[i].numMessages == 0) {
             continue;  // Pula filas sem mensagens
         }
 
-        printf("Number of Messages: %d\n", queues_data.queues[i].numMessages);
+        printf("Number of Messages: %d\n", queues.queues[i].numMessages);
 
         for (int j = 0; j < MAXMESSAGENUMBER; j++) {
-            if (queues_data.queues[i].messages[j].data[0] == '\0') {
+            if (queues.queues[i].messages[j].data[0] == '\0') {
                 continue;  // Pula mensagens vazias
             }
 
             printf("Message %d:\n", j);
-            printf("Data: %s\n", queues_data.queues[i].messages[j].data);
+            printf("Data: %s\n", queues.queues[i].messages[j].data);
 
-            if (queues_data.queues[i].messages[j].numConsumers == 0) {
+            if (queues.queues[i].messages[j].numConsumers == 0) {
                 continue;  // Pula mensagens sem consumidores
             }
 
-            printf("Number of Consumers: %d\n", queues_data.queues[i].messages[j].numConsumers);
+            printf("Number of Consumers: %d\n", queues.queues[i].messages[j].numConsumers);
 
             printf("Consumers: ");
             for (int k = 0; k < MAXCONSUMERNUMBER; k++) {
-                if (queues_data.queues[i].messages[j].consumers[k] != 0) {
-                    printf("%d ", queues_data.queues[i].messages[j].consumers[k]);
+                if (queues.queues[i].messages[j].consumers[k] != 0) {
+                    printf("%d ", queues.queues[i].messages[j].consumers[k]);
                 }
             }
             printf("\n");
@@ -201,7 +201,7 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
 
     addQueue(queueName);
     printf("Dados da fila: \n");
-    print_queues_data();
+    print_queues();
 
     struct AMQPFrame frame;
     frame.type = 1;
@@ -240,7 +240,7 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     write(connfd, packet, packetSize);
 }
 
-void allocateSharedMemory(size_t size){
+void* allocateSharedMemory(size_t size){
     void* memory = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, 0, 0);
     if (memory == MAP_FAILED) {
         fprintf(stderr, "Couldn't malloc shared memory.\n");
@@ -262,37 +262,37 @@ void initializeQueuesData(){
         queues.consumers[i] = malloc_shared_data(MAXCONSUMERNUMBER * sizeof(int));
 
         for (int j = 0; j < MAXMESSAGENUMBER; j++) {
-            queues.queue_messages[i][j] = malloc_shared_data(MAXMESSAGESIZE * sizeof(char));
-            queues.queue_messages[i][j][0] = 0;
-            queues.queue_consumers[i][j] = 0;
+            queues.messages[i][j] = malloc_shared_data(MAXMESSAGESIZE * sizeof(char));
+            queues.messages[i][j][0] = 0;
+            queues.consumers[i][j] = 0;
         }
     }
 }
 
 void freeQueuesData(){
     /*for (int i = 0; i < MAXQUEUESIZE; i++) {
-        munmap(queues_data.queues[i].name, MAXQUEUENAMESIZE);
+        munmap(queues.queues[i].name, MAXQUEUENAMESIZE);
         
         for (int j = 0; j < MAXMESSAGENUMBER; j++) {
-            munmap(queues_data.queues[i].messages[j].data, MAXMESSAGESIZE);
-            munmap(queues_data.queues[i].messages[j].consumers, MAXCONSUMERNUMBER * sizeof(int));
+            munmap(queues.queues[i].messages[j].data, MAXMESSAGESIZE);
+            munmap(queues.queues[i].messages[j].consumers, MAXCONSUMERNUMBER * sizeof(int));
         }
     }
-    munmap(queues_data.queues, MAXQUEUESIZE * sizeof(struct queue));*/
+    munmap(queues.queues, MAXQUEUESIZE * sizeof(struct queue));*/
 }
 
 void addQueue(const char *queueName){
     /*
     for(int i = 0; i < MAXQUEUESIZE; i++){
-        if(strcmp(queues_data.queues[i].name, queueName) == 0){
+        if(strcmp(queues.queues[i].name, queueName) == 0){
             printf("A fila '%s' já existe.\n", queueName);
             return; 
         }
     }
     for(int i = 0; i < MAXQUEUESIZE; i++){
-        if(strcmp(queues_data.queues[i].name, "") == 0){
-            strncpy(queues_data.queues[i].name, queueName, MAXQUEUENAMESIZE - 1);
-            queues_data.queues[i].name[MAXQUEUENAMESIZE - 1] = '\0';
+        if(strcmp(queues.queues[i].name, "") == 0){
+            strncpy(queues.queues[i].name, queueName, MAXQUEUENAMESIZE - 1);
+            queues.queues[i].name[MAXQUEUENAMESIZE - 1] = '\0';
             printf("Fila '%s' adicionada.\n", queueName);
             return; 
         }
@@ -325,26 +325,26 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
 
     addMessage(queueName, messageData);
     printf("Dados da fila: \n");
-    print_queues_data();
+    print_queues();
 }
 
 void addMessage(const char *queueName, const char *message){
     printf("Dados da fila: \n");
-    print_queues_data();
+    print_queues();
     // Procura pela fila com o nome especificado
     for(int i = 0; i < MAXQUEUESIZE; i++){
-        if(strcmp(queues_data.queues[i].name, queueName) == 0){
+        if(strcmp(queues.queues[i].name, queueName) == 0){
             printf("A fila '%s' foi encontrada.\n", queueName);
             // Verifica se a fila não está cheia de mensagens
-            if(queues_data.queues[i].numMessages < MAXMESSAGENUMBER){
+            if(queues.queues[i].numMessages < MAXMESSAGENUMBER){
                 printf("A fila '%s' não está cheia.\n", queueName);
                 // Encontra a primeira posição vazia para a mensagem
                 for(int j = 0; j < MAXMESSAGENUMBER; j++){
-                    if(strcmp(queues_data.queues[i].messages[j].data, "") == 0){
+                    if(strcmp(queues.queues[i].messages[j].data, "") == 0){
                         // Copia a mensagem para a fila
-                        strncpy(queues_data.queues[i].messages[j].data, message, MAXMESSAGESIZE - 1);
-                        queues_data.queues[i].messages[j].data[MAXMESSAGESIZE - 1] = '\0';
-                        queues_data.queues[i].numMessages++;
+                        strncpy(queues.queues[i].messages[j].data, message, MAXMESSAGESIZE - 1);
+                        queues.queues[i].messages[j].data[MAXMESSAGESIZE - 1] = '\0';
+                        queues.queues[i].numMessages++;
                         printf("Mensagem adicionada à fila '%s'.\n", queueName);
                         return;
                     }
