@@ -96,6 +96,8 @@ void queueMethod(int connfd, char *recvline, u_int32_t size);
 
 void* allocateSharedMemory(size_t size);
 
+void freeSharedMemory(void* memory, size_t size);
+
 void initializeQueuesData();
 
 void freeQueuesData();

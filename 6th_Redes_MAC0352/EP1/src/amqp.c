@@ -74,7 +74,7 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
                     read(connfd, recvline, size-3);
                     printf("Servidor enviou o método CONNECTION_CLOSE_OK\n");
                     write(connfd, PACKET_CONNECTION_CLOSE_OK, PACKET_CONNECTION_CLOSE_OK_SIZE - 1);
-                    freeQueuesData();
+                    //freeQueuesData();
                     break;
                 default:
                     printf("Método CONNECTION desconhecido\n");
@@ -223,7 +223,6 @@ void* allocateSharedMemory(size_t size){
         fprintf(stderr, "Couldn't malloc shared memory.\n");
         exit(errno);
     }
-
     return memory;
 }
 
