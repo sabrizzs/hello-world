@@ -32,22 +32,22 @@ void print(char *recvline, ssize_t length){
 }
 
 void print_queues(){
-    if (queues == NULL || queues->numQueues == 0) {
+    if (queues == NULL || queues.numQueues == 0) {
         printf("A estrutura está vazia ou não foi inicializada.\n");
         return;
     }
 
-    printf("Número de filas: %d\n", queues->numQueues);
+    printf("Número de filas: %d\n", queues.numQueues);
 
-    for (int i = 0; i < queues->numQueues; i++) {
-        printf("Fila %d: %s\n", i + 1, queues->name[i]);
-        printf("Número de mensagens: %d\n", queues->numMessages);
+    for (int i = 0; i < queues.numQueues; i++) {
+        printf("Fila %d: %s\n", i + 1, queues.name[i]);
+        printf("Número de mensagens: %d\n", queues.numMessages);
 
-        for (int j = 0; j < queues->numMessages; j++) {
+        for (int j = 0; j < queues.numMessages; j++) {
             printf("Mensagem %d:\n", j + 1);
 
-            for (int k = 0; k < queues->numConsumers; k++) {
-                printf("  Consumidor %d: %d\n", k + 1, queues->consumers[i][j][k]);
+            for (int k = 0; k < queues.numConsumers; k++) {
+                printf("  Consumidor %d: %d\n", k + 1, queues.consumers[i][j][k]);
             }
         }
     }
