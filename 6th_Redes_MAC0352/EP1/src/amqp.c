@@ -234,7 +234,7 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
 }
 
 void mallocSharedData(size_t size){
-    void m = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS,0,0);
+    m = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS,0,0);
     return m;
 }
 
