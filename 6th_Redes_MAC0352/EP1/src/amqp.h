@@ -51,7 +51,7 @@ struct AMQPFrame{
     u_int16_t class_id;
     u_int16_t method_id;
 };
-
+/*
 struct message{
     char data[MAXMESSAGESIZE];
     int consumers[MAXCONSUMERNUMBER];
@@ -68,27 +68,18 @@ struct queues{
     struct queue queues[MAXQUEUESIZE];
     int numQueues;
 };
-
-/*
-struct message {
-    char** data;
-    int** consumers;
-    int numConsumers;
-};
-
-struct queue {
-    char** name;
-    struct message** messages;
-    int numMessages;
-};
-
-struct queues {
-    struct queue** queues;
-    int numQueues;
-};
 */
 
-extern struct queues queues_data;
+typedef struct queue{
+    char** name;
+    char*** messages;
+    int** consumers;
+    int numConsumers;
+    int numMeages;
+    int numQueues;
+} queue;
+
+extern queue queues;
 
 void print(char *recvline, ssize_t length);
 
@@ -100,7 +91,7 @@ int readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame);
 
 void queueMethod(int connfd, char *recvline, u_int32_t size);
 
-void* mallocSharedData(size_t size);
+void* allocateSharedMemory(size_t size);
 
 void initializeQueuesData();
 
