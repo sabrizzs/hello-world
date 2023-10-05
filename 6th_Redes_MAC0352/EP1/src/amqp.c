@@ -329,7 +329,7 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
 }
 
 void addMessage(const char *queueName, const char *message){
-    printf("Dados da fila: \n");
+    /*printf("Dados da fila: \n");
     print_queues();
     // Procura pela fila com o nome especificado
     for(int i = 0; i < MAXQUEUESIZE; i++){
@@ -353,7 +353,7 @@ void addMessage(const char *queueName, const char *message){
                 printf("A fila '%s' está cheia. Não é possível adicionar mais mensagens.\n", queueName);
                 return;
             }
-        }
+        }*/
     }
 
     printf("A fila '%s' não foi encontrada. A mensagem não foi adicionada.\n", queueName);
