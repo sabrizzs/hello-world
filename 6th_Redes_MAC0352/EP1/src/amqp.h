@@ -70,13 +70,13 @@ struct queues{
 };*/
 
 struct message {
-    char* data;
-    int* consumers;
+    char** data;
+    int** consumers;
     int numConsumers;
 };
 
 struct queue {
-    char* name;
+    char** name;
     struct message* messages;
     int numMessages;
 };
