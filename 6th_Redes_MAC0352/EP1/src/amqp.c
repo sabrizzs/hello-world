@@ -273,8 +273,7 @@ void addQueue(const char *queueName){
         }
     }
 
-    strncpy(queues.messages[queues.numQueues], queueName, MAXQUEUENAMESIZE - 1);
-    queues.messages[queues.numQueues][MAXQUEUENAMESIZE - 1] = '\0';
+    memcpy(queues.name[queues.numQueues], queueName, strlen(queueName));
     printf("Fila '%s' adicionada.\n", queueName);
     queues.numQueues++;
     printf("Fim da função adicionando fila...\n");
