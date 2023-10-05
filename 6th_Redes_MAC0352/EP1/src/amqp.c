@@ -282,15 +282,15 @@ void freeQueuesData(){
 
 void addQueue(const char *queueName){
     for(int i = 0; i < MAXQUEUESIZE; i++){
-        if(strcmp(queues_data->queues[i].name, queueName) == 0){
+        if(strcmp(queues_data.queues[i]->name, queueName) == 0){
             printf("A fila '%s' já existe.\n", queueName);
             return; 
         }
     }
     for(int i = 0; i < MAXQUEUESIZE; i++){
-        if(strcmp(queues_data->queues[i].name, "") == 0){
-            strncpy(queues_data->queues[i].name, queueName, MAXQUEUENAMESIZE - 1);
-            queues_data->queues[i].name[MAXQUEUENAMESIZE - 1] = '\0';
+        if(strcmp(queues_data.queues[i]->name, "") == 0){
+            strncpy(queues_data.queues[i]->name, queueName, MAXQUEUENAMESIZE - 1);
+            queues_data.queues[i]->name[MAXQUEUENAMESIZE - 1] = '\0';
             printf("Fila '%s' adicionada.\n", queueName);
             return; 
         }
