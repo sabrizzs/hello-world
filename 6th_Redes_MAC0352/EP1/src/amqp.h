@@ -52,7 +52,7 @@ struct AMQPFrame{
     u_int16_t method_id;
 };
 
-struct message{
+/*struct message{
     char data[MAXMESSAGESIZE];
     int consumers[MAXCONSUMERNUMBER];
     int numConsumers;
@@ -66,6 +66,23 @@ struct queue{
 
 struct queues{
     struct queue queues[MAXQUEUESIZE];
+    int numQueues;
+};*/
+
+struct message {
+    char* data;
+    int* consumers;
+    int numConsumers;
+};
+
+struct queue {
+    char* name;
+    struct message* messages;
+    int numMessages;
+};
+
+struct queues {
+    struct queue* queues;
     int numQueues;
 };
 
