@@ -295,7 +295,7 @@ void addQueue(const char *queueName){
         if (strcmp(queues.name[i], queueName) == 0) {
             printf("A fila '%s' já existe.\n", queueName);
             return;
-        } else if (strcmp(queues.name[i], "") == 0) {
+        } else if (strcmp(queues.name[i], '\0') == 0) {
             memcpy(queues.name[i], queueName, strlen(queueName));
             printf("Fila '%s' adicionada.\n", queueName);
         }
