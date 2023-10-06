@@ -33,7 +33,7 @@ void print(char *recvline, ssize_t length){
 void print_messages(int i){
     printf("  [M]:");
     for(int j = 0; j < MAXMESSAGENUMBER;j++){
-        if(strcmp(queues.messages[i][j], "\0") != 0){
+        if(strcmp(queues.messages[i][j], '\0') != 0){
             printf("%s, ",queues.messages[i][j]);
         }
         else{
@@ -59,7 +59,7 @@ void print_consumers(int i){
 void print_queues() {
     printf("QUEUE:\n");
     for(int i = 0; i < MAXQUEUESIZE;i++){
-        if(strcmp(queues.name[i], "\0") != 0){
+        if(strcmp(queues.name[i], '\0') != 0){
             printf("%s\n",queues.name[i]);
             print_consumers(i);
             print_messages(i);
