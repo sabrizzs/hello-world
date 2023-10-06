@@ -208,7 +208,7 @@ int main (int argc, char **argv) {
              * connfd (ele é o socket do cliente específico que será tratado
              * pelo processo filho)
              */
-            close(connfd);
+            //close(connfd);
     }
     exit(0);
 }
