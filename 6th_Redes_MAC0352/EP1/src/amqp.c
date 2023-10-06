@@ -335,7 +335,7 @@ void addMessage(const char *queueName, const char *message){
         return;
     }
     for(int i = 0; i < MAXMESSAGENUMBER; i++){
-        if(strcmp(queues.messages[index][i], "") != 0) {
+        if(strcmp(queues.messages[index][i], "") == 0) {
             memcpy(queues.messages[index][i], message, MAXMESSAGESIZE);
             printf("Mensagem adicionada à fila '%s'.\n", queueName);
             return;
