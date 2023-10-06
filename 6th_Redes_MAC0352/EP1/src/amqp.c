@@ -380,7 +380,7 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     moveConsumer(index);
 
     /* remove a mensagem da primeira posição da fila */
-    printf("Mensagem %s será removida da primeira posição da fila %d.\n", message, queueName);
+    printf("Mensagem %s será removida da primeira posição da fila %s.\n", message, queueName);
 
 }
 
