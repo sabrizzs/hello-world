@@ -34,13 +34,13 @@ void print_queues() {
     printf("QUEUES:\n");
     
     for (int i = 0; i < MAXQUEUESIZE; i++) {
-        if(strcmp(queues_data.queue_name[i], "\0") != 0){
+        if(strcmp(queues.name[i], "\0") != 0){
             printf("Nome da fila: %s\n", queues.name[i]);
 
             printf("Consumer: ");
             int hasConsumers = 0;
             for (int j = 0; j < MAXCONSUMERNUMBER; j++){
-                if(queues_data.queue_consumers[i][j] != 0){
+                if(queues.consumers[i][j] != 0){
                     printf("Consumer %d: %d, ", j, queues.consumers[i][j]);
                     hasConsumers = 1;
                 }
@@ -53,7 +53,7 @@ void print_queues() {
             printf("Messages: ");
             int hasMessages = 0;
             for (int j = 0; j < MAXMESSAGENUMBER; j++) {
-                if(strcmp(queues_data.queue_messages[i][j], "\0") != 0){
+                if(strcmp(queues.messages[i][j], "\0") != 0){
                     printf("Message %d: %s, ", j, queues.messages[i][j]);
                     hasMessages = 1;
                 }
