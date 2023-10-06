@@ -8,6 +8,7 @@
 TO DO:
 
 - publish
+- mensagem com um caractere estranho no final
 - consume
 - mudar packet do rabbit
 */
@@ -50,7 +51,7 @@ void print_queues() {
     printf("QUEUES ------\n");
     for(int i = 0; i < MAXQUEUESIZE;i++){
         if(strcmp(queues.name[i], "") != 0){
-            printf("%s\n", queues.name[i]);
+            printf(" Fila: %s\n", queues.name[i]);
             print_consumers(i);
             print_messages(i);
         }
@@ -312,7 +313,7 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
     length = ntohl(*((u_int32_t*)recvline));
   
     read(connfd,recvline, length + 1);
-    memcpy(messageData, recvline, size);
+    memcpy(messageData, recvline, size - 1);
     /* Mensagem com um caractere desconhecido no final */
     printf("Mensagem: %s\n", messageData);
 
