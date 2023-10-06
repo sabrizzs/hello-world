@@ -202,7 +202,7 @@ int main (int argc, char **argv) {
             printf("[Uma conexão fechada]\n");
             exit(0);
         }
-        else
+        //else
             /**** PROCESSO PAI ****/
             /* Se for o pai, a única coisa a ser feita é fechar o socket
              * connfd (ele é o socket do cliente específico que será tratado
