@@ -71,7 +71,7 @@ struct queues{
 };
 */
 
-typedef struct queue{
+typedef struct queue_t{
     char** name;
     char*** messages;
     int** consumers;
