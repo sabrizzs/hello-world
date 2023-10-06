@@ -112,4 +112,6 @@ void addConsumer(const char *queueName, int connfd);
 
 void moveConsumer(int index);
 
+void removeMessage(int index);
+
 #endif // AMQP_H
