@@ -363,12 +363,11 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
         return;
     }
 
-    if(queues.consumers[i][0] == 0 || strcmp(queues.messages[i][0], "") == 0){
+    if(queues.consumers[index][0] == 0 || strcmp(queues.messages[index][0], "") == 0){
         printf("Não há consumidores ou mensagens na fila %s.\n", queueName);
         return;
     }
 
-    int id = -1;
     /* Pega o identificador do consumer da posição 0 da fila, assim como a mensagem */
     int id = queues.consumers[index][0];
     memcpy(message, queues.messages[index][0], MAXMESSAGESIZE);
