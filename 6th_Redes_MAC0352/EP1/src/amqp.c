@@ -343,7 +343,7 @@ void addMessage(const char *queueName, const char *message){
         }
     }*/
 
-    printf("A fila '%s' não foi encontrada. A mensagem não foi adicionada.\n", queueName);
+    //printf("A fila '%s' não foi encontrada. A mensagem não foi adicionada.\n", queueName);
 }
 
 /* Consume */
