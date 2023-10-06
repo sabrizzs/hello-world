@@ -285,8 +285,8 @@ void addQueue(const char *queueName){
             return;
         }
     }
-    
-    memcpy(queues.name[*queues.numQueues], queueName, strlen(queueName));
+    int index = *queues.numQueues;
+    memcpy(queues.name[index], queueName, strlen(queueName));
     printf("Fila '%s' adicionada.\n", queueName);
     queues.numQueues++;
     printf("Num queues: %d\n", queues.numQueues);
