@@ -1,7 +1,7 @@
 #include "queue.h"
 #include "amqp.h"
 
-queue queues;
+//queue queues;
 char* empty = "\0";
 
 void* malloc_shared_data(size_t size){
