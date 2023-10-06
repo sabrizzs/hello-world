@@ -1,4 +1,5 @@
 #include "queue.h"
+#include "amqp.h"
 
 queue queues;
 char* empty = "\0";
