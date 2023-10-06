@@ -250,13 +250,6 @@ void initializeQueuesData(){
             queues.consumers[i][j] = 0;
         }
     }
-
-    queues.numConsumers = allocateSharedMemory(sizeof(int));
-    queues.numMessages = allocateSharedMemory(sizeof(int));
-    queues.numQueues = allocateSharedMemory(sizeof(int));
-    queues.numConsumers = 0;
-    queues.numMessages = 0;
-    queues.numQueues = 0;
 }
 
 void freeQueuesData(){
@@ -279,18 +272,15 @@ void addQueue(const char *queueName){
         return;
     }
 
-    for (int i = 0; i < queues.numQueues; i++) {
-        if (strcmp(queues.messages[i], queueName) == 0) {
+    for (int i = 0; i < MAXQUEUESIZE; i++) {
+        if(strcmp(queues.name[i], queueName) == 0) {
             printf("A fila '%s' já existe.\n", queueName);
             return;
+        } else if(strcmp(queues.name[i], 0) == 0){
+            memcpy(queues_data.queue_name[i], queueName, strlen(queueName));
         }
     }
-    int index = queues.numQueues;
-    printf("Index: %d\n", index);
-    memcpy(queues.name[index], queueName, strlen(queueName));
     printf("Fila '%s' adicionada.\n", queueName);
-    queues.numQueues++;
-    printf("Num queues: %d\n", queues.numQueues);
 }
 
 /* Publish */
