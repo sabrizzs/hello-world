@@ -431,9 +431,8 @@ void removeMessage(int index){
     memcpy(queues.messages[index][0], "", sizeof(char));
     for(int i = 0; i < MAXMESSAGENUMBER - 1; i++) {
         if(strcmp(queues.messages[index][i + 1], "") != 0){
-            memcpy(queues.messages[index][i],queues.messages[index][i + 1], strlen(queues.messages[index][i]));
+            memcpy(queues.messages[index][i],queues.messages[index][i + 1], strlen(queues.messages[index][i + 1]));
         } else {
-            memcpy(queues.messages[index][i], "", sizeof(char));
             return;
         }
     }
