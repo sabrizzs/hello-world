@@ -22,11 +22,11 @@
  *  int** QUEUE_CONSUMERS queues_data[i].queue_consumers -> schedule consumers
  * 
  * */
-typedef struct queue_t{
+/*typedef struct queue_t{
   char**  queue_name;
   char*** queue_messages;
   int**  queue_consumers;
-} queue;
+} queue;*/
 
 extern queue queues_data;
 
