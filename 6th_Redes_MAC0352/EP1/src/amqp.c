@@ -13,6 +13,7 @@ TO DO:
 - mudar packet do rabbit
 
 - fazer uma função que acha fila
+- se algo der errado é pq to usando "" em vez de '\0'
 */
 
 queue queues;
@@ -373,15 +374,17 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     /* pega o identificador do consumer da posição 0 da fila, assim como a mensagem */
     int id = queues.consumers[index][0];
     memcpy(message, queues.messages[index][0], MAXMESSAGESIZE);
-    printf("Consumer %d irá consumir a mensagem \"%s\".\n", id, message);
+    printf("Consumer \"%d\" irá consumir a mensagem \"%s\".\n", id, message);
 
     /* move o consumidor para o final da fila */
-    printf("Consumer %d irá para o final da fila %s.\n", id, queueName);
+    printf("Consumer \"%d\" irá para o final da fila \"%s\".\n", id, queueName);
     moveConsumer(index);
+    print_queues();
 
     /* remove a mensagem da primeira posição da fila */
-    printf("Mensagem %s será removida da primeira posição da fila %s.\n", message, queueName);
-
+    printf("Mensagem \"%s\" da primeira posição da fila \"%s\" será removida.\n", message, queueName);
+    removeMessage(index);
+    print_queues();
 }
 
 /* Adicionei connfd sem ponteiro */
@@ -412,14 +415,26 @@ void addConsumer(const char *queueName, int connfd){
 
 void moveConsumer(int index){
     int firstConsumer = queues.consumers[index][0];
-    for (int i = 0; i < MAXCONSUMERNUMBER - 1; i++) {
-        if (queues.consumers[index][i + 1] != 0) {
+    for(int i = 0; i < MAXCONSUMERNUMBER - 1; i++){
+        if(queues.consumers[index][i + 1] != 0){
             queues.consumers[index][i] = queues.consumers[index][i + 1];
-        } else {
+        }else{
             queues.consumers[index][i] = firstConsumer;
-            printf("Consumer com connfd %d movido para o final da fila.\n", firstConsumer);
+            printf("Consumer com connfd \"%d\" movido para o final da fila.\n", firstConsumer);
             return;
         }
     }
-    printf("Não foi possível mover o consumer %d para o final da fila.\n", firstConsumer);
+    printf("Não foi possível mover o consumer \"%d\" para o final da fila.\n", firstConsumer);
+}
+
+void removeMessage(int index){
+    memset(queues.messages[i][0], "", MAXMESSAGESIZE);
+    for(int i = 0; i < MAXMESSAGENUMBER - 1; i++) {
+        if(strcmp(queues.messages[index][i + 1], "") != 0){
+            memcpy(queues.messages[index][i],queues.messages[index][i + 1], strlen(queues.messages[index][i]));
+        } else {
+            memcpy(queues_data.queue_messages[index][i], "", sizeof(char));
+            return;
+        }
+    }
 }
