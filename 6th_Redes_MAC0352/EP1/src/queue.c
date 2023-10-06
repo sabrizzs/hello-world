@@ -41,7 +41,7 @@ void free_structure_queues(){
             free_shared_data(queues.messages[i][j], MAX_MESSAGE_SIZE * sizeof(char));
         }
         free_shared_data(queues.messages[i], MAX_MESSAGE_NUMBER * sizeof(char*));
-        free_shared_data(queues.name[i], MAX_name_SIZE * sizeof(char));
+        free_shared_data(queues.name[i], MAX_QUEUE_NAME_SIZE * sizeof(char));
         free_shared_data(queues.consumers[i], MAX_CONSUMER_NUMBER * sizeof(int*));
     }
     free_shared_data(queues.name, MAX_QUEUE_SIZE * sizeof(char*));
