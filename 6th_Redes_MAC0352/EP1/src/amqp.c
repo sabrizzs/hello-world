@@ -11,6 +11,8 @@ TO DO:
     - mensagem com um caractere estranho no final
 - consume
 - mudar packet do rabbit
+
+- fazer uma função que acha fila
 */
 
 queue queues;
@@ -339,31 +341,58 @@ void addMessage(const char *queueName, const char *message){
 /* Consume */
 void consumeMethod(int connfd, char *recvline, u_int32_t size){
     char queueName[MAXQUEUENAMESIZE];
-
+    
     read(connfd, recvline, size - 3);
     memcpy(queueName, recvline + 3, size);
     printf("Nome da fila do consumer: %s\n", queueName);
 
     addConsumer(queueName, connfd);
+    write(connfd, PACKET_BASIC_CONSUME_OK, PACKET_BASIC_CONSUME_OK_SIZE - 1);
+
+    char message[MAXMESSAGESIZE];
+
+    int index = -1;
+    for(int i = 0; i < MAXQUEUESIZE; i++){
+        if (strcmp(queues.name[i], queueName) == 0) {
+            index = i;
+            break;
+        }
+    }
+    if(index == -1){
+        printf("Fila '%s' não encontrada na função consumeMethod.\n", queueName);
+        return;
+    }
+
+    if(queues.consumers[i][0] == 0 || strcmp(queues.messages[i][0], "") == 0){
+        printf("Não há consumidores ou mensagens na fila %s.\n", queueName);
+        return;
+    }
+
+    int id = -1;
+    /* Pega o identificador do consumer da posição 0 da fila, assim como a mensagem */
+    int id = queues.consumers[index][0];
+    memcpy(message, queues.messages[index][0], MAXMESSAGESIZE);
+    printf("Consumer %d irá consumir a mensagem \"%s\".\n", id, message);
 
 }
 
-void addConsumer(const char *queueName, int connfd) {
+/* Adicionei connfd sem ponteiro */
+void addConsumer(const char *queueName, int connfd){
     int index = -1;
-    for (int i = 0; i < MAXQUEUESIZE; i++) {
+    for(int i = 0; i < MAXQUEUESIZE; i++){
         if (strcmp(queues.name[i], queueName) == 0) {
             index = i;
             printf("Fila '%s' encontrada no índice %d.\n", queueName, index);
             break;
         }
     }
-    if (index == -1) {
+    if(index == -1){
         printf("Fila '%s' não encontrada.\n", queueName);
         return;
     }
 
     printf("Connfd do consumer: %d\n", connfd);
-    for (int i = 0; i < MAXMESSAGENUMBER; i++) {
+    for(int i = 0; i < MAXCONSUMERNUMBER; i++){
         if (queues.consumers[index][i] == 0) {
             queues.consumers[index][i] = connfd;
             printf("Consumer %d adicionado à fila '%s'.\n", connfd, queueName);

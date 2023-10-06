@@ -106,4 +106,8 @@ void publishMethod(int connfd, char *recvline, u_int32_t size);
 
 void addMessage(const char *queueName, const char *message);
 
+void consumeMethod(int connfd, char *recvline, u_int32_t size);
+
+void addConsumer(const char *queueName, int connfd);
+
 #endif // AMQP_H
