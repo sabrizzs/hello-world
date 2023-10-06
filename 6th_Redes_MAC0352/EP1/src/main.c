@@ -42,6 +42,8 @@
 
 #include "amqp.h"
 
+#include "queue.h"
+
 #define LISTENQ 1
 #define MAXDATASIZE 100
 #define MAXLINE 4096
