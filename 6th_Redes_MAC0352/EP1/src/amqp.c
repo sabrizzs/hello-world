@@ -7,14 +7,6 @@
 /*  
 TO DO:
 
-- free queues
-- add message
-
-
-- arrumar queue que esta desaparecendo com os dados dps da conexão fechar
-    - declarar como extern
-    - funções void
-    - malloc
 - publish
 - consume
 - mudar packet do rabbit
@@ -31,7 +23,7 @@ void print(char *recvline, ssize_t length){
 }
 
 void print_messages(int i){
-    printf("  [M]:");
+    printf(" Messages: ");
     for(int j = 0; j < MAXMESSAGENUMBER;j++){
         if(strcmp(queues.messages[i][j], "") != 0){
             printf("%s, ", queues.messages[i][j]);
@@ -43,7 +35,7 @@ void print_messages(int i){
 }
 
 void print_consumers(int i){
-    printf("  [C]:");
+    printf(" Consumers: ");
     for(int j = 0; j < MAXCONSUMERNUMBER;j++){
         if(queues.consumers[i][j] != 0){
             printf("%d, ", queues.consumers[i][j]);
@@ -55,7 +47,7 @@ void print_consumers(int i){
 }
 
 void print_queues() {
-    printf("QUEUE:\n");
+    printf("QUEUES ------\n");
     for(int i = 0; i < MAXQUEUESIZE;i++){
         if(strcmp(queues.name[i], "") != 0){
             printf("%s\n", queues.name[i]);
@@ -330,34 +322,25 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
 }
 
 void addMessage(const char *queueName, const char *message){
-    /*printf("Dados da fila: \n");
-    print_queues();
-    // Procura pela fila com o nome especificado
+    int index = -1;
     for(int i = 0; i < MAXQUEUESIZE; i++){
-        if(strcmp(queues.queues[i].name, queueName) == 0){
-            printf("A fila '%s' foi encontrada.\n", queueName);
-            // Verifica se a fila não está cheia de mensagens
-            if(queues.queues[i].numMessages < MAXMESSAGENUMBER){
-                printf("A fila '%s' não está cheia.\n", queueName);
-                // Encontra a primeira posição vazia para a mensagem
-                for(int j = 0; j < MAXMESSAGENUMBER; j++){
-                    if(strcmp(queues.queues[i].messages[j].data, "") == 0){
-                        // Copia a mensagem para a fila
-                        strncpy(queues.queues[i].messages[j].data, message, MAXMESSAGESIZE - 1);
-                        queues.queues[i].messages[j].data[MAXMESSAGESIZE - 1] = '\0';
-                        queues.queues[i].numMessages++;
-                        printf("Mensagem adicionada à fila '%s'.\n", queueName);
-                        return;
-                    }
-                }
-            }else{
-                printf("A fila '%s' está cheia. Não é possível adicionar mais mensagens.\n", queueName);
-                return;
-            }
+        if(strcmp(queues.name[i], queueName) == 0) {
+            index = i;
+            break;
         }
-    }*/
-
-    //printf("A fila '%s' não foi encontrada. A mensagem não foi adicionada.\n", queueName);
+    }
+    if(index == -1){
+        printf("Fila '%s' não encontrada.\n", queueName);
+        return;
+    }
+    for(int i = 0; i < MAXMESSAGENUMBER; i++){
+        if(strcmp(queues.messages[index][i], "") != 0) {
+            memcpy(queues.messages[index][i], message, MAXMESSAGESIZE);
+            printf("Mensagem adicionada à fila '%s'.\n", queueName);
+            return;
+        }
+    }
+    printf("A fila '%s' está cheia. Não é possível adicionar mais mensagens.\n", queueName);
 }
 
 /* Consume */
