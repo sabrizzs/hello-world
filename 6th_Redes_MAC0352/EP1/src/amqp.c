@@ -349,8 +349,10 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     addConsumer(queueName, connfd);
     write(connfd, PACKET_BASIC_CONSUME_OK, PACKET_BASIC_CONSUME_OK_SIZE - 1);
 
+    /* deliver message */
     char message[MAXMESSAGESIZE];
 
+    /* verifica se a fila existe e se há menagens ou consumidores */
     int index = -1;
     for(int i = 0; i < MAXQUEUESIZE; i++){
         if (strcmp(queues.name[i], queueName) == 0) {
@@ -368,10 +370,17 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
         return;
     }
 
-    /* Pega o identificador do consumer da posição 0 da fila, assim como a mensagem */
+    /* pega o identificador do consumer da posição 0 da fila, assim como a mensagem */
     int id = queues.consumers[index][0];
     memcpy(message, queues.messages[index][0], MAXMESSAGESIZE);
     printf("Consumer %d irá consumir a mensagem \"%s\".\n", id, message);
+
+    /* move o consumidor para o final da fila */
+    printf("Consumer %d irá para o final da fila %d.\n", id, queueName);
+    moveConsumer(index);
+
+    /* remove a mensagem da primeira posição da fila */
+    printf("Mensagem %d erá removida da primeira posição da fila %d.\n", message, queueName);
 
 }
 
@@ -399,4 +408,19 @@ void addConsumer(const char *queueName, int connfd){
         }
     }
     printf("A fila '%s' está cheia de consumidores.\n", queueName);
+}
+
+void moveConsumer(int index){
+
+    int firstConsumer = queues.consumer[index][0];
+    for (int i = 0; i < MAXCONSUMERNUMBER - 1; i++) {
+        if (queues.consumer[index][i + 1] != 0) {
+            queues.consumer[index][i] = queues.consumers[index][i + 1];
+        } else {
+            queues.consumer[index][i] = firstConsumer;
+            printf("Consumer com connfd %d movido para o final da fila.\n", firstConsumer);
+            return;
+        }
+    }
+    printf("Não foi possível mover o consumer %d para o final da fila.\n", firstConsumer);
 }
