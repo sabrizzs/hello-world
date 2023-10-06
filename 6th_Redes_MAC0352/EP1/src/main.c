@@ -180,8 +180,6 @@ int main (int argc, char **argv) {
                 if(!connectionStart){
                     connectionStart = sendProtocolHeader(connfd, recvline);
                 }
-                printf("Dados da fila na main.c: \n");
-                print_queues();
                 struct AMQPFrame frame;
                 /*int n = readAMQPFrame(connfd, recvline, &frame);
                 if(n == 0) exit(0);*/
@@ -199,8 +197,10 @@ int main (int argc, char **argv) {
             /* Após ter feito toda a troca de informação com o cliente,
              * pode finalizar o processo filho
              */
+            printf("Dados da fila na main.c: \n");
+            print_queues();
             printf("[Uma conexão fechada]\n");
-            //exit(0);
+            exit(0); //
         }
         else
             /**** PROCESSO PAI ****/
