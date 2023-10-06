@@ -412,12 +412,12 @@ void addConsumer(const char *queueName, int connfd){
 
 void moveConsumer(int index){
 
-    int firstConsumer = queues.consumer[index][0];
+    int firstConsumer = queues.consumers[index][0];
     for (int i = 0; i < MAXCONSUMERNUMBER - 1; i++) {
-        if (queues.consumer[index][i + 1] != 0) {
-            queues.consumer[index][i] = queues.consumers[index][i + 1];
+        if (queues.consumers[index][i + 1] != 0) {
+            queues.consumers[index][i] = queues.consumers[index][i + 1];
         } else {
-            queues.consumer[index][i] = firstConsumer;
+            queues.consumers[index][i] = firstConsumer;
             printf("Consumer com connfd %d movido para o final da fila.\n", firstConsumer);
             return;
         }
