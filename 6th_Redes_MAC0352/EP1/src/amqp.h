@@ -1,6 +1,7 @@
 #ifndef AMQP_H
 #define AMQP_H
 
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <errno.h>

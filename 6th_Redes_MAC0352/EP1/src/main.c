@@ -120,7 +120,8 @@ int main (int argc, char **argv) {
     printf("[Para finalizar, pressione CTRL+c ou rode um kill ou killall]\n");
    
     /* EP1 */
-    initializeQueuesData();
+    //initializeQueuesData();
+    create_structure_queues();
 
     /* O servidor no final das contas é um loop infinito de espera por
      * conexões e processamento de cada uma individualmente
@@ -202,13 +203,13 @@ int main (int argc, char **argv) {
             printf("[Uma conexão fechada]\n");
             exit(0);
         }
-        //else
+        else
             /**** PROCESSO PAI ****/
             /* Se for o pai, a única coisa a ser feita é fechar o socket
              * connfd (ele é o socket do cliente específico que será tratado
              * pelo processo filho)
              */
-            //close(connfd);
+            close(connfd);
     }
     exit(0);
 }

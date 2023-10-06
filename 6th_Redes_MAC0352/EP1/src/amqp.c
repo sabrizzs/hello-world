@@ -4,6 +4,8 @@
 #include "amqp.h"
 #include "packets.h"
 
+#include "queue.h"
+
 /*  
 TO DO:
 
@@ -178,7 +180,8 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     memcpy(queueName, recvline + 3, size);
     printf("Nome da fila: %s\n", queueName);
     printf("Adicionando fila...\n");
-    addQueue(queueName);
+    //addQueue(queueName);
+    add_queue(queueName);
     printf("Dados da fila: \n");
     print_queues();
 
