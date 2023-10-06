@@ -33,44 +33,41 @@ void print(char *recvline, ssize_t length){
 void print_messages(int i){
     printf("  [M]:");
     for(int j = 0; j < MAXMESSAGENUMBER;j++){
-        if(strcmp(queues.messages[i][j], '\0') != 0){
-            printf("%s, ",queues.messages[i][j]);
-        }
-        else{
-            printf("\n");
+        if(strcmp(queues.messages[i][j], "") != 0){
+            printf("%s, ", queues.messages[i][j]);
+        } else {
             break;
         }
     }
+    printf("\n");
 }
 
 void print_consumers(int i){
     printf("  [C]:");
     for(int j = 0; j < MAXCONSUMERNUMBER;j++){
         if(queues.consumers[i][j] != 0){
-            printf("%d, ",queues.consumers[i][j]);
-        }
-        else{
-            printf("\n");
+            printf("%d, ", queues.consumers[i][j]);
+        } else {
             break;
         }
     }
+    printf("\n");
 }
 
 void print_queues() {
     printf("QUEUE:\n");
     for(int i = 0; i < MAXQUEUESIZE;i++){
-        if(strcmp(queues.name[i], '\0') != 0){
-            printf("%s\n",queues.name[i]);
+        if(strcmp(queues.name[i], "") != 0){
+            printf("%s\n", queues.name[i]);
             print_consumers(i);
             print_messages(i);
-        }
-        else{
+        } else {
             printf("\n");
-            break; 
         }
     }
     printf("-------------\n");    
 }
+
 
 
 void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id){
