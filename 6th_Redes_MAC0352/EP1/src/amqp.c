@@ -30,44 +30,46 @@ void print(char *recvline, ssize_t length){
     printf("\n");
 }
 
-void print_queues() {
-    printf("QUEUES:\n");
-    
-    for (int i = 0; i < MAXQUEUESIZE; i++) {
-        if(strcmp(queues.name[i], "\0") != 0){
-            printf("Nome da fila: %s\n", queues.name[i]);
-
-            printf("Consumer: ");
-            int hasConsumers = 0;
-            for (int j = 0; j < MAXCONSUMERNUMBER; j++){
-                if(queues.consumers[i][j] != 0){
-                    printf("Consumer %d: %d, ", j, queues.consumers[i][j]);
-                    hasConsumers = 1;
-                }
-            }
-            if (!hasConsumers) {
-                printf("No consumer");
-            }
+void print_messages(int i){
+    printf("  [M]:");
+    for(int j = 0; j < MAXMESSAGENUMBER;j++){
+        if(strcmp(queues.messages[i][j], "\0") != 0){
+            printf("%s, ",queues.messages[i][j]);
+        }
+        else{
             printf("\n");
-
-            printf("Messages: ");
-            int hasMessages = 0;
-            for (int j = 0; j < MAXMESSAGENUMBER; j++) {
-                if(strcmp(queues.messages[i][j], "\0") != 0){
-                    printf("Message %d: %s, ", j, queues.messages[i][j]);
-                    hasMessages = 1;
-                }
-            }
-            if (!hasMessages) {
-                printf("No message");
-            }
-            printf("\n");
-          
-        } else {
-            printf("--------\n");
             break;
         }
-    }    
+    }
+}
+
+void print_consumers(int i){
+    printf("  [C]:");
+    for(int j = 0; j < MAXCONSUMERNUMBER;j++){
+        if(queues.consumers[i][j] != 0){
+            printf("%d, ",queues.consumers[i][j]);
+        }
+        else{
+            printf("\n");
+            break;
+        }
+    }
+}
+
+void print_queues() {
+    printf("QUEUE:\n");
+    for(int i = 0; i < MAXQUEUESIZE;i++){
+        if(strcmp(queues.name[i], "\0") != 0){
+            printf("%s\n",queues.name[i]);
+            print_consumers(i);
+            print_messages(i);
+        }
+        else{
+            printf("\n");
+            break; 
+        }
+    }
+    printf("-------------\n");    
 }
 
 
