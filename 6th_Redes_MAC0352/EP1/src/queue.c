@@ -61,6 +61,7 @@ void add_queue(char* name){
         memcpy(queues.name[i], name, strlen(name));
         printf("    [+]add_queue: %s %d %ld\n", queues.name[i], i, strlen(queues.name[i]));
     }
+    queues.numQueues++;
     return;
 }
 
