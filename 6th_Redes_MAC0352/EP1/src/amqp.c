@@ -30,25 +30,46 @@ void print(char *recvline, ssize_t length){
     printf("\n");
 }
 
-void print_queues(){
+void print_queues() {
     printf("QUEUES:\n");
-    for(int i = 0; i < MAXQUEUESIZE;i++){
-        if(strcmp(queues.name[i], "\0") != 0){
-            printf("Nome da fila: %s\n",queues.name[i]);
-            for(int j = 0; j < MAXCONSUMERNUMBER;j++){
-                if(queues.consumers[i][j] != 0){
+    
+    for (int i = 0; i < MAXQUEUESIZE; i++) {
+        if (queues.name[i][0] != '\0') {
+            printf("Nome da fila: %s\n", queues.name[i]);
+
+            // Imprimir consumidores
+            printf("Consumidores: ");
+            int hasConsumers = 0;
+            for (int j = 0; j < MAXCONSUMERNUMBER; j++) {
+                if (queues.consumers[i][j] != 0) {
                     printf("Consumer %d: %d, ", j, queues.consumers[i][j]);
+                    hasConsumers = 1;
                 }
             }
-            for(int j = 0; j < MAXMESSAGENUMBER;j++){
-                if(strcmp(queues.messages[i][j], "\0") != 0){
-                    printf("Menssages %d: %s, ", j, queues.messages[i][j]);
+            if (!hasConsumers) {
+                printf("No consumer");
+            }
+            printf("\n");
+
+            // Imprimir mensagens
+            printf("Mensagens: ");
+            int hasMessages = 0;
+            for (int j = 0; j < MAXMESSAGENUMBER; j++) {
+                if (queues.messages[i][j][0] != '\0') {
+                    printf("Mensagem %d: %s, ", j, queues.messages[i][j]);
+                    hasMessages = 1;
                 }
             }
+            if (!hasMessages) {
+                printf("No message");
+            }
+            printf("\n");
+
+            printf("--------\n");
         }
     }
-    printf("--------\n");
 }
+
 
 void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_id, u_int16_t method_id){
     switch (class_id) {
