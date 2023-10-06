@@ -16,7 +16,7 @@ void free_shared_data(void* p, size_t size){
 
 void initialize_structure_queues(){
     for(int i=0; i < MAX_QUEUE_SIZE;i++){
-        queues.name[i] = malloc_shared_data(MAX_name_SIZE * sizeof(char));
+        queues.name[i] = malloc_shared_data(MAX_QUEUE_NAME_SIZE * sizeof(char));
         queues.name[i][0] = 0;
         queues.messages[i] = malloc_shared_data(MAX_MESSAGE_NUMBER * sizeof(char*));
         queues.consumers[i] = malloc_shared_data(MAX_CONSUMER_NUMBER * sizeof(int)); 

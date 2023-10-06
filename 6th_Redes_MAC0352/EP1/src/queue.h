@@ -28,7 +28,7 @@
   int**  queue_consumers;
 } queue;*/
 
-extern queue queues_data;
+//extern queue queues_data;
 
 void create_structure_queues_data();
 void initialize_strucuture_queues_data();
