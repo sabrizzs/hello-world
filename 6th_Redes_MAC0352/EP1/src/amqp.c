@@ -348,26 +348,27 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
 
 }
 
-void addConsumer(const char *queueName, int connfd){
+void addConsumer(const char *queueName, int connfd) {
     int index = -1;
-    for(int i = 0; i < MAXQUEUESIZE; i++){
-        if(strcmp(queues.name[i], queueName) == 0) {
+    for (int i = 0; i < MAXQUEUESIZE; i++) {
+        if (strcmp(queues.name[i], queueName) == 0) {
             index = i;
-            printf("Fila '%s' encontrada no index %d.\n", queueName, index);
+            printf("Fila '%s' encontrada no índice %d.\n", queueName, index);
             break;
         }
     }
-    if(index == -1){
+    if (index == -1) {
         printf("Fila '%s' não encontrada.\n", queueName);
         return;
     }
 
-    printf("Connfd: %d\n", connfd);
-    for(int i = 0; i < MAXMESSAGENUMBER; i++){
-        if(strcmp(queues.consumers[index][i], 0) == 0) {
-            memcpy(queues.consumers[index][i], connfd, sizeof(int));
+    printf("Connfd do consumer: %d\n", connfd);
+    for (int i = 0; i < MAXMESSAGENUMBER; i++) {
+        if (queues.consumers[index][i] == 0) {
+            queues.consumers[index][i] = connfd;
             printf("Consumer %d adicionado à fila '%s'.\n", connfd, queueName);
             return;
         }
     }
+    printf("A fila '%s' está cheia de consumidores.\n", queueName);
 }
