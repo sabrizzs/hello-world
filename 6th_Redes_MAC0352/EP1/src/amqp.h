@@ -76,9 +76,9 @@ typedef struct queue{
     char** name;
     char*** messages;
     int** consumers;
-    int *numConsumers;
-    int *numMessages;
-    int *numQueues;
+    int numConsumers;
+    int numMessages;
+    int numQueues;
 } queue;
 
 extern queue queues;

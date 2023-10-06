@@ -250,6 +250,9 @@ void initializeQueuesData(){
             queues.consumers[i][j] = 0;
         }
     }
+    queues.numConsumers = 0;
+    queues.numMessages = 0;
+    queues.numQueues = 0;
 }
 
 void freeQueuesData(){
