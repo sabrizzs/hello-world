@@ -376,11 +376,11 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     printf("Consumer %d irá consumir a mensagem \"%s\".\n", id, message);
 
     /* move o consumidor para o final da fila */
-    printf("Consumer %d irá para o final da fila %d.\n", id, queueName);
+    printf("Consumer %d irá para o final da fila %s.\n", id, queueName);
     moveConsumer(index);
 
     /* remove a mensagem da primeira posição da fila */
-    printf("Mensagem %d erá removida da primeira posição da fila %d.\n", message, queueName);
+    printf("Mensagem %s será removida da primeira posição da fila %d.\n", message, queueName);
 
 }
 
@@ -411,7 +411,6 @@ void addConsumer(const char *queueName, int connfd){
 }
 
 void moveConsumer(int index){
-
     int firstConsumer = queues.consumers[index][0];
     for (int i = 0; i < MAXCONSUMERNUMBER - 1; i++) {
         if (queues.consumers[index][i + 1] != 0) {

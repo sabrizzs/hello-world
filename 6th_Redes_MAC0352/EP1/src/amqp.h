@@ -110,4 +110,6 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size);
 
 void addConsumer(const char *queueName, int connfd);
 
+void moveConsumer(int index);
+
 #endif // AMQP_H
