@@ -1,7 +1,7 @@
 #include "queue.h"
 #include "amqp.h"
 
-//queue queues;
+queue queues;
 char* empty = "\0";
 
 void* malloc_shared_data(size_t size){
@@ -61,9 +61,9 @@ void add_queue(char* name){
         memcpy(queues.name[i], name, strlen(name));
         printf("    [+]add_queue: %s %d %ld\n", queues.name[i], i, strlen(queues.name[i]));
     }
-    queues.numQueues++;
     return;
 }
+
 
 int get_id(char* name){
     for(int i = 0; i < MAX_QUEUE_SIZE;i++){

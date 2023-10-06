@@ -42,8 +42,6 @@
 
 #include "amqp.h"
 
-#include "queue.h"
-
 #define LISTENQ 1
 #define MAXDATASIZE 100
 #define MAXLINE 4096
@@ -122,8 +120,7 @@ int main (int argc, char **argv) {
     printf("[Para finalizar, pressione CTRL+c ou rode um kill ou killall]\n");
    
     /* EP1 */
-    //initializeQueuesData();
-    create_structure_queues();
+    initializeQueuesData();
 
     /* O servidor no final das contas é um loop infinito de espera por
      * conexões e processamento de cada uma individualmente
@@ -180,15 +177,15 @@ int main (int argc, char **argv) {
              */
             int connectionStart = 0;
             for(;;){
-                printf("Teste %d", teste);
                 if(!connectionStart){
                     connectionStart = sendProtocolHeader(connfd, recvline);
                 }
                 printf("Dados da fila na main.c: \n");
                 print_queues();
                 struct AMQPFrame frame;
-                int n = readAMQPFrame(connfd, recvline, &frame);
-                if(n == 0) exit(0);
+                /*int n = readAMQPFrame(connfd, recvline, &frame);
+                if(n == 0) exit(0);*/
+                readAMQPFrame(connfd, recvline, &frame);
 
                 AMQPConnection(connfd, recvline, frame.size, frame.class_id, frame.method_id);
  
