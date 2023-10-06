@@ -326,6 +326,7 @@ void addMessage(const char *queueName, const char *message){
     for(int i = 0; i < MAXQUEUESIZE; i++){
         if(strcmp(queues.name[i], queueName) == 0) {
             index = i;
+            printf("Fila '%s' encontrada no index %d.\n", queueName, index);
             break;
         }
     }
