@@ -39,7 +39,7 @@ void print_messages(int i){
             break;
         }
     }
-    printf("\n");
+    printf("\n"); // Adiciona uma nova linha após as mensagens
 }
 
 void print_consumers(int i){
@@ -51,7 +51,7 @@ void print_consumers(int i){
             break;
         }
     }
-    printf("\n");
+    printf("\n"); // Adiciona uma nova linha após os consumidores
 }
 
 void print_queues() {
@@ -61,12 +61,11 @@ void print_queues() {
             printf("%s\n", queues.name[i]);
             print_consumers(i);
             print_messages(i);
-        } else {
-            printf("\n");
         }
     }
     printf("-------------\n");    
 }
+
 
 
 
