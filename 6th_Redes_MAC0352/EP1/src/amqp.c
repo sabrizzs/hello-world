@@ -428,7 +428,7 @@ void moveConsumer(int index){
 }
 
 void removeMessage(int index){
-    memset(queues.messages[i][0], "", MAXMESSAGESIZE);
+    memset(queues.messages[index][0], "", MAXMESSAGESIZE);
     for(int i = 0; i < MAXMESSAGENUMBER - 1; i++) {
         if(strcmp(queues.messages[index][i + 1], "") != 0){
             memcpy(queues.messages[index][i],queues.messages[index][i + 1], strlen(queues.messages[index][i]));
