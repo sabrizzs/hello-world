@@ -33,16 +33,16 @@ void print(char *recvline, ssize_t length){
 void print_queues(){
     printf("QUEUES:\n");
     for(int i = 0; i < MAXQUEUESIZE;i++){
-        if(strcmp(queues_data.queue_name[i],empty) != 0){
-            printf("Nome da fila: %s\n",queues_data.queue_name[i]);
+        if(strcmp(queues.name[i], "\0") != 0){
+            printf("Nome da fila: %s\n",queues.name[i]);
             for(int j = 0; j < MAXCONSUMERNUMBER;j++){
-                if(queues_data.queue_consumers[i][j] != 0){
-                    printf("Consumer %d: %d, ", j, queues_data.queue_consumers[i][j]);
+                if(queues.consumers[i][j] != 0){
+                    printf("Consumer %d: %d, ", j, queues.consumers[i][j]);
                 }
             }
-            for(int j = 0; j < MAX_MESSAGE_NUMBER;j++){
-                if(strcmp(queues_data.queue_messages[i][j], empty) != 0){
-                    printf("Menssages %d: %s, ", j, queues_data.queue_messages[i][j]);
+            for(int j = 0; j < MAXMESSAGENUMBER;j++){
+                if(strcmp(queues.messages[i][j], "\0") != 0){
+                    printf("Menssages %d: %s, ", j, queues.messages[i][j]);
                 }
             }
         }
