@@ -361,6 +361,8 @@ void addConsumer(const char *queueName, int connfd){
         printf("Fila '%s' não encontrada.\n", queueName);
         return;
     }
+
+    printf("Connfd: %d\n", connfd);
     for(int i = 0; i < MAXMESSAGENUMBER; i++){
         if(strcmp(queues.consumers[index][i], 0) == 0) {
             memcpy(queues.consumers[index][i], connfd, sizeof(int));
