@@ -200,7 +200,7 @@ int main (int argc, char **argv) {
              * pode finalizar o processo filho
              */
             printf("[Uma conexão fechada]\n");
-            exit(0);
+            //exit(0);
         }
         else
             /**** PROCESSO PAI ****/

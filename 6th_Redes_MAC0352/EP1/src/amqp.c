@@ -175,7 +175,6 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     char queueName[MAXQUEUENAMESIZE];
     memcpy(queueName, recvline + 3, size);
     printf("Nome da fila: %s\n", queueName);
-    printf("Adicionando fila...\n");
     addQueue(queueName);
     printf("Dados da fila: \n");
     print_queues();
