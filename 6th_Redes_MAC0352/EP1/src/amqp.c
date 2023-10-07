@@ -1,6 +1,3 @@
-#include <string.h>
-#include <stdio.h>
-
 #include "amqp.h"
 #include "packets.h"
 
@@ -529,6 +526,7 @@ void moveConsumer(int index){
     printf("Não foi possível mover o consumer \"%d\" para o final da fila.\n", firstConsumer);
 }
 
+/* dando errado */
 void removeMessage(int index){
     // clear the message at the front of the queue
     memcpy(queues.messages[index][0], "", sizeof(char));

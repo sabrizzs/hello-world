@@ -5,6 +5,8 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <errno.h>
+#include <string.h>
+#include <stdio.h>
 
 #define MAXQUEUENAMESIZE 100
 #define MAXQUEUESIZE 100

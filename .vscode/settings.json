@@ -5,6 +5,7 @@
         "typeinfo": "c",
         "compare": "c",
         "type_traits": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "packets.h": "c"
     }
 }
