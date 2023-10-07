@@ -426,7 +426,7 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     u_int32_t length = htonl(15);
     u_int16_t class_id = htons(60);
     u_int16_t wt = htons(0);
-    u_int64_t bl = htonll((u_int32_t)strlen(message)); 
+    u_int64_t bl = htonl((u_int32_t)strlen(message)); 
     u_int16_t pf = htons(4096);
     u_int8_t dl = 1;
 
