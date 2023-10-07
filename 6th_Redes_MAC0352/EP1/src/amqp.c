@@ -305,7 +305,7 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
     length = ntohl(*((u_int32_t*)recvline));
   
     read(connfd,recvline, length + 1);
-    memcpy(messageData, recvline, length - 1s); // testar com -1
+    memcpy(messageData, recvline, length - 1); // testar com -1
     //messageData[length] = "\0";
     /* Mensagem com um caractere desconhecido no final */
     printf("Mensagem: %s\n", messageData);
