@@ -413,7 +413,7 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
 
     memcpy(packet + packetSize, data, 42); 
     packetSize += 42;
-    memcpy(packet + packetSize, (char*)&(strlen(queueName)), sizeof(strlen(queueName)));
+    memcpy(packet + packetSize, (char*)&((u_int32_t)strlen(queueName)), sizeof(strlen(queueName)));
     packetSize+= sizeof(strlen(queueName));
     memcpy(packet + packetSize, queueName, strlen(queueName));
     packetSize+= strlen(queueName);
