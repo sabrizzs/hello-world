@@ -412,8 +412,8 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     char data[] = "\x1f\x61\x6d\x71\x2e\x63\x74\x61\x67\x2d\x55\x6e\x73\x75\x6f\x31\x58\x6c\x68\x46\x58\x41\x6e\x45\x68\x6f\x58\x76\x58\x68\x59\x41\x00\x00\x00\x00\x00\x00\x00\x01\x00";
 
     memcpy(packet + packetSize, data, 42); 
-    packetSize += packetSize_data;
-    memcpy(packet +*packetSize, (char*)&(strlen(queueName)), sizeof(strlen(queueName)));
+    packetSize += 42;
+    memcpy(packet + packetSize, (char*)&(strlen(queueName)), sizeof(strlen(queueName)));
     packetSize+= sizeof(strlen(queueName));
     memcpy(packet + packetSize, queueName, strlen(queueName));
     packetSize+= strlen(queueName);
@@ -440,7 +440,7 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     memcpy(packet + packetSize, "\xce", 1); packetSize += 1;
 
     type = 3;
-    u_int32_t length = htonl((u_int32_t)strlen(message));
+    length = htonl((u_int32_t)strlen(message));
 
     memcpy(packet + packetSize, (char*)&type, sizeof(type)); packetSize += sizeof(type);
     memcpy(packet + packetSize, (char*)&channel, sizeof(channel)); packetSize += sizeof(channel);
