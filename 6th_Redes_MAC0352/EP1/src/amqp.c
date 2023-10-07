@@ -220,7 +220,7 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
 
     char packet[MAXSIZE];
     int packetSize = 0;
-    queuePacket(queueName, packet, &packetSize);
+    queuePacket(queueName, packet, &packetSize, size);
 
     write(connfd, packet, packetSize);
 }

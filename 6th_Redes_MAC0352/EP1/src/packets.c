@@ -72,7 +72,7 @@ const size_t PACKET_BASIC_DELIVER_SIZE = 60;
 const char PACKET_BASIC_QOS_OK[] = "\x01\x00\x01\x00\x00\x00\x04\x00\x3c\x00\x0b\xce";
 const size_t PACKET_BASIC_QOS_OK_SIZE = 13;
 
-void queuePacket(char *queueName, char *packet, int *packetSize){
+void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size){
     struct AMQPFrame frame;
     frame.type = 1;
     frame.channel = htons(1);
