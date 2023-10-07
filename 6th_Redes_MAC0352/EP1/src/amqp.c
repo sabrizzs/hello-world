@@ -10,6 +10,7 @@ TO DO:
 - publish
     - mensagem com um caractere estranho no final
 - consume
+    - CRIAR O PACKET
 - mudar packet do rabbit
 
 - fazer uma função que acha fila
@@ -385,6 +386,69 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     printf("Mensagem \"%s\" da primeira posição da fila \"%s\" será removida.\n", message, queueName);
     removeMessage(index);
     print_queues();
+
+    /* criação do packet para o cliente */
+    struct AMQPFrame frame;
+    frame.type = 1;
+    frame.channel = htons(0x1);
+    frame.size = htonl(47 + strlen(queueName));
+    frame.class_id = htons(60);
+    frame.method_id = htons(60);
+
+    char packet[MAXSIZE];
+    int packetSize = 0;
+
+    memcpy(packet + packetSize, (char *)&frame.type, sizeof(frame.type));
+    packetSize += sizeof(frame.type);
+    memcpy(packet + packetSize, (char *)&frame.channel, sizeof(frame.channel));
+    packetSize += sizeof(frame.channel);
+    memcpy(packet + packetSize, (char *)&frame.size, sizeof(frame.size));
+    packetSize += sizeof(frame.size);
+    memcpy(packet + packetSize, (char *)&frame.class_id, sizeof(frame.class_id));
+    packetSize += sizeof(frame.class_id);
+    memcpy(packet + packetSize, (char *)&frame.method_id, sizeof(frame.method_id));
+    packetSize += sizeof(frame.method_id);
+
+    char data[] = "\x1f\x61\x6d\x71\x2e\x63\x74\x61\x67\x2d\x55\x6e\x73\x75\x6f\x31\x58\x6c\x68\x46\x58\x41\x6e\x45\x68\x6f\x58\x76\x58\x68\x59\x41\x00\x00\x00\x00\x00\x00\x00\x01\x00";
+
+    memcpy(packet + packetSize, data, 42); 
+    packetSize += packetSize_data;
+    memcpy(packet +*packetSize, (char*)&(strlen(queueName)), sizeof(strlen(queueName)));
+    packetSize+= sizeof(strlen(queueName));
+    memcpy(packet + packetSize, queueName, strlen(queueName));
+    packetSize+= strlen(queueName);
+    memcpy(packet + packetSize, "\xce", 1);
+    packetSize+=1;
+
+    u_int8_t type = 2;
+    u_int16_t channel = htons(1);
+    u_int32_t length = htonl(15);
+    u_int16_t class_id = htons(60);
+    u_int16_t wt = htons(0);
+    u_int64_t bl = htonll((u_int32_t)strlen(message)); 
+    u_int16_t pf = htons(4096);
+    u_int8_t dl = 1;
+
+    memcpy(packet + packetSize, (char*)&type, sizeof(type)); packetSize += sizeof(type);
+    memcpy(packet + packetSize, (char*)&channel, sizeof(channel)); packetSize += sizeof(channel);
+    memcpy(packet + packetSize, (char*)&length, sizeof(length)); packetSize += sizeof(length);
+    memcpy(packet + packetSize, (char*)&class_id, sizeof(class_id)); packetSize += sizeof(class_id);
+    memcpy(packet + packetSize, (char*)&wt, sizeof(wt)); packetSize += sizeof(wt);
+    memcpy(packet + packetSize, (char*)&bl, sizeof(bl)); packetSize += sizeof(bl);
+    memcpy(packet + packetSize, (char*)&pf, sizeof(pf)); packetSize += sizeof(pf);
+    memcpy(packet + packetSize, (char*)&dl, sizeof(dl)); packetSize += sizeof(dl);
+    memcpy(packet + packetSize, "\xce", 1); packetSize += 1;
+
+    type = 3;
+    u_int32_t length = htonl((u_int32_t)strlen(message));
+
+    memcpy(packet + packetSize, (char*)&type, sizeof(type)); packetSize += sizeof(type);
+    memcpy(packet + packetSize, (char*)&channel, sizeof(channel)); packetSize += sizeof(channel);
+    memcpy(packet + packetSize, (char*)&length, sizeof(length)); packetSize += sizeof(length);
+    memcpy(packet + packetSize, message, strlen(message)); packetSize += strlen(message);
+    memcpy(packet + packetSize, "\xce", 1); packetSize += 1;
+
+    write(connfd, packet, packetSize);
 }
 
 /* Adicionei connfd sem ponteiro */
@@ -428,7 +492,6 @@ void moveConsumer(int index){
 }
 
 void removeMessage(int index){
-    /* nao ta exlucindo */
     memcpy(queues.messages[index][0], "", sizeof(char));
     for(int i = 0; i < MAXMESSAGENUMBER - 1; i++) {
         if(strcmp(queues.messages[index][i + 1], "") != 0){
