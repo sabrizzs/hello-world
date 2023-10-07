@@ -530,12 +530,12 @@ void moveConsumer(int index){
 void removeMessage(int index){
     // clear the message at the front of the queue
     //memcpy(queues.messages[index][0], '\0', sizeof(char));
-    memset(queues.messages[index][0].data, 0, MAXMESSAGESIZE);
+    memset(queues.messages[index][0], 0, MAXMESSAGESIZE);
     for(int i = 0; i < MAXMESSAGENUMBER - 1; i++) {
         if(strcmp(queues.messages[index][i + 1], "") != 0){
             memcpy(queues.messages[index][i],queues.messages[index][i + 1], strlen(queues.messages[index][i + 1]));
             //memcpy(queues.messages[index][i + 1], "", sizeof(char));
-            memset(queues.messages[index][i + 1].data, 0, MAXMESSAGESIZE);
+            memset(queues.messages[index][i + 1], 0, MAXMESSAGESIZE);
         } else {
             return;
         }
