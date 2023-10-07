@@ -398,7 +398,9 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     removeMessage(index);
     print_queues();
 
+    
     /* create a packet for the client */
+    /*
     struct AMQPFrame frame;
     frame.type = 1;
     frame.channel = htons(0x1);
@@ -477,7 +479,12 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     packetSize += strlen(message);
     memcpy(packet + packetSize, "\xce", 1); 
     packetSize += 1;
+    */
 
+    char packet[MAXSIZE];
+    int packetSize = 0;
+
+    consumePacket(queueName, packet, &packetSize, message, size)
     // send the constructed packet to the client
     write(connfd, packet, packetSize);
 }
