@@ -105,6 +105,8 @@ void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size)
     // copy v3 and the delimiter to the packet
     memcpy(packet + (*packetSize), (char *)&(v3), sizeof(v3));
     (*packetSize) += sizeof(v3);
+    memcpy(packet + (*packetSize), (char *)&(v3), sizeof(v3));
+    (*packetSize) += sizeof(v3);
     memcpy(packet + (*packetSize), "\xce", 1);
     (*packetSize) += 1;
 }
