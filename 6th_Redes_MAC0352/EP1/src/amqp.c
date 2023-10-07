@@ -182,42 +182,6 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     printf("Dados da fila: \n");
     print_queues();
 
-    /*
-    struct AMQPFrame frame;
-    frame.type = 1;
-    frame.channel = htons(1);
-    frame.size = htonl(size + 1);
-    frame.class_id = htons(50);
-    frame.method_id = htons(11);
-
-    char packet[MAXSIZE];
-    int packetSize = 0;
-
-    memcpy(packet + packetSize, (char *)&frame.type, sizeof(frame.type));
-    packetSize += sizeof(frame.type);
-    memcpy(packet + packetSize, (char *)&frame.channel, sizeof(frame.channel));
-    packetSize += sizeof(frame.channel);
-    memcpy(packet + packetSize, (char *)&frame.size, sizeof(frame.size));
-    packetSize += sizeof(frame.size);
-    memcpy(packet + packetSize, (char *)&frame.class_id, sizeof(frame.class_id));
-    packetSize += sizeof(frame.class_id);
-    memcpy(packet + packetSize, (char *)&frame.method_id, sizeof(frame.method_id));
-    packetSize += sizeof(frame.method_id);
-
-    u_int8_t len = strlen(queueName);
-    u_int32_t v3 = htonl(0);
-    memcpy(packet+packetSize,(char*)&(len),sizeof(len)); 
-    packetSize+= sizeof(len);
-    memcpy(packet+packetSize,queueName, len); 
-    packetSize+= len;
-    memcpy(packet+packetSize,(char*)&(v3),sizeof(v3)); 
-    packetSize+= sizeof(v3);
-    memcpy(packet+packetSize,(char*)&(v3),sizeof(v3)); 
-    packetSize+= sizeof(v3);
-    memcpy(packet+packetSize, "\xce",1); 
-    packetSize+=1;
-    */
-
     char packet[MAXSIZE];
     int packetSize = 0;
     queuePacket(queueName, packet, &packetSize, size);
@@ -398,89 +362,6 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     removeMessage(index);
     print_queues();
 
-    
-    /* create a packet for the client */
-    /*
-    struct AMQPFrame frame;
-    frame.type = 1;
-    frame.channel = htons(0x1);
-    frame.size = htonl(47 + strlen(queueName));
-    frame.class_id = htons(60);
-    frame.method_id = htons(60);
-
-    char packet[MAXSIZE];
-    int packetSize = 0;
-
-    memcpy(packet + packetSize, (char *)&frame.type, sizeof(frame.type));
-    packetSize += sizeof(frame.type);
-    memcpy(packet + packetSize, (char *)&frame.channel, sizeof(frame.channel));
-    packetSize += sizeof(frame.channel);
-    memcpy(packet + packetSize, (char *)&frame.size, sizeof(frame.size));
-    packetSize += sizeof(frame.size);
-    memcpy(packet + packetSize, (char *)&frame.class_id, sizeof(frame.class_id));
-    packetSize += sizeof(frame.class_id);
-    memcpy(packet + packetSize, (char *)&frame.method_id, sizeof(frame.method_id));
-    packetSize += sizeof(frame.method_id);
-
-    char data[] = "\x1f\x61\x6d\x71\x2e\x63\x74\x61\x67\x2d\x55\x6e\x73\x75\x6f\x31\x58\x6c\x68\x46\x58\x41\x6e\x45\x68\x6f\x58\x76\x58\x68\x59\x41\x00\x00\x00\x00\x00\x00\x00\x01\x00";
-    u_int8_t queueNameSize = strlen(queueName);
-
-    memcpy(packet + packetSize, data, 42); 
-    packetSize += 42;
-    memcpy(packet + packetSize, (char*)&(queueNameSize), sizeof(queueNameSize));
-    packetSize += sizeof(queueNameSize);
-    memcpy(packet + packetSize, queueName, queueNameSize);
-    packetSize += queueNameSize;
-    memcpy(packet + packetSize, "\xce", 1);
-    packetSize += 1;
-
-    u_int8_t type = 2;
-    u_int16_t channel = htons(1);
-    u_int32_t length = htonl(15);
-    u_int16_t class_id = htons(60);
-    u_int16_t wt = htons(0);
-    u_int16_t pf = htons(4096);
-    u_int8_t dl = 1;
-
-    u_int32_t left = (u_int32_t) (strlen(message) >> 32);
-    u_int32_t right = (u_int32_t) (strlen(message) & 0xffff);    
-    u_int32_t new_left = htonl(right);
-    u_int32_t new_right = htonl(left);
-    u_int64_t bl =  ((u_int64_t) new_left << 32) | ((u_int64_t) new_right);
-
-    memcpy(packet + packetSize, (char*)&type, sizeof(type)); 
-    packetSize += sizeof(type);
-    memcpy(packet + packetSize, (char*)&channel, sizeof(channel)); 
-    packetSize += sizeof(channel);
-    memcpy(packet + packetSize, (char*)&length, sizeof(length)); 
-    packetSize += sizeof(length);
-    memcpy(packet + packetSize, (char*)&class_id, sizeof(class_id)); 
-    packetSize += sizeof(class_id);
-    memcpy(packet + packetSize, (char*)&wt, sizeof(wt)); 
-    packetSize += sizeof(wt);
-    memcpy(packet + packetSize, (char*)&bl, sizeof(bl)); 
-    packetSize += sizeof(bl);
-    memcpy(packet + packetSize, (char*)&pf, sizeof(pf)); 
-    packetSize += sizeof(pf);
-    memcpy(packet + packetSize, (char*)&dl, sizeof(dl)); 
-    packetSize += sizeof(dl);
-    memcpy(packet + packetSize, "\xce", 1); packetSize += 1;
-
-    type = 3;
-    length = htonl((u_int32_t)strlen(message));
-
-    memcpy(packet + packetSize, (char*)&type, sizeof(type)); 
-    packetSize += sizeof(type);
-    memcpy(packet + packetSize, (char*)&channel, sizeof(channel)); 
-    packetSize += sizeof(channel);
-    memcpy(packet + packetSize, (char*)&length, sizeof(length)); 
-    packetSize += sizeof(length);
-    memcpy(packet + packetSize, message, strlen(message)); 
-    packetSize += strlen(message);
-    memcpy(packet + packetSize, "\xce", 1); 
-    packetSize += 1;
-    */
-
     char packet[MAXSIZE];
     int packetSize = 0;
 
@@ -533,7 +414,6 @@ void moveConsumer(int index){
     printf("Não foi possível mover o consumer \"%d\" para o final da fila.\n", firstConsumer);
 }
 
-/* dando errado */
 void removeMessage(int index){
     // clear the message at the front of the queue
     //memcpy(queues.messages[index][0], '\0', sizeof(char));
