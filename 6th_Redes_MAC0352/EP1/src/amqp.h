@@ -7,6 +7,8 @@
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <arpa/inet.h>
 
 #define MAXQUEUENAMESIZE 100
 #define MAXQUEUESIZE 100
