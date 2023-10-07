@@ -423,9 +423,9 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     u_int16_t pf = htons(4096);
     u_int8_t dl = 1;
 
-    u_int8_t msgSize = strlen(message)
-    uint32_t left = (uint32_t) (msgSize >> 32);
-    uint32_t right = (uint32_t) (msgSize & 0xffff);    
+    //u_int8_t msgSize = strlen(message)
+    uint32_t left = (uint32_t) (strlen(message) >> 32);
+    uint32_t right = (uint32_t) (strlen(message) & 0xffff);    
     uint32_t new_left = htonl(right);
     uint32_t new_right = htonl(left);
     u_int64_t bl =  ((uint64_t) new_left << 32) | ((uint64_t) new_right);
