@@ -484,7 +484,7 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     char packet[MAXSIZE];
     int packetSize = 0;
 
-    consumePacket(queueName, packet, &packetSize, message, size);
+    consumePacket(queueName, packet, &packetSize, message);
     // send the constructed packet to the client
     write(connfd, packet, packetSize);
 }

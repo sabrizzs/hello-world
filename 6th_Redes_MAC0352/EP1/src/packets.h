@@ -34,6 +34,6 @@ extern const char PACKET_BASIC_QOS_OK[];
 extern const size_t PACKET_BASIC_QOS_OK_SIZE;
 
 void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size);
-void consumePacket(char *queueName, char *packet, int *packetSize, char *message, u_int32_t size);
+void consumePacket(char *queueName, char *packet, int *packetSize, char *message);
 
 #endif

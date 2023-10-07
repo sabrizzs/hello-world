@@ -105,7 +105,7 @@ void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size)
     (*packetSize) += 1;
 }
 
-void consumePacket(char *queueName, char *packet, int *packetSize, char *message, u_int32_t size){
+void consumePacket(char *queueName, char *packet, int *packetSize, char *message){
     // create a packet for the client
     struct AMQPFrame frame;
     frame.type = 1;
