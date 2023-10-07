@@ -303,8 +303,8 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
     read(connfd,recvline, length + 4);
     read(connfd,recvline, 4);//content body length
     length = ntohl(*((u_int32_t*)recvline));
-  
-    read(connfd,recvline, length + 1);
+    printf("Tamanho da mensagem: %d", length);
+    read(connfd, recvline, length + 1);
     memcpy(messageData, recvline, length); // testar com -1
     //messageData[length] = "\0";
     /* Mensagem com um caractere desconhecido no final */
