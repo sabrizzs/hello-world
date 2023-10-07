@@ -7,10 +7,10 @@
 /*  
 TO DO:
 
+- nao recebo basic ack
+
 - publish
     - mensagem com um caractere estranho no final
-- consume
-    - CRIAR O PACKET
 - mudar packet do rabbit
 
 - fazer uma função que acha fila
@@ -111,8 +111,8 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
                  case QUEUE_DECLARE:
                     printf("Cliente enviou o método QUEUE_DECLARE\n");
                     read(connfd, recvline, size);
-                    printf("Servidor enviou o método QUEUE_DECLARE_OK\n");
                     queueMethod(connfd, recvline, size);
+                    printf("Servidor enviou o método QUEUE_DECLARE_OK\n");
                     break;
                 default:
                     printf("Método QUEUE desconhecido\n");
@@ -133,16 +133,9 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
                     break;
                 case BASIC_CONSUME:
                     printf("Cliente enviou o método BASIC_CONUME\n");
-                    /*
-                    read(connfd, recvline, size-3);
                     printf("Servidor enviou o método BASIC_CONSUME_OK\n");
-                    write(connfd, PACKET_BASIC_CONSUME_OK, PACKET_BASIC_CONSUME_OK_SIZE - 1);
-                    printf("Servidor enviou o método BASIC_DELIVER\n");
-                    write(connfd, PACKET_BASIC_DELIVER, PACKET_BASIC_DELIVER_SIZE - 1);
-                    */
-                    printf("Servidor enviou o método BASIC_CONSUME_OK\n");
-                    printf("Servidor enviou o método BASIC_DELIVER\n");
                     consumeMethod(connfd, recvline, size);
+                    printf("Servidor enviou o método BASIC_DELIVER\n");
                     break;
                 case BASIC_ACK:
                     printf("Cliente enviou o método BASIC_ACK\n");
@@ -340,6 +333,7 @@ void addMessage(const char *queueName, const char *message){
     printf("A fila '%s' está cheia. Não é possível adicionar mais mensagens.\n", queueName);
 }
 
+/* Modificar */
 /* Consume */
 void consumeMethod(int connfd, char *recvline, u_int32_t size){
     char queueName[MAXQUEUENAMESIZE];
