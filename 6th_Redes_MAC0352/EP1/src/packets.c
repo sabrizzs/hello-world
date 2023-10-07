@@ -1,4 +1,5 @@
 #include <sys/types.h>
+#include "amqp.h"
 
 const char PACKET_CONNECTION_START[] = 
 "\x01\x00\x00\x00\x00\x01\xfa\x00\x0a\x00\x0a\x00\x09\x00\x00\x01" \
@@ -70,3 +71,37 @@ const size_t PACKET_BASIC_DELIVER_SIZE = 60;
 
 const char PACKET_BASIC_QOS_OK[] = "\x01\x00\x01\x00\x00\x00\x04\x00\x3c\x00\x0b\xce";
 const size_t PACKET_BASIC_QOS_OK_SIZE = 13;
+
+void queuePacket(char *queueName, char *packet, int *packetSize){
+    struct AMQPFrame frame;
+    frame.type = 1;
+    frame.channel = htons(1);
+    frame.size = htonl(size + 1);
+    frame.class_id = htons(50);
+    frame.method_id = htons(11);
+
+    memcpy(packet + (*packetSize), (char *)&frame.type, sizeof(frame.type));
+    (*packetSize) += sizeof(frame.type);
+    memcpy(packet + (*packetSize), (char *)&frame.channel, sizeof(frame.channel));
+    (*packetSize) += sizeof(frame.channel);
+    memcpy(packet + (*packetSize), (char *)&frame.size, sizeof(frame.size));
+    (*packetSize) += sizeof(frame.size);
+    memcpy(packet + (*packetSize), (char *)&frame.class_id, sizeof(frame.class_id));
+    (*packetSize) += sizeof(frame.class_id);
+    memcpy(packet + (*packetSize), (char *)&frame.method_id, sizeof(frame.method_id));
+    (*packetSize) += sizeof(frame.method_id);
+
+    u_int8_t len = strlen(queueName);
+    u_int32_t v3 = htonl(0);
+    memcpy(packet + (*packetSize), (char *)&(len), sizeof(len));
+    (*packetSize) += sizeof(len);
+    memcpy(packet + (*packetSize), queueName, len);
+    (*packetSize) += len;
+    memcpy(packet + (*packetSize), (char *)&(v3), sizeof(v3));
+    (*packetSize) += sizeof(v3);
+    memcpy(packet + (*packetSize), (char *)&(v3), sizeof(v3));
+    (*packetSize) += sizeof(v3);
+    memcpy(packet + (*packetSize), "\xce", 1);
+    (*packetSize) += 1;
+}
+

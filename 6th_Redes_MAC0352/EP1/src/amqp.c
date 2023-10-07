@@ -164,7 +164,6 @@ int sendProtocolHeader(int connfd, char *recvline){
 
 int readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame){
     ssize_t n = read(connfd, recvline, 11);
-    //print(recvline, 11);
     if(n == 0) return 0;
 
     frame->type = (u_int8_t)recvline[0];
@@ -186,6 +185,7 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     printf("Dados da fila: \n");
     print_queues();
 
+    /*
     struct AMQPFrame frame;
     frame.type = 1;
     frame.channel = htons(1);
@@ -219,6 +219,11 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     packetSize+= sizeof(v3);
     memcpy(packet+packetSize, "\xce",1); 
     packetSize+=1;
+    */
+
+    char packet[MAXSIZE];
+    int packetSize = 0;
+    queuePacket(queueName, packet, &packetSize);
 
     write(connfd, packet, packetSize);
 }
@@ -292,22 +297,26 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
     char queueName[MAXQUEUENAMESIZE];
     char messageData[MAXMESSAGESIZE];
 
+    // read the queue name from the received data
     read(connfd, recvline, size - 3);
     memcpy(queueName, recvline + 4, size);
     printf("Nome da fila: %s\n", queueName);
 
-    read(connfd,recvline, 3); //content header type + channel
-    read(connfd,recvline, 4); //content header lenght 4 hex bytes
+    // read content header information (type, channel, length)
+    read(connfd,recvline, 3); 
+    read(connfd,recvline, 4); 
     u_int32_t length = ntohl(*((u_int32_t*)recvline));
 
+    // read the content body
     read(connfd,recvline, length + 4);
     read(connfd,recvline, 4);//content body length
     length = ntohl(*((u_int32_t*)recvline));
     printf("Tamanho da mensagem: %d\n", length);
+
+    // read the message data
     read(connfd, recvline, length + 1);
-    memcpy(messageData, recvline, length); // testar com -1
+    memcpy(messageData, recvline, length);
     messageData[length] = '\0';
-    /* Mensagem com um caractere desconhecido no final */
     printf("Mensagem: %s\n", messageData);
 
     addMessage(queueName, messageData);
@@ -316,6 +325,8 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
 }
 
 void addMessage(const char *queueName, const char *message){
+
+    // find the index of the specified queue
     int index = -1;
     for(int i = 0; i < MAXQUEUESIZE; i++){
         if(strcmp(queues.name[i], queueName) == 0) {
@@ -324,10 +335,13 @@ void addMessage(const char *queueName, const char *message){
             break;
         }
     }
+
     if(index == -1){
         printf("Fila '%s' não encontrada.\n", queueName);
         return;
     }
+
+    // find an empty slot in the queue's message array and add the message
     for(int i = 0; i < MAXMESSAGENUMBER; i++){
         if(strcmp(queues.messages[index][i], "") == 0) {
             memcpy(queues.messages[index][i], message, MAXMESSAGESIZE);
@@ -343,17 +357,19 @@ void addMessage(const char *queueName, const char *message){
 void consumeMethod(int connfd, char *recvline, u_int32_t size){
     char queueName[MAXQUEUENAMESIZE];
     
+    // read the queue name from the client
     read(connfd, recvline, size - 3);
     memcpy(queueName, recvline + 3, size);
     printf("Nome da fila do consumer: %s\n", queueName);
 
+    // add the consumer to the queue
     addConsumer(queueName, connfd);
     write(connfd, PACKET_BASIC_CONSUME_OK, PACKET_BASIC_CONSUME_OK_SIZE - 1);
 
     /* deliver message */
     char message[MAXMESSAGESIZE];
 
-    /* verifica se a fila existe e se há menagens ou consumidores */
+    /* check if the queue exists and has messages or consumers */
     int index = -1;
     for(int i = 0; i < MAXQUEUESIZE; i++){
         if (strcmp(queues.name[i], queueName) == 0) {
@@ -365,28 +381,27 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
         printf("Fila '%s' não encontrada na função consumeMethod.\n", queueName);
         return;
     }
-
     if(queues.consumers[index][0] == 0 || strcmp(queues.messages[index][0], "") == 0){
         printf("Não há consumidores ou mensagens na fila %s.\n", queueName);
         return;
     }
 
-    /* pega o identificador do consumer da posição 0 da fila, assim como a mensagem */
+    /* get the consumer identifier from position 0 of the queue, as well as the message */
     int id = queues.consumers[index][0];
     memcpy(message, queues.messages[index][0], MAXMESSAGESIZE);
     printf("Consumer \"%d\" irá consumir a mensagem \"%s\".\n", id, message);
 
-    /* move o consumidor para o final da fila */
+    /* move the consumer to the end of the queue */
     printf("Consumer \"%d\" irá para o final da fila \"%s\".\n", id, queueName);
     moveConsumer(index);
     print_queues();
 
-    /* remove a mensagem da primeira posição da fila */
+    /* remove the message from the first position of the queue */
     printf("Mensagem \"%s\" da primeira posição da fila \"%s\" será removida.\n", message, queueName);
     removeMessage(index);
     print_queues();
 
-    /* criação do packet para o cliente */
+    /* create a packet for the client */
     struct AMQPFrame frame;
     frame.type = 1;
     frame.channel = htons(0x1);
@@ -428,7 +443,6 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     u_int16_t pf = htons(4096);
     u_int8_t dl = 1;
 
-    //u_int8_t msgSize = strlen(message)
     u_int32_t left = (u_int32_t) (strlen(message) >> 32);
     u_int32_t right = (u_int32_t) (strlen(message) & 0xffff);    
     u_int32_t new_left = htonl(right);
@@ -467,11 +481,13 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     memcpy(packet + packetSize, "\xce", 1); 
     packetSize += 1;
 
+    // send the constructed packet to the client
     write(connfd, packet, packetSize);
 }
 
-/* Adicionei connfd sem ponteiro */
 void addConsumer(const char *queueName, int connfd){
+
+    // find the queue index based on its name
     int index = -1;
     for(int i = 0; i < MAXQUEUESIZE; i++){
         if (strcmp(queues.name[i], queueName) == 0) {
@@ -486,6 +502,8 @@ void addConsumer(const char *queueName, int connfd){
     }
 
     printf("Connfd do consumer: %d\n", connfd);
+
+    // add the consumer to the queue
     for(int i = 0; i < MAXCONSUMERNUMBER; i++){
         if (queues.consumers[index][i] == 0) {
             queues.consumers[index][i] = connfd;
@@ -502,6 +520,7 @@ void moveConsumer(int index){
         if(queues.consumers[index][i + 1] != 0){
             queues.consumers[index][i] = queues.consumers[index][i + 1];
         }else{
+            // place the first consumer at the end of the queue
             queues.consumers[index][i] = firstConsumer;
             printf("Consumer com connfd \"%d\" movido para o final da fila.\n", firstConsumer);
             return;
@@ -511,6 +530,7 @@ void moveConsumer(int index){
 }
 
 void removeMessage(int index){
+    // clear the message at the front of the queue
     memcpy(queues.messages[index][0], "", sizeof(char));
     for(int i = 0; i < MAXMESSAGENUMBER - 1; i++) {
         if(strcmp(queues.messages[index][i + 1], "") != 0){
