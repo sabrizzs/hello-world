@@ -172,20 +172,23 @@ int readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame){
     return 1;
 }
 
-/* Modificar */
 /* Queue */
 void queueMethod(int connfd, char *recvline, u_int32_t size){
+    // extract the queue name from the received data
     char queueName[MAXQUEUENAMESIZE];
     memcpy(queueName, recvline + 3, size);
     printf("Nome da fila: %s\n", queueName);
+
     addQueue(queueName);
     printf("Dados da fila: \n");
     print_queues();
 
+    // create a packet to respond to the client
     char packet[MAXSIZE];
     int packetSize = 0;
     queuePacket(queueName, packet, &packetSize, size);
 
+    // send the constructed packet back to the client
     write(connfd, packet, packetSize);
 }
 
@@ -207,17 +210,20 @@ void freeSharedMemory(void* memory, size_t size){
 }
 
 void initializeQueuesData(){
+    // allocate shared memory for queues
     queues.name = allocateSharedMemory(MAXQUEUESIZE * sizeof(char*));
     queues.messages = allocateSharedMemory(MAXQUEUESIZE * sizeof(char**));
     queues.consumers = allocateSharedMemory(MAXQUEUESIZE * sizeof(int*));
 
-    for (int i = 0; i < MAXQUEUESIZE; i++) {
+    for(int i = 0; i < MAXQUEUESIZE; i++){
+        // allocate shared memory for queue names, queue messages and queue consumers
         queues.name[i] = allocateSharedMemory(MAXQUEUENAMESIZE * sizeof(char));
         queues.name[i][0] = 0;
         queues.messages[i] = allocateSharedMemory(MAXMESSAGENUMBER * sizeof(char*));
         queues.consumers[i] = allocateSharedMemory(MAXCONSUMERNUMBER * sizeof(int));
 
-        for (int j = 0; j < MAXMESSAGENUMBER; j++) {
+        for(int j = 0; j < MAXMESSAGENUMBER; j++){
+            // initialize each message and each consumer
             queues.messages[i][j] = allocateSharedMemory(MAXMESSAGESIZE * sizeof(char));
             queues.messages[i][j][0] = 0;
             queues.consumers[i][j] = 0;
@@ -245,6 +251,7 @@ void addQueue(const char *queueName){
             printf("A fila '%s' já existe.\n", queueName);
             return;
         } else if (strcmp(queues.name[i], "") == 0) {
+             // if an empty slot is found, copy the queue name
             memcpy(queues.name[i], queueName, strlen(queueName));
             printf("Fila '%s' adicionada.\n", queueName);
             return; 
@@ -252,6 +259,17 @@ void addQueue(const char *queueName){
     }
     printf("Não foi possível adicionar a fila. Limite de filas atingido.\n");
 }
+
+int findQueueIndex(const char *queueName) {
+    for (int i = 0; i < MAXQUEUESIZE; i++) {
+        if (strcmp(queues.name[i], queueName) == 0) {
+            return i;  // queue found, return its index
+        }
+    }
+    printf("Fila '%s' não encontrada na função consumeMethod.\n", queueName);
+    return -1;
+}
+
 
 /* Publish */
 void publishMethod(int connfd, char *recvline, u_int32_t size){
@@ -264,14 +282,14 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
     printf("Nome da fila: %s\n", queueName);
 
     // read content header information (type, channel, length)
-    read(connfd,recvline, 3); 
-    read(connfd,recvline, 4); 
-    u_int32_t length = ntohl(*((u_int32_t*)recvline));
+    read(connfd, recvline, 3); 
+    read(connfd, recvline, 4); 
+    u_int32_t length = ntohl(*((u_int32_t*) recvline));
 
     // read the content body
-    read(connfd,recvline, length + 4);
-    read(connfd,recvline, 4);//content body length
-    length = ntohl(*((u_int32_t*)recvline));
+    read(connfd, recvline, length + 4);
+    read(connfd, recvline, 4);//content body length
+    length = ntohl(*((u_int32_t*) recvline));
     printf("Tamanho da mensagem: %d\n", length);
 
     // read the message data
@@ -288,19 +306,8 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
 void addMessage(const char *queueName, const char *message){
 
     // find the index of the specified queue
-    int index = -1;
-    for(int i = 0; i < MAXQUEUESIZE; i++){
-        if(strcmp(queues.name[i], queueName) == 0) {
-            index = i;
-            printf("Fila '%s' encontrada no index %d.\n", queueName, index);
-            break;
-        }
-    }
-
-    if(index == -1){
-        printf("Fila '%s' não encontrada.\n", queueName);
-        return;
-    }
+    int index = findQueueIndex(queueName);
+    if (index == -1) return;
 
     // find an empty slot in the queue's message array and add the message
     for(int i = 0; i < MAXMESSAGENUMBER; i++){
@@ -331,17 +338,9 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     char message[MAXMESSAGESIZE];
 
     /* check if the queue exists and has messages or consumers */
-    int index = -1;
-    for(int i = 0; i < MAXQUEUESIZE; i++){
-        if (strcmp(queues.name[i], queueName) == 0) {
-            index = i;
-            break;
-        }
-    }
-    if(index == -1){
-        printf("Fila '%s' não encontrada na função consumeMethod.\n", queueName);
-        return;
-    }
+    int index = findQueueIndex(queueName);
+    if (index == -1) return;
+
     if(queues.consumers[index][0] == 0 || strcmp(queues.messages[index][0], "") == 0){
         printf("Não há consumidores ou mensagens na fila %s.\n", queueName);
         return;
@@ -373,18 +372,8 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
 void addConsumer(const char *queueName, int connfd){
 
     // find the queue index based on its name
-    int index = -1;
-    for(int i = 0; i < MAXQUEUESIZE; i++){
-        if (strcmp(queues.name[i], queueName) == 0) {
-            index = i;
-            printf("Fila '%s' encontrada no índice %d.\n", queueName, index);
-            break;
-        }
-    }
-    if(index == -1){
-        printf("Fila '%s' não encontrada.\n", queueName);
-        return;
-    }
+    int index = findQueueIndex(queueName);
+    if (index == -1) return;
 
     printf("Connfd do consumer: %d\n", connfd);
 
@@ -416,15 +405,11 @@ void moveConsumer(int index){
 
 void removeMessage(int index){
     // clear the message at the front of the queue
-    //memcpy(queues.messages[index][0], '\0', sizeof(char));
     memset(queues.messages[index][0], 0, MAXMESSAGESIZE);
     for(int i = 0; i < MAXMESSAGENUMBER - 1; i++) {
         if(strcmp(queues.messages[index][i + 1], "") != 0){
             memcpy(queues.messages[index][i],queues.messages[index][i + 1], strlen(queues.messages[index][i + 1]));
-            //memcpy(queues.messages[index][i + 1], "", sizeof(char));
             memset(queues.messages[index][i + 1], 0, MAXMESSAGESIZE);
-        } else {
-            return;
-        }
+        } else return;
     }
 }
