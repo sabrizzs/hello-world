@@ -73,6 +73,7 @@ const char PACKET_BASIC_QOS_OK[] = "\x01\x00\x01\x00\x00\x00\x04\x00\x3c\x00\x0b
 const size_t PACKET_BASIC_QOS_OK_SIZE = 13;
 
 void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size){
+    // create a packet for the packet
     struct AMQPFrame frame;
     frame.type = 1;
     frame.channel = htons(1);
@@ -80,6 +81,7 @@ void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size)
     frame.class_id = htons(50);
     frame.method_id = htons(11);
 
+    // copy frame data to the packet
     memcpy(packet + (*packetSize), (char *)&frame.type, sizeof(frame.type));
     (*packetSize) += sizeof(frame.type);
     memcpy(packet + (*packetSize), (char *)&frame.channel, sizeof(frame.channel));
@@ -93,12 +95,14 @@ void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size)
 
     u_int8_t len = strlen(queueName);
     u_int32_t v3 = htonl(0);
+
+    // Copy queueName length and data to the packet
     memcpy(packet + (*packetSize), (char *)&(len), sizeof(len));
     (*packetSize) += sizeof(len);
     memcpy(packet + (*packetSize), queueName, len);
     (*packetSize) += len;
-    memcpy(packet + (*packetSize), (char *)&(v3), sizeof(v3));
-    (*packetSize) += sizeof(v3);
+
+    // copy v3 and the delimiter to the packet
     memcpy(packet + (*packetSize), (char *)&(v3), sizeof(v3));
     (*packetSize) += sizeof(v3);
     memcpy(packet + (*packetSize), "\xce", 1);
@@ -106,7 +110,7 @@ void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size)
 }
 
 void consumePacket(char *queueName, char *packet, int *packetSize, char *message){
-    // create a packet for the client
+    // create a packet for the packet
     struct AMQPFrame frame;
     frame.type = 1;
     frame.channel = htons(0x1);
@@ -153,7 +157,7 @@ void consumePacket(char *queueName, char *packet, int *packetSize, char *message
     u_int32_t new_right = htonl(left);
     u_int64_t bl =  ((u_int64_t) new_left << 32) | ((u_int64_t) new_right);
 
-    // Copy additional data to the packet
+    // copy additional data to the packet
     memcpy(packet + *packetSize, (char*)&type, sizeof(type)); 
     *packetSize += sizeof(type);
     memcpy(packet + *packetSize, (char*)&channel, sizeof(channel)); 
@@ -176,7 +180,7 @@ void consumePacket(char *queueName, char *packet, int *packetSize, char *message
     type = 3;
     length = htonl((u_int32_t)strlen(message));
 
-    // Copy message-specific data to the packet
+    // copy message-specific data to the packet
     memcpy(packet + *packetSize, (char*)&type, sizeof(type)); 
     *packetSize += sizeof(type);
     memcpy(packet + *packetSize, (char*)&channel, sizeof(channel)); 
