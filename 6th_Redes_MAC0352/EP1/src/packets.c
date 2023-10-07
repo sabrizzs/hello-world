@@ -114,8 +114,6 @@ void consumePacket(char *queueName, char *packet, int *packetSize, char *message
     frame.class_id = htons(60);
     frame.method_id = htons(60);
 
-    int *packetSize = 0;
-
     // copy frame data to the packet
     memcpy(packet + *packetSize, (char *)&frame.type, sizeof(frame.type));
     *packetSize += sizeof(frame.type);
