@@ -410,15 +410,16 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     packetSize += sizeof(frame.method_id);
 
     char data[] = "\x1f\x61\x6d\x71\x2e\x63\x74\x61\x67\x2d\x55\x6e\x73\x75\x6f\x31\x58\x6c\x68\x46\x58\x41\x6e\x45\x68\x6f\x58\x76\x58\x68\x59\x41\x00\x00\x00\x00\x00\x00\x00\x01\x00";
+    u_int8_t queueNameSize = strlen(queueName);
 
     memcpy(packet + packetSize, data, 42); 
     packetSize += 42;
-    memcpy(packet + packetSize, (char*)&((u_int32_t)strlen(queueName)), sizeof(strlen(queueName)));
-    packetSize+= sizeof(strlen(queueName));
-    memcpy(packet + packetSize, queueName, strlen(queueName));
-    packetSize+= strlen(queueName);
+    memcpy(packet + packetSize, (char*)&(queueNameSize), sizeof(queueNameSize));
+    packetSize += sizeof(queueNameSize);
+    memcpy(packet + packetSize, queueName, queueNameSize);
+    packetSize += queueNameSize;
     memcpy(packet + packetSize, "\xce", 1);
-    packetSize+=1;
+    packetSize += 1;
 
     u_int8_t type = 2;
     u_int16_t channel = htons(1);
@@ -429,24 +430,37 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     u_int16_t pf = htons(4096);
     u_int8_t dl = 1;
 
-    memcpy(packet + packetSize, (char*)&type, sizeof(type)); packetSize += sizeof(type);
-    memcpy(packet + packetSize, (char*)&channel, sizeof(channel)); packetSize += sizeof(channel);
-    memcpy(packet + packetSize, (char*)&length, sizeof(length)); packetSize += sizeof(length);
-    memcpy(packet + packetSize, (char*)&class_id, sizeof(class_id)); packetSize += sizeof(class_id);
-    memcpy(packet + packetSize, (char*)&wt, sizeof(wt)); packetSize += sizeof(wt);
-    memcpy(packet + packetSize, (char*)&bl, sizeof(bl)); packetSize += sizeof(bl);
-    memcpy(packet + packetSize, (char*)&pf, sizeof(pf)); packetSize += sizeof(pf);
-    memcpy(packet + packetSize, (char*)&dl, sizeof(dl)); packetSize += sizeof(dl);
+    memcpy(packet + packetSize, (char*)&type, sizeof(type)); 
+    packetSize += sizeof(type);
+    memcpy(packet + packetSize, (char*)&channel, sizeof(channel)); 
+    packetSize += sizeof(channel);
+    memcpy(packet + packetSize, (char*)&length, sizeof(length)); 
+    packetSize += sizeof(length);
+    memcpy(packet + packetSize, (char*)&class_id, sizeof(class_id)); 
+    packetSize += sizeof(class_id);
+    memcpy(packet + packetSize, (char*)&wt, sizeof(wt)); 
+    packetSize += sizeof(wt);
+    memcpy(packet + packetSize, (char*)&bl, sizeof(bl)); 
+    packetSize += sizeof(bl);
+    memcpy(packet + packetSize, (char*)&pf, sizeof(pf)); 
+    packetSize += sizeof(pf);
+    memcpy(packet + packetSize, (char*)&dl, sizeof(dl)); 
+    packetSize += sizeof(dl);
     memcpy(packet + packetSize, "\xce", 1); packetSize += 1;
 
     type = 3;
     length = htonl((u_int32_t)strlen(message));
 
-    memcpy(packet + packetSize, (char*)&type, sizeof(type)); packetSize += sizeof(type);
-    memcpy(packet + packetSize, (char*)&channel, sizeof(channel)); packetSize += sizeof(channel);
-    memcpy(packet + packetSize, (char*)&length, sizeof(length)); packetSize += sizeof(length);
-    memcpy(packet + packetSize, message, strlen(message)); packetSize += strlen(message);
-    memcpy(packet + packetSize, "\xce", 1); packetSize += 1;
+    memcpy(packet + packetSize, (char*)&type, sizeof(type)); 
+    packetSize += sizeof(type);
+    memcpy(packet + packetSize, (char*)&channel, sizeof(channel)); 
+    packetSize += sizeof(channel);
+    memcpy(packet + packetSize, (char*)&length, sizeof(length)); 
+    packetSize += sizeof(length);
+    memcpy(packet + packetSize, message, strlen(message)); 
+    packetSize += strlen(message);
+    memcpy(packet + packetSize, "\xce", 1); 
+    packetSize += 1;
 
     write(connfd, packet, packetSize);
 }
