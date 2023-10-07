@@ -141,7 +141,6 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
                 case BASIC_ACK:
                     printf("Cliente enviou o método BASIC_ACK\n");
                     read(connfd, recvline, size-3);
-                    exit(0);
                     break;
                 default:
                     printf("Método BASIC desconhecido\n");
