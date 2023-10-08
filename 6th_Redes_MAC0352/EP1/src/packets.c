@@ -99,6 +99,23 @@ void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size)
 }
 
 void consumePacket(char *queueName, char *packet, int *packetSize, char *message){
+
+    u_int8_t type = 2;
+    u_int8_t type_2 = 3;
+    u_int16_t channel = htons(1);
+    u_int32_t length = htonl(15);
+    u_int32_t length_2 = htonl((u_int32_t)strlen(message));
+    u_int16_t class_id = htons(60);
+    u_int16_t wt = htons(0);
+    u_int16_t pf = htons(4096);
+    u_int8_t dl = 1;
+
+    u_int32_t h = (u_int32_t) (strlen(message) >> 32);
+    u_int32_t l = (u_int32_t) (strlen(message) & 0xffff);    
+    u_int32_t nh = htonl(h);
+    u_int32_t nl = htonl(l);
+    u_int64_t bl =  ((u_int64_t) nl << 32) | ((u_int64_t) nh);
+
     /* create a packet for the packet */ 
     struct AMQPFrame frame;
     frame.type = 1;
@@ -116,14 +133,13 @@ void consumePacket(char *queueName, char *packet, int *packetSize, char *message
         (*packetSize) += frameSizes[i];
     }
 
+    /* copy queue data to the packet */
     char data[] = "\x1f\x61\x6d\x71\x2e\x63\x74\x61\x67\x2d\x55\x6e\x73\x75\x6f\x31\x58\x6c\x68\x46\x58\x41\x6e\x45\x68\x6f\x58\x76\x58\x68\x59\x41\x00\x00\x00\x00\x00\x00\x00\x01\x00";
     u_int8_t queueNameSize = strlen(queueName);
-
-    /* copy data to the packet */ 
+     
     memcpy(packet + *packetSize, data, 42); 
     *packetSize += 42;
 
-    //
     void *queueFields[] = { &queueNameSize, queueName, "\xce" };
     int queueFieldsSizes[] = { sizeof(queueNameSize), queueNameSize, 1 };
 
@@ -132,60 +148,13 @@ void consumePacket(char *queueName, char *packet, int *packetSize, char *message
         *packetSize += queueFieldsSizes[i];
     }
 
-    u_int8_t type = 2;
-    u_int8_t type_2 = 3;
-    u_int16_t channel = htons(1);
-    u_int32_t length = htonl(15);
-    u_int32_t length_2 = htonl((u_int32_t)strlen(message));
-    u_int16_t class_id = htons(60);
-    u_int16_t wt = htons(0);
-    u_int16_t pf = htons(4096);
-    u_int8_t dl = 1;
-
-    u_int32_t left = (u_int32_t) (strlen(message) >> 32);
-    u_int32_t right = (u_int32_t) (strlen(message) & 0xffff);    
-    u_int32_t new_left = htonl(right);
-    u_int32_t new_right = htonl(left);
-    u_int64_t bl =  ((u_int64_t) new_left << 32) | ((u_int64_t) new_right);
-
-    /* copy additional data to the packet */ 
+    /* copy message data to the packet */ 
     void *messageFields[] = {&type, &channel, &length, &class_id, &wt, &bl, &pf, &dl, "\xce", &type_2, &channel, &length_2, message, "\xce"};
     int messageSizes[] = {sizeof(type), sizeof(channel), sizeof(length), sizeof(class_id), sizeof(wt), sizeof(bl), sizeof(pf), sizeof(dl), 1, sizeof(type_2), sizeof(channel), sizeof(length_2), strlen(message), 1};
 
-    for(int i = 0; i < sizeof(messageFields) / sizeof(messageFields[0]); i++){
+    for(int i = 0; i < 14; i++){
         memcpy(packet + *packetSize, messageFields[i], messageSizes[i]);
         *packetSize += messageSizes[i];
     }
-
-    /*memcpy(packet + *packetSize, (char*)&type, sizeof(type)); 
-    *packetSize += sizeof(type);
-    memcpy(packet + *packetSize, (char*)&channel, sizeof(channel)); 
-    *packetSize += sizeof(channel);
-    memcpy(packet + *packetSize, (char*)&length, sizeof(length)); 
-    *packetSize += sizeof(length);
-    memcpy(packet + *packetSize, (char*)&class_id, sizeof(class_id)); 
-    *packetSize += sizeof(class_id);
-    memcpy(packet + *packetSize, (char*)&wt, sizeof(wt)); 
-    *packetSize += sizeof(wt);
-    memcpy(packet + *packetSize, (char*)&bl, sizeof(bl)); 
-    *packetSize += sizeof(bl);
-    memcpy(packet + *packetSize, (char*)&pf, sizeof(pf)); 
-    *packetSize += sizeof(pf);
-    memcpy(packet + *packetSize, (char*)&dl, sizeof(dl)); 
-    *packetSize += sizeof(dl);
-    memcpy(packet + *packetSize, "\xce", 1); 
-    *packetSize += 1;*/
-
-    /* copy message-specific data to the packet */ 
-    /*memcpy(packet + *packetSize, (char*)&type, sizeof(type)); 
-    *packetSize += sizeof(type);
-    memcpy(packet + *packetSize, (char*)&channel, sizeof(channel)); 
-    *packetSize += sizeof(channel);
-    memcpy(packet + *packetSize, (char*)&length, sizeof(length)); 
-    *packetSize += sizeof(length);
-    memcpy(packet + *packetSize, message, strlen(message)); 
-    *packetSize += strlen(message);
-    memcpy(packet + *packetSize, "\xce", 1); 
-    *packetSize += 1;*/
 }
 
