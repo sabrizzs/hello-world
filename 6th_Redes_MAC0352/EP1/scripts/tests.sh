@@ -36,6 +36,9 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
     amqp-consume -q "$queue_name" -c 5 cat &
   done
 
+  output_file="results_${NUM_CLIENTS}_clients.txt"
+  docker stats servidor --no-stream --format "table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}" > "$output_file"
+
   # Wait for execution
   sleep 30
 
