@@ -85,22 +85,31 @@ void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size)
         (*packetSize) += frameSizes[i];
     }
 
-    u_int8_t len = strlen(queueName);
-    u_int32_t v3 = htonl(0);
 
-    /* copy queueName length and data to the packet */ 
-    memcpy(packet + (*packetSize), (char *)&(len), sizeof(len));
+    
+    /*memcpy(packet + (*packetSize), (char *)&(len), sizeof(len));
     (*packetSize) += sizeof(len);
     memcpy(packet + (*packetSize), queueName, len);
     (*packetSize) += len;
-
-    /* copy v3 and the delimiter to the packet */ 
+    
     memcpy(packet + (*packetSize), (char *)&(v3), sizeof(v3));
     (*packetSize) += sizeof(v3);
     memcpy(packet + (*packetSize), (char *)&(v3), sizeof(v3));
     (*packetSize) += sizeof(v3);
     memcpy(packet + (*packetSize), "\xce", 1);
-    (*packetSize) += 1;
+    (*packetSize) += 1;*/
+
+    u_int8_t len = strlen(queueName);
+    u_int32_t v3 = htonl(0);
+
+    /* copy queueName length, data, v3 and the delimiter to the packet */ 
+    void *packetFields[] = { &len, queueName, &v3, &v3, "\xce" };
+    int sizesFields[] = { sizeof(len), len, sizeof(v3), sizeof(v3), 1 };
+
+    for (int i = 0; i < 5; i++) {
+        memcpy(packet + (*packetSize), packetFields[i], sizesFields[i]);
+        (*packetSize) += sizesFields[i];
+    }
 }
 
 void consumePacket(char *queueName, char *packet, int *packetSize, char *message){
