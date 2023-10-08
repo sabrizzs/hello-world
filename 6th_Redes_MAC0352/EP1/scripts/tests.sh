@@ -37,13 +37,15 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
   done
 
   output_file="results_${NUM_CLIENTS}_clients.txt"
-  docker stats servidor --no-stream --format "table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}" > "$output_file"
+  echo "0s: " > "$output_file"
+  docker stats servidor --no-stream --format "table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}" >> "$output_file"
 
-  # Wait for execution
+  sleep 15
+  echo "15s: " >> "$output_file"
+  docker stats servidor --no-stream --format "table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}" >> "$output_file"
+  
   sleep 30
-
-  # Collect network and CPU usage metrics from the server container
-  output_file="results_${NUM_CLIENTS}_clients.txt"
+  echo "30s: " >> "$output_file"
   docker stats servidor --no-stream --format "table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}" >> "$output_file"
 
   # Stop and remove the server container
