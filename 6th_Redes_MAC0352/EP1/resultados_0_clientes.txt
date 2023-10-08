@@ -1,0 +1,5 @@
+3be125d9a5a69d1b56c2299b40a5cea2cf6d02669333c5505250f4c554b479ce
+CONTAINER   NAME       CPU %     MEM USAGE / LIMIT     NET I/O
+servidor    servidor   0.00%     54.88MiB / 7.631GiB   5.48kB / 0B
+servidor
+servidor
