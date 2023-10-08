@@ -90,7 +90,8 @@ void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size)
 
     char *frameData = (char *)&frame;
     for (size_t i = 0; i < sizeof(frame); i++) {
-        packet[(*packetSize)++] = frameData[i];
+        memcpy(packet + (*packetSize), (char *)&frameData[i], sizeof(frameData[i]));
+        (*packetSize) += sizeof(frameData[i]);
     }
 
     u_int8_t len = strlen(queueName);
