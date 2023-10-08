@@ -54,25 +54,25 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
         case CONNECTION:
             switch (method_id){
                 case CONNECTION_START_OK:
-                    printf("Cliente enviou o método CONNECTION_START_OK\n");
+                    printf("[CLIENT] CONNECTION_START_OK\n");
                     read(connfd, recvline, size-3);
-                    printf("Servidor enviou o método CONNECTION_TUNE\n");
+                    printf("[SERVER] CONNECTION_TUNE\n");
                     write(connfd, PACKET_CONNECTION_TUNE, PACKET_CONNECTION_TUNE_SIZE - 1);
                     break;
                 case CONNECTION_TUNE_OK:
-                    printf("Cliente enviou o método CONNECTION_TUNE_OK\n");
+                    printf("[CLIENT] CONNECTION_TUNE_OK\n");
                     read(connfd, recvline, size-3);
                     break;
                 case CONNECTION_OPEN:
-                    printf("Cliente enviou o método CONNECTION_OPEN\n");
+                    printf("[CLIENT] CONNECTION_OPEN\n");
                     read(connfd, recvline, size-3);
-                    printf("Servidor enviou o método CONNECTION_OPEN_OK\n");
+                    printf("[SERVER] CONNECTION_OPEN_OK\n");
                     write(connfd, PACKET_CONNECTION_OPEN_OK, PACKET_CONNECTION_OPEN_OK_SIZE - 1);
                     break;
                 case CONNECTION_CLOSE:
-                    printf("Cliente enviou o método CONNECTION_CLOSE\n");
+                    printf("[CLIENT] CONNECTION_CLOSE\n");
                     read(connfd, recvline, size-3);
-                    printf("Servidor enviou o método CONNECTION_CLOSE_OK\n");
+                    printf("[SERVER] CONNECTION_CLOSE_OK\n");
                     write(connfd, PACKET_CONNECTION_CLOSE_OK, PACKET_CONNECTION_CLOSE_OK_SIZE - 1);
                     exit(0);
                     break;
@@ -84,15 +84,15 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
         case CHANNEL:
             switch (method_id){
                 case CHANNEL_OPEN:
-                    printf("Cliente enviou o método CHANNEL_OPEN\n");
+                    printf("[CLIENT] CHANNEL_OPEN\n");
                     read(connfd, recvline, size-3);
-                    printf("Servidor enviou o método CHANNEL_OPEN_OK\n");
+                    printf("[SERVER] CHANNEL_OPEN_OK\n");
                     write(connfd, PACKET_CHANNEL_OPEN_OK, PACKET_CHANNEL_OPEN_OK_SIZE - 1);
                     break;
                 case CHANNEL_CLOSE:
-                    printf("Cliente enviou o método CHANNEL_CLOSE\n");
+                    printf("[CLIENT] CHANNEL_CLOSE\n");
                     read(connfd, recvline, size-3);
-                    printf("Servidor enviou o método CHANNEL_CLOSE_OK\n");
+                    printf("[SERVER] CHANNEL_CLOSE_OK\n");
                     write(connfd, PACKET_CHANNEL_CLOSE_OK, PACKET_CHANNEL_CLOSE_OK_SIZE - 1);
                     break;
                 default:
@@ -103,10 +103,10 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
         case QUEUE:
             switch(method_id){
                  case QUEUE_DECLARE:
-                    printf("Cliente enviou o método QUEUE_DECLARE\n");
+                    printf("[CLIENT] QUEUE_DECLARE\n");
                     read(connfd, recvline, size);
                     queueMethod(connfd, recvline, size);
-                    printf("Servidor enviou o método QUEUE_DECLARE_OK\n");
+                    printf("[SERVER] QUEUE_DECLARE_OK\n");
                     break;
                 default:
                     printf("Método QUEUE desconhecido\n");
@@ -116,23 +116,23 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
         case BASIC:
             switch(method_id){
                 case BASIC_PUBLISH:
-                    printf("Cliente enviou o método BASIC_PUBLISH\n");
+                    printf("[CLIENT] BASIC_PUBLISH\n");
                     publishMethod(connfd, recvline, size);
                     break;
                 case BASIC_QOS:
-                    printf("Cliente enviou o método BASIC_QOS\n");
+                    printf("[CLIENT] BASIC_QOS\n");
                     read(connfd, recvline, size-3);
-                    printf("Servidor enviou o método BASIC_QOS_OK\n");
+                    printf("[SERVER] BASIC_QOS_OK\n");
                     write(connfd, PACKET_BASIC_QOS_OK, PACKET_BASIC_QOS_OK_SIZE - 1);
                     break;
                 case BASIC_CONSUME:
-                    printf("Cliente enviou o método BASIC_CONUME\n");
-                    printf("Servidor enviou o método BASIC_CONSUME_OK\n");
+                    printf("[CLIENT] BASIC_CONUME\n");
+                    printf("[SERVER] BASIC_CONSUME_OK\n");
                     consumeMethod(connfd, recvline, size);
-                    printf("Servidor enviou o método BASIC_DELIVER\n");
+                    printf("[SERVER] BASIC_DELIVER\n");
                     break;
                 case BASIC_ACK:
-                    printf("Cliente enviou o método BASIC_ACK\n");
+                    printf("[CLIENT] BASIC_ACK\n");
                     read(connfd, recvline, size-3);
                     break;
                 default:
@@ -144,10 +144,10 @@ void AMQPConnection(int connfd, char *recvline, u_int32_t size, u_int16_t class_
 }
 
 int sendProtocolHeader(int connfd, char *recvline){
-    printf("Cliente enviou o método CONNECTION_START\n");
+    printf("[CLIENT] CONNECTION_START\n");
     read(connfd, recvline, 8);
     print(recvline, 8);
-    printf("Servidor enviou o método CONNECTION_START\n");
+    printf("[SERVER] CONNECTION_START\n");
     write(connfd, PACKET_CONNECTION_START, PACKET_CONNECTION_START_SIZE - 1);
     return 1; 
 }
@@ -170,11 +170,7 @@ void queueMethod(int connfd, char *recvline, u_int32_t size){
     // extract the queue name from the received data
     char queueName[MAXQUEUENAMESIZE];
     memcpy(queueName, recvline + 3, size);
-    printf("Nome da fila: %s\n", queueName);
-
     addQueue(queueName);
-    printf("Dados da fila: \n");
-    print_queues();
 
     // create a packet to respond to the client
     char packet[MAXSIZE];
@@ -202,6 +198,7 @@ void freeSharedMemory(void* memory, size_t size){
     }
 }
 
+//
 void initializeQueuesData(){
     // allocate shared memory for queues
     queues.name = allocateSharedMemory(MAXQUEUESIZE * sizeof(char*));
@@ -224,6 +221,7 @@ void initializeQueuesData(){
     }
 }
 
+//
 void freeQueuesData(){
     for (int i = 0; i < MAXQUEUESIZE; i++){
         for(int j = 0; j < MAXMESSAGENUMBER; j++){
@@ -241,7 +239,7 @@ void freeQueuesData(){
 void addQueue(const char *queueName){
     for (int i = 0; i < MAXQUEUESIZE; i++) {
         if (strcmp(queues.name[i], queueName) == 0) {
-            printf("A fila '%s' já existe.\n", queueName);
+            printf("[ERRO] A fila '%s' já existe.\n", queueName);
             return;
         } else if (strcmp(queues.name[i], "") == 0) {
              // if an empty slot is found, copy the queue name
@@ -250,7 +248,7 @@ void addQueue(const char *queueName){
             return; 
         }
     }
-    printf("Não foi possível adicionar a fila. Limite de filas atingido.\n");
+    printf("[ERRO] Não foi possível adicionar a fila '%s. Limite de filas atingido.\n", queueName);
 }
 
 int findQueueIndex(const char *queueName) {
@@ -259,7 +257,7 @@ int findQueueIndex(const char *queueName) {
             return i;  // queue found, return its index
         }
     }
-    printf("Fila '%s' não encontrada na função consumeMethod.\n", queueName);
+    printf("[ERRO] Fila '%s' não encontrada na função consumeMethod.\n", queueName);
     return -1;
 }
 
@@ -267,32 +265,33 @@ int findQueueIndex(const char *queueName) {
 void publishMethod(int connfd, char *recvline, u_int32_t size){
     char queueName[MAXQUEUENAMESIZE];
     char messageData[MAXMESSAGESIZE];
+    u_int32_t length = 0;
 
     // read the queue name from the received data
     read(connfd, recvline, size - 3);
     memcpy(queueName, recvline + 4, size);
-    printf("Nome da fila: %s\n", queueName);
+
+    printf("Nome da fila do publisher: %s\n", queueName);
 
     // read content header information (type, channel, length)
-    read(connfd, recvline, 3); 
-    read(connfd, recvline, 4); 
-    u_int32_t length = ntohl(*((u_int32_t*) recvline));
+    /*read(connfd, recvline, 3); 
+    read(connfd, recvline, 4);
+    length = ntohl(*((u_int32_t*) recvline));*/
+    read(connfd, recvline, 7);
+    length = ntohl(*((u_int32_t*) (recvline + 3)));
 
     // read the content body
     read(connfd, recvline, length + 4);
     read(connfd, recvline, 4);//content body length
     length = ntohl(*((u_int32_t*) recvline));
-    printf("Tamanho da mensagem: %d\n", length);
 
     // read the message data
     read(connfd, recvline, length + 1);
     memcpy(messageData, recvline, length);
     messageData[length] = '\0';
-    printf("Mensagem: %s\n", messageData);
-
     addMessage(queueName, messageData);
-    printf("Dados da fila: \n");
-    print_queues();
+
+    printf("Mensagem: %s\n", messageData);
 }
 
 void addMessage(const char *queueName, const char *message){
