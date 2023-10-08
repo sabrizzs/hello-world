@@ -325,23 +325,22 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     /* deliver message */
     char message[MAXMESSAGESIZE];
 
-    /* check if the queue exists and has messages or consumers */
+    /* check if the queue exists and has messages */
     int index = findQueueIndex(queueName);
     if (index == -1) return;
 
-    if(queues.consumers[index][0] == 0 || strcmp(queues.messages[index][0], "") == 0){
-        printf("[X] Não há consumidores ou mensagens na fila \"%s\".\n", queueName);
+    if(strcmp(queues.messages[index][0], "") == 0){
+        printf("[X] Não há mensagens na fila \"%s\".\n", queueName);
         return;
     }
 
-    /* get the consumer identifier from position 0 of the queue, as well as the message */
-    int id = queues.consumers[index][0];
+    /* get the message from position 0 of the queue */
     memcpy(message, queues.messages[index][0], MAXMESSAGESIZE);
-    printf("[INFO] Consumer \"%d\" irá consumir a mensagem \"%s\".\n", id, message);
+    printf("[INFO] Consumer \"%d\" irá consumir a mensagem \"%s\".\n", queues.consumers[index][0], message);
 
     /* move the consumer to the end of the queue */
-    printf("[INFO] Consumer \"%d\" irá para o final da fila \"%s\".\n", id, queueName);
     moveConsumer(index);
+    printf("[INFO] Consumer \"%d\" movido para o final da fila \"%s\".\n", queues.consumers[index][0], queueName);
 
     print_queues();
 
