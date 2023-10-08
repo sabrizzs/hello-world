@@ -85,26 +85,12 @@ void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size)
         (*packetSize) += frameSizes[i];
     }
 
-
-    
-    /*memcpy(packet + (*packetSize), (char *)&(len), sizeof(len));
-    (*packetSize) += sizeof(len);
-    memcpy(packet + (*packetSize), queueName, len);
-    (*packetSize) += len;
-    
-    memcpy(packet + (*packetSize), (char *)&(v3), sizeof(v3));
-    (*packetSize) += sizeof(v3);
-    memcpy(packet + (*packetSize), (char *)&(v3), sizeof(v3));
-    (*packetSize) += sizeof(v3);
-    memcpy(packet + (*packetSize), "\xce", 1);
-    (*packetSize) += 1;*/
-
-    u_int8_t len = strlen(queueName);
+    u_int8_t queueNameSize = strlen(queueName);
     u_int32_t v3 = htonl(0);
 
     /* copy queueName length, data, v3 and the delimiter to the packet */ 
-    void *packetFields[] = { &len, queueName, &v3, &v3, "\xce" };
-    int sizesFields[] = { sizeof(len), len, sizeof(v3), sizeof(v3), 1 };
+    void *packetFields[] = { &queueNameSize, queueName, &v3, &v3, "\xce" };
+    int sizesFields[] = { sizeof(queueNameSize), queueNameSize, sizeof(v3), sizeof(v3), 1 };
 
     for (int i = 0; i < 5; i++) {
         memcpy(packet + (*packetSize), packetFields[i], sizesFields[i]);
@@ -121,17 +107,14 @@ void consumePacket(char *queueName, char *packet, int *packetSize, char *message
     frame.class_id = htons(60);
     frame.method_id = htons(60);
 
-    /* copy frame data to the packet */
-    memcpy(packet + *packetSize, (char *)&frame.type, sizeof(frame.type));
-    *packetSize += sizeof(frame.type);
-    memcpy(packet + *packetSize, (char *)&frame.channel, sizeof(frame.channel));
-    *packetSize += sizeof(frame.channel);
-    memcpy(packet + *packetSize, (char *)&frame.size, sizeof(frame.size));
-    *packetSize += sizeof(frame.size);
-    memcpy(packet + *packetSize, (char *)&frame.class_id, sizeof(frame.class_id));
-    *packetSize += sizeof(frame.class_id);
-    memcpy(packet + *packetSize, (char *)&frame.method_id, sizeof(frame.method_id));
-    *packetSize += sizeof(frame.method_id);
+    /* copy frame data to the packet */ 
+    int frameSizes[] = { sizeof(frame.type), sizeof(frame.channel), sizeof(frame.size), sizeof(frame.class_id), sizeof(frame.method_id) };
+    void *frameFields[] = { &frame.type, &frame.channel, &frame.size, &frame.class_id, &frame.method_id };
+
+    for (int i = 0; i < 5; i++) {
+        memcpy(packet + (*packetSize), (char *)frameFields[i], frameSizes[i]);
+        (*packetSize) += frameSizes[i];
+    }
 
     char data[] = "\x1f\x61\x6d\x71\x2e\x63\x74\x61\x67\x2d\x55\x6e\x73\x75\x6f\x31\x58\x6c\x68\x46\x58\x41\x6e\x45\x68\x6f\x58\x76\x58\x68\x59\x41\x00\x00\x00\x00\x00\x00\x00\x01\x00";
     u_int8_t queueNameSize = strlen(queueName);
@@ -139,12 +122,21 @@ void consumePacket(char *queueName, char *packet, int *packetSize, char *message
     /* copy data to the packet */ 
     memcpy(packet + *packetSize, data, 42); 
     *packetSize += 42;
-    memcpy(packet + *packetSize, (char*)&(queueNameSize), sizeof(queueNameSize));
+
+    /*memcpy(packet + *packetSize, (char*)&(queueNameSize), sizeof(queueNameSize));
     *packetSize += sizeof(queueNameSize);
     memcpy(packet + *packetSize, queueName, queueNameSize);
     *packetSize += queueNameSize;
     memcpy(packet + *packetSize, "\xce", 1);
-    *packetSize += 1;
+    *packetSize += 1;*/
+
+    void *additionalFields[] = { &queueNameSize, queueName, "\xce" };
+    int additionalSizes[] = { sizeof(queueNameSize), queueNameSize, 1 };
+
+    for (int i = 0; i < 3; i++) {
+        memcpy(packet + *packetSize, additionalFields[i], additionalSizes[i]);
+        *packetSize += additionalSizes[i];
+    }
 
     u_int8_t type = 2;
     u_int16_t channel = htons(1);
