@@ -6,8 +6,6 @@ TO DO:
 
 - mudar packet do rabbit
 
-- remover prints
-
 - se algo der errado é pq to usando "" em vez de '\0'
 */
 
