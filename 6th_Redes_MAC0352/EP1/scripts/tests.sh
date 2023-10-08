@@ -44,7 +44,7 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
   echo "15s: " >> "$output_file"
   docker stats servidor --no-stream --format "table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}" >> "$output_file"
   
-  sleep 30
+  sleep 15
   echo "30s: " >> "$output_file"
   docker stats servidor --no-stream --format "table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}" >> "$output_file"
 
