@@ -4,4 +4,7 @@ queue_2
 queue_3
 queue_4
 queue_5
-message_1message_2message_3message_5message_4
+message_1message_2message_3message_5message_4CONTAINER   NAME       CPU %     MEM USAGE / LIMIT     NET I/O
+servidor    servidor   0.00%     64.68MiB / 7.631GiB   24.9kB / 20.3kB
+servidor
+servidor
