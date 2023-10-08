@@ -1,7 +1,0 @@
-ff582aacce2a85e149bfa977889e0a1c7c066f53c116145c033f3c79991d5557
----------------------------------
-Metrics for the server container:
-CONTAINER   NAME       CPU %     MEM USAGE / LIMIT     NET I/O
-servidor    servidor   0.00%     54.89MiB / 7.631GiB   5.48kB / 0B
-servidor
-servidor
