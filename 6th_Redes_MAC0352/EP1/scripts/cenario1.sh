@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Inicie o servidor em um contêiner com base na imagem que você construiu
-docker run -d --name servidor -p 5672:5672 cenario1
+docker run -d --name servidor -p 5672:5672 amqp
 
 # Aguarde alguns segundos para garantir que o servidor esteja totalmente iniciado
 sleep 10

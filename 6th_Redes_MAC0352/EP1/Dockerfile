@@ -10,10 +10,10 @@ WORKDIR /usr/src/app
 
 ENV PORT=5672
 
-COPY --from=base ./broker ./
+COPY --from=base ./main ./
 
-RUN chmod 777 ./broker
+RUN chmod 777 ./main
 
 EXPOSE $PORT
 
-CMD ./broker ${PORT}
+CMD ./main ${PORT}
