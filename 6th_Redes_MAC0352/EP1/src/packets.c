@@ -68,7 +68,7 @@ const char PACKET_BASIC_QOS_OK[] = "\x01\x00\x01\x00\x00\x00\x04\x00\x3c\x00\x0b
 const size_t PACKET_BASIC_QOS_OK_SIZE = 13;
 
 void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size){
-    // create a packet for the packet
+    /* create a packet for the packet */ 
     struct AMQPFrame frame;
     frame.type = 1;
     frame.channel = htons(1);
@@ -76,8 +76,8 @@ void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size)
     frame.class_id = htons(50);
     frame.method_id = htons(11);
 
-    // copy frame data to the packet
-    memcpy(packet + (*packetSize), (char *)&frame.type, sizeof(frame.type));
+    /* copy frame data to the packet */ 
+    /*memcpy(packet + (*packetSize), (char *)&frame.type, sizeof(frame.type));
     (*packetSize) += sizeof(frame.type);
     memcpy(packet + (*packetSize), (char *)&frame.channel, sizeof(frame.channel));
     (*packetSize) += sizeof(frame.channel);
@@ -86,18 +86,22 @@ void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size)
     memcpy(packet + (*packetSize), (char *)&frame.class_id, sizeof(frame.class_id));
     (*packetSize) += sizeof(frame.class_id);
     memcpy(packet + (*packetSize), (char *)&frame.method_id, sizeof(frame.method_id));
-    (*packetSize) += sizeof(frame.method_id);
+    (*packetSize) += sizeof(frame.method_id);*/
+
+    int frameSize = sizeof(struct AMQPFrame);
+    memcpy(packet + *packetSize, &frame, frameSize);
+    *packetSize += frameSize;
 
     u_int8_t len = strlen(queueName);
     u_int32_t v3 = htonl(0);
 
-    // Copy queueName length and data to the packet
+    /* copy queueName length and data to the packet */ 
     memcpy(packet + (*packetSize), (char *)&(len), sizeof(len));
     (*packetSize) += sizeof(len);
     memcpy(packet + (*packetSize), queueName, len);
     (*packetSize) += len;
 
-    // copy v3 and the delimiter to the packet
+    /* copy v3 and the delimiter to the packet */ 
     memcpy(packet + (*packetSize), (char *)&(v3), sizeof(v3));
     (*packetSize) += sizeof(v3);
     memcpy(packet + (*packetSize), (char *)&(v3), sizeof(v3));
@@ -107,7 +111,7 @@ void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size)
 }
 
 void consumePacket(char *queueName, char *packet, int *packetSize, char *message){
-    // create a packet for the packet
+    /* create a packet for the packet */ 
     struct AMQPFrame frame;
     frame.type = 1;
     frame.channel = htons(0x1);
@@ -115,7 +119,7 @@ void consumePacket(char *queueName, char *packet, int *packetSize, char *message
     frame.class_id = htons(60);
     frame.method_id = htons(60);
 
-    // copy frame data to the packet
+    /* copy frame data to the packet */
     memcpy(packet + *packetSize, (char *)&frame.type, sizeof(frame.type));
     *packetSize += sizeof(frame.type);
     memcpy(packet + *packetSize, (char *)&frame.channel, sizeof(frame.channel));
@@ -130,7 +134,7 @@ void consumePacket(char *queueName, char *packet, int *packetSize, char *message
     char data[] = "\x1f\x61\x6d\x71\x2e\x63\x74\x61\x67\x2d\x55\x6e\x73\x75\x6f\x31\x58\x6c\x68\x46\x58\x41\x6e\x45\x68\x6f\x58\x76\x58\x68\x59\x41\x00\x00\x00\x00\x00\x00\x00\x01\x00";
     u_int8_t queueNameSize = strlen(queueName);
 
-    // copy data to the packet
+    /* copy data to the packet */ 
     memcpy(packet + *packetSize, data, 42); 
     *packetSize += 42;
     memcpy(packet + *packetSize, (char*)&(queueNameSize), sizeof(queueNameSize));
@@ -154,7 +158,7 @@ void consumePacket(char *queueName, char *packet, int *packetSize, char *message
     u_int32_t new_right = htonl(left);
     u_int64_t bl =  ((u_int64_t) new_left << 32) | ((u_int64_t) new_right);
 
-    // copy additional data to the packet
+    /* copy additional data to the packet */ 
     memcpy(packet + *packetSize, (char*)&type, sizeof(type)); 
     *packetSize += sizeof(type);
     memcpy(packet + *packetSize, (char*)&channel, sizeof(channel)); 
@@ -177,7 +181,7 @@ void consumePacket(char *queueName, char *packet, int *packetSize, char *message
     type = 3;
     length = htonl((u_int32_t)strlen(message));
 
-    // copy message-specific data to the packet
+    /* copy message-specific data to the packet */ 
     memcpy(packet + *packetSize, (char*)&type, sizeof(type)); 
     *packetSize += sizeof(type);
     memcpy(packet + *packetSize, (char*)&channel, sizeof(channel)); 

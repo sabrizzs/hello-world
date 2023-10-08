@@ -166,17 +166,17 @@ int readAMQPFrame(int connfd, char *recvline, struct AMQPFrame *frame){
 
 /* Queue */
 void queueMethod(int connfd, char *recvline, u_int32_t size){
-    // extract the queue name from the received data
+    /* extract the queue name from the received data */ 
     char queueName[MAXQUEUENAMESIZE];
     memcpy(queueName, recvline + 3, size);
     addQueue(queueName);
 
-    // create a packet to respond to the client
+    /* create a packet to respond to the client */
     char packet[MAXSIZE];
     int packetSize = 0;
     queuePacket(queueName, packet, &packetSize, size);
 
-    // send the constructed packet back to the client
+    /* send the constructed packet back to the client */ 
     write(connfd, packet, packetSize);
 }
 
@@ -199,20 +199,20 @@ void freeSharedMemory(void* memory, size_t size){
 
 //
 void initializeQueuesData(){
-    // allocate shared memory for queues
+    /* allocate shared memory for queues */ 
     queues.name = allocateSharedMemory(MAXQUEUESIZE * sizeof(char*));
     queues.messages = allocateSharedMemory(MAXQUEUESIZE * sizeof(char**));
     queues.consumers = allocateSharedMemory(MAXQUEUESIZE * sizeof(int*));
 
     for(int i = 0; i < MAXQUEUESIZE; i++){
-        // allocate shared memory for queue names, queue messages and queue consumers
+        /* allocate shared memory for queue names, queue messages and queue consumers */ 
         queues.name[i] = allocateSharedMemory(MAXQUEUENAMESIZE * sizeof(char));
         queues.name[i][0] = 0;
         queues.messages[i] = allocateSharedMemory(MAXMESSAGENUMBER * sizeof(char*));
         queues.consumers[i] = allocateSharedMemory(MAXCONSUMERNUMBER * sizeof(int));
 
         for(int j = 0; j < MAXMESSAGENUMBER; j++){
-            // initialize each message and each consumer
+            /* initialize each message and each consumer */ 
             queues.messages[i][j] = allocateSharedMemory(MAXMESSAGESIZE * sizeof(char));
             queues.messages[i][j][0] = 0;
             queues.consumers[i][j] = 0;
@@ -241,7 +241,7 @@ void addQueue(const char *queueName){
             printf("[X] A fila \"%s\" já existe.\n", queueName);
             return;
         } else if (strcmp(queues.name[i], "") == 0) {
-             // if an empty slot is found, copy the queue name
+            /* if an empty slot is found, copy the queue name */ 
             memcpy(queues.name[i], queueName, strlen(queueName));
             printf("[V] Fila \"%s\" adicionada.\n", queueName);
             return; 
@@ -253,7 +253,7 @@ void addQueue(const char *queueName){
 int findQueueIndex(const char *queueName) {
     for (int i = 0; i < MAXQUEUESIZE; i++) {
         if (strcmp(queues.name[i], queueName) == 0) {
-            return i;  // queue found, return its index
+            return i;  /* queue found, return its index */ 
         }
     }
     printf("[X] Fila \"%s\" não encontrada na função consumeMethod.\n", queueName);
@@ -266,25 +266,22 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
     char messageData[MAXMESSAGESIZE];
     u_int32_t length = 0;
 
-    // read the queue name from the received data
+    /* read the queue name from the received data */ 
     read(connfd, recvline, size - 3);
     memcpy(queueName, recvline + 4, size);
 
     printf("[INFO] Nome da fila do publisher: \"%s\".\n", queueName);
 
-    // read content header information (type, channel, length)
-    /*read(connfd, recvline, 3); 
-    read(connfd, recvline, 4);
-    length = ntohl(*((u_int32_t*) recvline));*/
+    /* read content header information (type, channel, length) */ 
     read(connfd, recvline, 7);
-    length = ntohl(*((u_int32_t*) (recvline + 3)));
+    length = ntohl(*((u_int32_t*) (recvline + 3))); //
 
-    // read the content body
+    /* read the content body */ 
     read(connfd, recvline, length + 4);
     read(connfd, recvline, 4);//content body length
     length = ntohl(*((u_int32_t*) recvline));
 
-    // read the message data
+    /* read the message data */ 
     read(connfd, recvline, length + 1);
     memcpy(messageData, recvline, length);
     messageData[length] = '\0';
@@ -293,11 +290,11 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
 
 void addMessage(const char *queueName, const char *message){
 
-    // find the index of the specified queue
+    /* find the index of the specified queue */ 
     int index = findQueueIndex(queueName);
     if (index == -1) return;
 
-    // find an empty slot in the queue's message array and add the message
+    /* find an empty slot in the queue's message array and add the message */ 
     for(int i = 0; i < MAXMESSAGENUMBER; i++){
         if(strcmp(queues.messages[index][i], "") == 0) {
             memcpy(queues.messages[index][i], message, MAXMESSAGESIZE);
@@ -308,17 +305,16 @@ void addMessage(const char *queueName, const char *message){
     printf("[X] A fila \"%s\" está cheia. Não é possível adicionar mais mensagens.\n", queueName);
 }
 
-/* Modificar */
 /* Consume */
 void consumeMethod(int connfd, char *recvline, u_int32_t size){
     char queueName[MAXQUEUENAMESIZE];
     
-    // read the queue name from the client
+    /* read the queue name from the client */ 
     read(connfd, recvline, size - 3);
     memcpy(queueName, recvline + 3, size);
     printf("[INFO] Nome da fila do consumer: \"%s\".\n", queueName);
 
-    // add the consumer to the queue
+    /* add the consumer to the queue */ 
     addConsumer(queueName, connfd);
     write(connfd, PACKET_BASIC_CONSUME_OK, PACKET_BASIC_CONSUME_OK_SIZE - 1);
 
@@ -340,31 +336,31 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
 
     /* move the consumer to the end of the queue */
     moveConsumer(index);
-    printf("[INFO] Consumer \"%d\" movido para o final da fila \"%s\".\n", queues.consumers[index][0], queueName);
+    printf("[V] Consumer \"%d\" movido para o final da fila \"%s\".\n", queues.consumers[index][0], queueName);
 
     print_queues();
 
     /* remove the message from the first position of the queue */
-    printf("[INFO] Mensagem \"%s\" da primeira posição da fila \"%s\" será removida.\n", message, queueName);
     removeMessage(index);
+    printf("[V] Mensagem \"%s\" da primeira posição da fila \"%s\" foi removida.\n", message, queueName);
 
     print_queues();
 
     char packet[MAXSIZE];
     int packetSize = 0;
-
     consumePacket(queueName, packet, &packetSize, message);
-    // send the constructed packet to the client
+
+    /* send the constructed packet to the client */
     write(connfd, packet, packetSize);
 }
 
 void addConsumer(const char *queueName, int connfd){
 
-    // find the queue index based on its name
+    /* find the queue index based on its name */ 
     int index = findQueueIndex(queueName);
     if (index == -1) return;
 
-    // add the consumer to the queue
+    /* add the consumer to the queue */ 
     for(int i = 0; i < MAXCONSUMERNUMBER; i++){
         if (queues.consumers[index][i] == 0) {
             queues.consumers[index][i] = connfd;
@@ -376,7 +372,13 @@ void addConsumer(const char *queueName, int connfd){
 }
 
 void moveConsumer(int index){
-    // place the first consumer at the end of the queue
+    /**
+     * Moves the consumer to the end of the queue, implementing a round-robin distribution.
+     * This function is used to manage the order in which multiple consumers receive messages
+     * from a shared queue. Round-robin distribution ensures that each consumer takes its turn
+     * to process messages.  
+     **/
+
     int firstConsumer = queues.consumers[index][0];
     for(int i = 0; i < MAXCONSUMERNUMBER - 1; i++){
         if(queues.consumers[index][i + 1] != 0){
@@ -390,7 +392,7 @@ void moveConsumer(int index){
 }
 
 void removeMessage(int index){
-    // clear the message at the front of the queue
+    /* clear the message at the front of the queue */ 
     memset(queues.messages[index][0], 0, MAXMESSAGESIZE);
     for(int i = 0; i < MAXMESSAGENUMBER - 1; i++) {
         if(strcmp(queues.messages[index][i + 1], "") != 0){
