@@ -195,8 +195,6 @@ int main (int argc, char **argv) {
             /* Após ter feito toda a troca de informação com o cliente,
              * pode finalizar o processo filho
              */
-            printf("Dados da fila na main.c: \n");
-            print_queues();
             printf("[Uma conexão fechada]\n");
             exit(0); //
         }
