@@ -46,9 +46,8 @@ done
 sleep 30
 
 # Collect network and CPU usage metrics from the server container
-echo "---------------------------------"
-echo "Metrics for the server container:"
-docker stats servidor --no-stream --format "table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}"
+output_file="results_${NUM_CLIENTES}_clients.txt"
+docker stats servidor --no-stream --format "table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}" > "$output_file"
 
 # Stop and remove the server container
 docker stop servidor
