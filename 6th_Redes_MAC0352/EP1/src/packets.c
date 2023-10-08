@@ -88,10 +88,13 @@ void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size)
     memcpy(packet + (*packetSize), (char *)&frame.method_id, sizeof(frame.method_id));
     (*packetSize) += sizeof(frame.method_id);*/
 
-    char *frameData = (char *)&frame;
-    for (size_t i = 0; i < sizeof(frame); i++) {
-        memcpy(packet + (*packetSize), (char *)&frameData[i], sizeof(frameData[i]));
-        (*packetSize) += sizeof(frameData[i]);
+    // Define the sizes and pointers for easy iteration
+    int frameSizes[] = { sizeof(frame.type), sizeof(frame.channel), sizeof(frame.size), sizeof(frame.class_id), sizeof(frame.method_id) };
+    u_int16_t *frameFields[] = { &frame.type, &frame.channel, &frame.size, &frame.class_id, &frame.method_id };
+
+    for (int i = 0; i < 5; i++) {
+        memcpy(packet + (*packetSize), (char *)frameFields[i], frameSizes[i]);
+        (*packetSize) += frameSizes[i];
     }
 
     u_int8_t len = strlen(queueName);
