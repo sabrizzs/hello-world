@@ -270,7 +270,7 @@ void publishMethod(int connfd, char *recvline, u_int32_t size){
     read(connfd, recvline, size - 3);
     memcpy(queueName, recvline + 4, size);
 
-    printf("Nome da fila do publisher: \"%s\".\n", queueName);
+    printf("[INFO] Nome da fila do publisher: \"%s\".\n", queueName);
 
     // read content header information (type, channel, length)
     /*read(connfd, recvline, 3); 
@@ -316,7 +316,7 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     // read the queue name from the client
     read(connfd, recvline, size - 3);
     memcpy(queueName, recvline + 3, size);
-    printf("Nome da fila do consumer: \"%s\".\n", queueName);
+    printf("[INFO] Nome da fila do consumer: \"%s\".\n", queueName);
 
     // add the consumer to the queue
     addConsumer(queueName, connfd);
@@ -337,16 +337,16 @@ void consumeMethod(int connfd, char *recvline, u_int32_t size){
     /* get the consumer identifier from position 0 of the queue, as well as the message */
     int id = queues.consumers[index][0];
     memcpy(message, queues.messages[index][0], MAXMESSAGESIZE);
-    printf("Consumer \"%d\" irá consumir a mensagem \"%s\".\n", id, message);
+    printf("[INFO] Consumer \"%d\" irá consumir a mensagem \"%s\".\n", id, message);
 
     /* move the consumer to the end of the queue */
-    printf("Consumer \"%d\" irá para o final da fila \"%s\".\n", id, queueName);
+    printf("[INFO] Consumer \"%d\" irá para o final da fila \"%s\".\n", id, queueName);
     moveConsumer(index);
 
     print_queues();
 
     /* remove the message from the first position of the queue */
-    printf("Mensagem \"%s\" da primeira posição da fila \"%s\" será removida.\n", message, queueName);
+    printf("[INFO] Mensagem \"%s\" da primeira posição da fila \"%s\" será removida.\n", message, queueName);
     removeMessage(index);
 
     print_queues();
@@ -369,7 +369,7 @@ void addConsumer(const char *queueName, int connfd){
     for(int i = 0; i < MAXCONSUMERNUMBER; i++){
         if (queues.consumers[index][i] == 0) {
             queues.consumers[index][i] = connfd;
-            printf("Consumer \"%d\" adicionado à fila \"%s\".\n", connfd, queueName);
+            printf("[V] Consumer \"%d\" adicionado à fila \"%s\".\n", connfd, queueName);
             return;
         }
     }
