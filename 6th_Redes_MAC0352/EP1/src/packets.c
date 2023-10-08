@@ -77,20 +77,8 @@ void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size)
     frame.method_id = htons(11);
 
     /* copy frame data to the packet */ 
-    /*memcpy(packet + (*packetSize), (char *)&frame.type, sizeof(frame.type));
-    (*packetSize) += sizeof(frame.type);
-    memcpy(packet + (*packetSize), (char *)&frame.channel, sizeof(frame.channel));
-    (*packetSize) += sizeof(frame.channel);
-    memcpy(packet + (*packetSize), (char *)&frame.size, sizeof(frame.size));
-    (*packetSize) += sizeof(frame.size);
-    memcpy(packet + (*packetSize), (char *)&frame.class_id, sizeof(frame.class_id));
-    (*packetSize) += sizeof(frame.class_id);
-    memcpy(packet + (*packetSize), (char *)&frame.method_id, sizeof(frame.method_id));
-    (*packetSize) += sizeof(frame.method_id);*/
-
-    // Define the sizes and pointers for easy iteration
     int frameSizes[] = { sizeof(frame.type), sizeof(frame.channel), sizeof(frame.size), sizeof(frame.class_id), sizeof(frame.method_id) };
-    u_int16_t *frameFields[] = { &frame.type, &frame.channel, &frame.size, &frame.class_id, &frame.method_id };
+    void *frameFields[] = { &frame.type, &frame.channel, &frame.size, &frame.class_id, &frame.method_id };
 
     for (int i = 0; i < 5; i++) {
         memcpy(packet + (*packetSize), (char *)frameFields[i], frameSizes[i]);
