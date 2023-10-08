@@ -1,4 +1,4 @@
-c0bfc362568abfb6484c915410dc7f2dd52c1c4056e79aa3ee689132a5c35800
+5870b5444abd3b7f1358997e689dce12ad293b2ffbf8119a5935e26e91f69d91
 queue_1
 queue_2
 queue_3
@@ -49,7 +49,9 @@ queue_47
 queue_48
 queue_49
 queue_50
-message_1message_8message_5message_9message_40message_2message_11message_10message_24message_28message_35message_38message_4message_12message_7message_29message_50message_42message_13message_27message_18message_37message_49message_6message_3message_39message_16message_21message_19message_22message_17message_32message_43message_45message_30message_34message_41message_46message_47message_48message_31message_15message_20message_14message_26message_44message_36message_33message_25message_23CONTAINER   NAME       CPU %     MEM USAGE / LIMIT     NET I/O
-servidor    servidor   0.00%     153.3MiB / 7.631GiB   209kB / 200kB
+message_1message_3message_10message_19message_35message_20message_16message_13message_5message_33message_44message_49message_46message_14message_15message_11message_21message_48message_40message_6message_7message_22message_8message_36message_50message_38message_2message_12message_4message_17message_30message_28message_25message_23message_9message_24message_39message_41message_45message_29message_26message_31message_37message_47message_34message_32message_43---------------------------------
+Metrics for the server container:
+CONTAINER   NAME       CPU %     MEM USAGE / LIMIT     NET I/O
+servidor    servidor   0.00%     147.1MiB / 7.631GiB   207kB / 198kB
 servidor
 servidor

@@ -1,10 +1,12 @@
-a41b93dd5568aba785727aaf6621250592579fb35c0236c62ab1f1abc316962a
+20ad6319937393af3c21261aa5ad12fd7a960451852373b8c99755aecc05596c
 queue_1
 queue_2
 queue_3
 queue_4
 queue_5
-message_2message_1message_5message_4message_3CONTAINER   NAME       CPU %     MEM USAGE / LIMIT     NET I/O
-servidor    servidor   0.00%     64.68MiB / 7.631GiB   24.7kB / 20.2kB
+message_1message_2message_3message_4message_5---------------------------------
+Metrics for the server container:
+CONTAINER   NAME       CPU %     MEM USAGE / LIMIT     NET I/O
+servidor    servidor   0.00%     64.71MiB / 7.631GiB   24.6kB / 20.1kB
 servidor
 servidor
