@@ -123,24 +123,20 @@ void consumePacket(char *queueName, char *packet, int *packetSize, char *message
     memcpy(packet + *packetSize, data, 42); 
     *packetSize += 42;
 
-    /*memcpy(packet + *packetSize, (char*)&(queueNameSize), sizeof(queueNameSize));
-    *packetSize += sizeof(queueNameSize);
-    memcpy(packet + *packetSize, queueName, queueNameSize);
-    *packetSize += queueNameSize;
-    memcpy(packet + *packetSize, "\xce", 1);
-    *packetSize += 1;*/
-
-    void *additionalFields[] = { &queueNameSize, queueName, "\xce" };
-    int additionalSizes[] = { sizeof(queueNameSize), queueNameSize, 1 };
+    //
+    void *queueFields[] = { &queueNameSize, queueName, "\xce" };
+    int queueFieldsSizes[] = { sizeof(queueNameSize), queueNameSize, 1 };
 
     for (int i = 0; i < 3; i++) {
-        memcpy(packet + *packetSize, additionalFields[i], additionalSizes[i]);
-        *packetSize += additionalSizes[i];
+        memcpy(packet + *packetSize, queueFields[i], queueFieldsSizes[i]);
+        *packetSize += queueFieldsSizes[i];
     }
 
     u_int8_t type = 2;
+    u_int8_t type_2 = 3;
     u_int16_t channel = htons(1);
     u_int32_t length = htonl(15);
+    u_int32_t length_2 = htonl((u_int32_t)strlen(message));
     u_int16_t class_id = htons(60);
     u_int16_t wt = htons(0);
     u_int16_t pf = htons(4096);
@@ -153,7 +149,15 @@ void consumePacket(char *queueName, char *packet, int *packetSize, char *message
     u_int64_t bl =  ((u_int64_t) new_left << 32) | ((u_int64_t) new_right);
 
     /* copy additional data to the packet */ 
-    memcpy(packet + *packetSize, (char*)&type, sizeof(type)); 
+    void *messageFields[] = {&type, &channel, &length, &class_id, &wt, &bl, &pf, &dl, "\xce", &type_2, &channel, &length_2, message, "\xce"};
+    int messageSizes[] = {sizeof(type), sizeof(channel), sizeof(length), sizeof(class_id), sizeof(wt), sizeof(bl), sizeof(pf), sizeof(dl), 1, sizeof(type_2), sizeof(channel), sizeof(length_2), strlen(message), 1};
+
+    for(int i = 0; i < sizeof(messageFields) / sizeof(messageFields[0]); i++){
+        memcpy(packet + *packetSize, messageFields[i], messageSizes[i]);
+        *packetSize += messageSizes[i];
+    }
+
+    /*memcpy(packet + *packetSize, (char*)&type, sizeof(type)); 
     *packetSize += sizeof(type);
     memcpy(packet + *packetSize, (char*)&channel, sizeof(channel)); 
     *packetSize += sizeof(channel);
@@ -170,13 +174,10 @@ void consumePacket(char *queueName, char *packet, int *packetSize, char *message
     memcpy(packet + *packetSize, (char*)&dl, sizeof(dl)); 
     *packetSize += sizeof(dl);
     memcpy(packet + *packetSize, "\xce", 1); 
-    *packetSize += 1;
-
-    type = 3;
-    length = htonl((u_int32_t)strlen(message));
+    *packetSize += 1;*/
 
     /* copy message-specific data to the packet */ 
-    memcpy(packet + *packetSize, (char*)&type, sizeof(type)); 
+    /*memcpy(packet + *packetSize, (char*)&type, sizeof(type)); 
     *packetSize += sizeof(type);
     memcpy(packet + *packetSize, (char*)&channel, sizeof(channel)); 
     *packetSize += sizeof(channel);
@@ -185,6 +186,6 @@ void consumePacket(char *queueName, char *packet, int *packetSize, char *message
     memcpy(packet + *packetSize, message, strlen(message)); 
     *packetSize += strlen(message);
     memcpy(packet + *packetSize, "\xce", 1); 
-    *packetSize += 1;
+    *packetSize += 1;*/
 }
 
