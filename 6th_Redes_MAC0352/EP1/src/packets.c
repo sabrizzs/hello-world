@@ -77,7 +77,7 @@ void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size)
     frame.method_id = htons(11);
 
     /* copy frame data to the packet */ 
-    memcpy(packet + (*packetSize), (char *)&frame.type, sizeof(frame.type));
+    /*memcpy(packet + (*packetSize), (char *)&frame.type, sizeof(frame.type));
     (*packetSize) += sizeof(frame.type);
     memcpy(packet + (*packetSize), (char *)&frame.channel, sizeof(frame.channel));
     (*packetSize) += sizeof(frame.channel);
@@ -86,9 +86,12 @@ void queuePacket(char *queueName, char *packet, int *packetSize, u_int32_t size)
     memcpy(packet + (*packetSize), (char *)&frame.class_id, sizeof(frame.class_id));
     (*packetSize) += sizeof(frame.class_id);
     memcpy(packet + (*packetSize), (char *)&frame.method_id, sizeof(frame.method_id));
-    (*packetSize) += sizeof(frame.method_id);
+    (*packetSize) += sizeof(frame.method_id);*/
 
-    
+    char *frameData = (char *)&frame;
+    for (size_t i = 0; i < sizeof(frame); i++) {
+        packet[(*packetSize)++] = frameData[i];
+    }
 
     u_int8_t len = strlen(queueName);
     u_int32_t v3 = htonl(0);
