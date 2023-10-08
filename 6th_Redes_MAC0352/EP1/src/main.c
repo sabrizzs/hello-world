@@ -177,13 +177,10 @@ int main (int argc, char **argv) {
              */
             int connectionStart = 0;
             for(;;){
-                if(!connectionStart){
-                    connectionStart = sendProtocolHeader(connfd, recvline);
-                }
+                if(!connectionStart) connectionStart = sendProtocolHeader(connfd, recvline);
                 struct AMQPFrame frame;
                 int n = readAMQPFrame(connfd, recvline, &frame);
                 if(n == 0) exit(0);
-
                 AMQPConnection(connfd, recvline, frame.size, frame.class_id, frame.method_id);
             }
             /* ========================================================= */
