@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define os cenários (0, 10, 100 clientes)
-scenarios=(0 10 100)
+scenarios=(10 100)
 
 for NUM_CLIENTS in "${scenarios[@]}"; do
   num_queues=$((NUM_CLIENTS / 2))
