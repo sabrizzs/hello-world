@@ -10,7 +10,6 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
 
   docker run -d --name server -p 5672:5672 testes
 
-
   chmod +x declare_queues.sh
   ./declare_queues.sh $num_queues
   chmod +x publish.sh
