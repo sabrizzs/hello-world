@@ -6,4 +6,4 @@ CONTAINER   NAME       CPU %     MEM USAGE / LIMIT     NET I/O
 servidor    servidor   0.00%     54.88MiB / 7.631GiB   3.1kB / 0B
 30s: 
 CONTAINER   NAME       CPU %     MEM USAGE / LIMIT     NET I/O
-servidor    servidor   0.00%     54.88MiB / 7.631GiB   3.28kB / 0B
+servidor    servidor   0.00%     54.88MiB / 7.631GiB   3.1kB / 0B
