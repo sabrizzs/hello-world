@@ -2,15 +2,15 @@
 
 SAMPLE_SIZE=100
 MESSAGES=30
-docker start servidor;
+docker start amqp;
 echo "Started docker container";
 sleep 5;
-./declare-queue.sh $1;
-./publish.sh $1 $MESSAGES & 
-./consume.sh $1 1 &
+./scripts/declare-queue.sh $1;
+./scripts/publish.sh $1 $MESSAGES & 
+./scripts/consume.sh $1 1 &
 echo "Started get_cpu_network_from_docker"
 ./get_cpu_network_from_docker.sh $SAMPLE_SIZE $1
 pkill -TERM -g $$
-docker kill servidor;
+docker kill amqp;
 echo "Killed docker container";
 sleep 5;
