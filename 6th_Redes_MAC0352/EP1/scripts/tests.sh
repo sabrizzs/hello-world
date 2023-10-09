@@ -8,7 +8,7 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
   num_publishers=$((NUM_CLIENTS / 2))
   num_consumers=$((NUM_CLIENTS / 2))
 
-  docker run -d --name servidor -p 5672:5672 testes
+  docker run -d --name  -p 5672:5672 testes
 
   sleep 10
 
@@ -33,11 +33,11 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
 
     # Aguarda 1 segundo e coleta estatísticas do Docker
     sleep 1
-    docker stats testes --no-stream --format "{{.CPUPerc}} {{.NetIO}}" >> "$output_file"
+    docker stats server --no-stream --format "{{.CPUPerc}} {{.NetIO}}" >> "$output_file"
   done
 
-  docker stop testes
-  docker rm testes
+  docker stop server
+  docker rm server
 
   # Calcula a média do uso de CPU
   cpu_average=$(awk '{ total += $1 } END { print total / NR }' "$output_file")
