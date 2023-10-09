@@ -33,12 +33,11 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
 
     # Aguarda 1 segundo e coleta estatísticas do Docker
     sleep 1
-    docker stats servidor --no-stream --format "{{.CPUPerc}} {{.NetIO}}" >> "$output_file"
+    docker stats testes --no-stream --format "{{.CPUPerc}} {{.NetIO}}" >> "$output_file"
   done
 
-  # Encerra o container do servidor RabbitMQ
-  docker stop servidor
-  docker rm servidor
+  docker stop testes
+  docker rm testes
 
   # Calcula a média do uso de CPU
   cpu_average=$(awk '{ total += $1 } END { print total / NR }' "$output_file")
