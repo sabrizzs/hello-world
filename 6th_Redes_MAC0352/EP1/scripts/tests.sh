@@ -16,9 +16,9 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
 
   ./publish.sh $num_publishers &
 
-  ./consume_messages.sh $num_consumers &
+  ./consume.sh $num_consumers &
 
-  ./collect_docker_stats.sh "$output_file" 60 $NUM_CLIENTS
+  ./docker_stats.sh "$output_file" 60 $NUM_CLIENTS
 
   docker stop server
   docker rm server
