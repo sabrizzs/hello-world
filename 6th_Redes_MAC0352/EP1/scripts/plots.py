@@ -10,12 +10,12 @@ fig, axs = plt.subplots(2, 1, figsize=(10, 10))
 
 axs[0].bar(clients, cpu_percentages, color='blue')
 axs[0].set_ylabel('CPU %')
-axs[0].set_title('Uso de CPU por Número de Clientes')
+axs[0].set_title('Média do uso de CPU em 1 minuto por Número de Clientes')
 
 axs[1].bar(clients, net_io_tx, label='NET I/O (Tx)', color='green')
 axs[1].bar(clients, net_io_rx, label='NET I/O (Rx)', bottom=net_io_tx, color='orange')
 axs[1].set_ylabel('NET I/O (kB)')
-axs[1].set_title('Uso de NET I/O por Número de Clientes')
+axs[1].set_title('Uso de NET I/O em 1 minuto por Número de Clientes')
 axs[1].legend()
 
 for i, (tx, rx) in enumerate(zip(net_io_tx, net_io_rx)):
