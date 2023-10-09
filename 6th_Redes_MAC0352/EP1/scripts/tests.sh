@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Array of scenarios (0, 10, and 100 clients)
+# Array of scenarios
 scenarios=(0 10 100)
 
 for NUM_CLIENTS in "${scenarios[@]}"; do
@@ -11,7 +11,6 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
   # Start the server in a container based on the image built
   docker run -d --name servidor -p 5672:5672 amqp
 
-  # Wait for a few seconds to ensure the server is fully started
   sleep 10
 
   # Create queues
@@ -27,7 +26,6 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
     amqp-publish -r "$queue_name" -b "$message"
   done
 
-  # Wait for a period for the publishers to finish sending messages
   sleep 10
 
   # Execute the consumers
@@ -48,7 +46,6 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
   echo "30s: " >> "$output_file"
   docker stats servidor --no-stream --format "table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}" >> "$output_file"
 
-  # Stop and remove the server container
   docker stop servidor
   docker rm servidor
 done
