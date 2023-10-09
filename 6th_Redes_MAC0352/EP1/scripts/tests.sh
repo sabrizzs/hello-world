@@ -37,7 +37,7 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
     fi
 
     # Executa docker stats
-    docker stats servidor --no-stream --format "table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}" >> "$output_file"
+    docker stats servidor --no-stream --format "table {{.CPUPerc}}\t{{.NetIO}}" >> "$output_file"
     sleep 1
   done
 
