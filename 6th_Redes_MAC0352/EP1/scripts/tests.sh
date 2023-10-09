@@ -8,7 +8,7 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
   num_publishers=$((NUM_CLIENTS / 2))
   num_consumers=$((NUM_CLIENTS / 2))
 
-  docker run -d --name servidor -p 5672:5672 testes
+  docker run -d --name server -p 5672:5672 testes
 
   sleep 10
 
