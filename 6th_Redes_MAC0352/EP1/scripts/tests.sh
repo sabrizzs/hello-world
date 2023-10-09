@@ -8,8 +8,7 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
   num_publishers=$((NUM_CLIENTS / 2))
   num_consumers=$((NUM_CLIENTS / 2))
 
-  # Inicia o container do servidor RabbitMQ
-  docker run -d --name servidor -p 5672:5672 rabbitmq
+  docker run -d --name servidor -p 5672:5672 testes
 
   sleep 10
 
