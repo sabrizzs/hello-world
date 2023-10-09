@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Array of scenarios (0, 10, and 100 clients)
+# Define os cenários (0, 10, 100 clientes)
 scenarios=(0 10 100)
 
 for NUM_CLIENTS in "${scenarios[@]}"; do
@@ -8,52 +8,47 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
   num_publishers=$((NUM_CLIENTS / 2))
   num_consumers=$((NUM_CLIENTS / 2))
 
-  # Start the server in a container based on the image built
-  docker run -d --name servidor -p 5672:5672 amqp
+  # Inicia o container do servidor RabbitMQ
+  docker run -d --name servidor -p 5672:5672 rabbitmq
 
-  # Wait for a few seconds to ensure the server is fully started
-  sleep 5
-
-  # Create queues
-  for i in $(seq 1 $num_queues); do
-    queue_name="queue_$i"
-    amqp-declare-queue -q "$queue_name"
-    sleep 1
-  done
-
-  # Execute the publishers
-  for i in $(seq 1 $num_publishers); do
-    queue_name="queue_$i"
-    message="message_$i"
-    amqp-publish -r "$queue_name" -b "$message"
-    sleep 1
-  done
-
-  # Wait for a period for the publishers to finish sending messages
   sleep 10
 
-  # Execute the consumers
-  for i in $(seq 1 $num_consumers); do
-    queue_name="queue_$i"
-    amqp-consume -q "$queue_name" -c 5 cat &
-    sleep 1
-  done
-
+  # Nome do arquivo de saída para os resultados
   output_file="results_${NUM_CLIENTS}_clients.txt"
   echo "docker stats:" > "$output_file"
 
+  i=0
+
+  # Executa medições por 60 segundos
   for ((j = 0; j < 60; j++)); do
-    docker stats servidor --no-stream --format "{{.CPUPerc}} {{.NetIO}}" >> "$output_file"
+    queue_name="queue_$i"
+    message="message_$i"
+
+    if [ $i -lt $num_queues ]; then
+      # Declara a fila e inicia os publishers e consumers
+      amqp-declare-queue -q "$queue_name"
+      amqp-publish -r "$queue_name" -b "$message"
+      amqp-consume -q "$queue_name" -c 5 cat &
+      i=$((i + 1))
+    fi
+
+    # Aguarda 1 segundo e coleta estatísticas do Docker
     sleep 1
+    docker stats servidor --no-stream --format "{{.CPUPerc}} {{.NetIO}}" >> "$output_file"
   done
 
+  # Encerra o container do servidor RabbitMQ
   docker stop servidor
   docker rm servidor
 
+  # Calcula a média do uso de CPU
   cpu_average=$(awk '{ total += $1 } END { print total / NR }' "$output_file")
 
+  # Calcula a soma dos bytes transmitidos e recebidos
   net_io_sum=$(awk -F'[/ ]+' '{ sum += $2; sum2 += $3 } END { print "Sum In: " sum " Sum Out: " sum2 }' "$output_file")
 
+  # Registra os resultados no arquivo de saída
   echo "Média da CPUPerc: $cpu_average" >> "$output_file"
   echo "Soma dos bytes da NetIO: $net_io_sum" >> "$output_file"
+
 done
