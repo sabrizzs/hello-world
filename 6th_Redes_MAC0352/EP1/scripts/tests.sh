@@ -11,13 +11,13 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
   docker run -d --name server -p 5672:5672 testes
 
 
-
+  chmod +x declare_queues.sh
   ./declare_queues.sh $num_queues
-
+  chmod +x publish.sh
   ./publish.sh $num_publishers &
-
+  chmod +x consume.sh
   ./consume.sh $num_consumers &
-
+  chmod +x docker_stats.sh
   ./docker_stats.sh "$output_file" 60 $NUM_CLIENTS
 
   docker stop server
