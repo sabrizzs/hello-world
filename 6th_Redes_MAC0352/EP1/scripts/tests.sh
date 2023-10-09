@@ -8,7 +8,7 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
   num_publishers=$((NUM_CLIENTS / 2))
   num_consumers=$((NUM_CLIENTS / 2))
 
-  docker run -d --name server -p 5672:5672 testes
+  docker run -d --name  -p 5672:5672 testes
 
   for i in $(seq 1 $num_queues); do
     queue_name="queue_$i"
@@ -28,13 +28,13 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
     amqp-consume -q "$queue_name" -c 5 cat &
   done
 
-    # Aguarda 1 segundo e coleta estatísticas do Docker
-    sleep 1
+  for ((j = 0; j < 60; j++)); do
+    #sleep 1
     docker stats server --no-stream --format "{{.CPUPerc}} {{.NetIO}}" >> "$output_file"
   done
 
-  docker stop testes
-  docker rm testes
+  docker stop server
+  docker rm server
 
   # Calcula a média do uso de CPU
   cpu_average=$(awk '{ total += $1 } END { print total / NR }' "$output_file")
