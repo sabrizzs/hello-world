@@ -32,7 +32,7 @@ Após compilar, execute o servidor AMQP usando o comando:
 
 ``` bash
 
-./main
+./main <Porta>
 
 ```
 O servidor estará pronto para aceitar conexões de clientes AMQP.
