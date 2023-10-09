@@ -10,39 +10,15 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
 
   docker run -d --name server -p 5672:5672 testes
 
-  output_file="results_${NUM_CLIENTS}_clients.txt"
-  echo "docker stats:" > "$output_file"
 
-  for i in $(seq 1 $num_queues); do
-    queue_name="queue_$i"
-    amqp-declare-queue -q "$queue_name"
-  done
 
-  for ((j = 0; j < 20; j++)); do
-    sleep 1
-    docker stats server --no-stream --format "{{.CPUPerc}} {{.NetIO}}" >> "$output_file"
-  done
+  ./declare_queues.sh $num_queues
 
-  for i in $(seq 1 $num_publishers); do
-    queue_name="queue_$i"
-    message="message_$i"
-    amqp-publish -r "$queue_name" -b "$message"
-  done
+  ./publish.sh $num_publishers &
 
-  for ((j = 0; j < 20; j++)); do
-    sleep 1
-    docker stats server --no-stream --format "{{.CPUPerc}} {{.NetIO}}" >> "$output_file"
-  done
+  ./consume_messages.sh $num_consumers &
 
-  for i in $(seq 1 $num_consumers); do
-    queue_name="queue_$i"
-    amqp-consume -q "$queue_name" -c 5 cat &
-  done
-
-  for ((j = 0; j < 20; j++)); do
-    sleep 1
-    docker stats server --no-stream --format "{{.CPUPerc}} {{.NetIO}}" >> "$output_file"
-  done
+  ./collect_docker_stats.sh "$output_file" 60 $NUM_CLIENTS
 
   docker stop server
   docker rm server
