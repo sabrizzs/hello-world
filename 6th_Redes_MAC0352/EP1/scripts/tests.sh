@@ -27,8 +27,8 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
       i=$((i + 1))
     fi
 
-    docker stats servidor --no-stream --format "{{.CPUPerc}} {{.NetIO}}" >> "$output_file"
     sleep 1
+    docker stats servidor --no-stream --format "{{.CPUPerc}} {{.NetIO}}" >> "$output_file"
   done
 
   docker stop servidor
