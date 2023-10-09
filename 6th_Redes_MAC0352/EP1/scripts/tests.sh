@@ -13,38 +13,43 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
 
   sleep 10
 
-  # Create queues
-  for i in $(seq 1 $num_queues); do
-    queue_name="queue_$i"
-    amqp-declare-queue -q "$queue_name"
-  done
-
-  # Execute the publishers
-  for i in $(seq 1 $num_publishers); do
-    queue_name="queue_$i"
-    message="message_$i"
-    amqp-publish -r "$queue_name" -b "$message"
-  done
-
-  sleep 10
-
-  # Execute the consumers
-  for i in $(seq 1 $num_consumers); do
-    queue_name="queue_$i"
-    amqp-consume -q "$queue_name" -c 5 cat &
-  done
-
   output_file="results_${NUM_CLIENTS}_clients.txt"
-  echo "0s: " > "$output_file"
-  docker stats servidor --no-stream --format "table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}" >> "$output_file"
-
-  sleep 15
-  echo "15s: " >> "$output_file"
-  docker stats servidor --no-stream --format "table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}" >> "$output_file"
   
-  sleep 15
-  echo "30s: " >> "$output_file"
-  docker stats servidor --no-stream --format "table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}" >> "$output_file"
+  # Run operations alternately with intervals
+  for ((i = 1; i <= NUM_CLIENTS / 2 ; i++)); do
+    case $i in
+      1)
+        for j in $(seq 1 $num_queues); do
+          queue_name="queue_$j"
+          amqp-declare-queue -q "$queue_name"
+        done
+        sleep 1
+        ;;
+      2)
+        # Execute the publishers
+        for j in $(seq 1 $num_publishers); do
+          queue_name="queue_$j"
+          message="message_$j"
+          amqp-publish -r "$queue_name" -b "$message"
+        done
+        sleep 1
+        ;;
+      3)
+        # Execute the consumers
+        for j in $(seq 1 $num_consumers); do
+          queue_name="queue_$j"
+          amqp-consume -q "$queue_name" -c 5 cat &
+        done
+        sleep 1
+        ;;
+      4)
+        # Run 'docker stats' for 10 seconds
+        echo "Running 'docker stats' for 10 seconds..." >> "$output_file"
+        docker stats servidor --no-stream --format "table{{.CPUPerc}}\t{{.NetIO}}" >> "$output_file"
+        sleep 2
+        ;;
+    esac
+  done
 
   docker stop servidor
   docker rm servidor
