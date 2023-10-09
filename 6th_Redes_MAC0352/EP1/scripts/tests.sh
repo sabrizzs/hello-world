@@ -36,7 +36,7 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
 
   cpu_average=$(awk '{ total += $1 } END { print total / NR }' "$output_file")
 
-  net_io_sum=$( awk '{ split($2, arr, "/"); sum += arr[1]; sum2 += arr[2] } END { print "Sum In: " sum " Sum Out: " sum2 }' "$output_file")
+  net_io_sum=$( awk '{ split($2, arr, "/ "); sum += arr[1]; sum2 += arr[2] } END { print "Sum In: " sum " Sum Out: " sum2 }' "$output_file")
 
   echo "Média da CPUPerc: $cpu_average" >> "$output_file"
   echo "Soma dos bytes da NetIO: $net_io_sum" >> "$output_file"
