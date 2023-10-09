@@ -12,12 +12,13 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
   docker run -d --name servidor -p 5672:5672 amqp
 
   # Wait for a few seconds to ensure the server is fully started
-  sleep 10
+  sleep 5
 
   # Create queues
   for i in $(seq 1 $num_queues); do
     queue_name="queue_$i"
     amqp-declare-queue -q "$queue_name"
+    sleep 1
   done
 
   # Execute the publishers
@@ -25,6 +26,7 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
     queue_name="queue_$i"
     message="message_$i"
     amqp-publish -r "$queue_name" -b "$message"
+    sleep 1
   done
 
   # Wait for a period for the publishers to finish sending messages
@@ -34,14 +36,15 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
   for i in $(seq 1 $num_consumers); do
     queue_name="queue_$i"
     amqp-consume -q "$queue_name" -c 5 cat &
+    sleep 1
   done
 
   output_file="results_${NUM_CLIENTS}_clients.txt"
   echo "docker stats:" > "$output_file"
 
   for ((j = 0; j < 60; j++)); do
-    sleep 1
     docker stats servidor --no-stream --format "{{.CPUPerc}} {{.NetIO}}" >> "$output_file"
+    sleep 1
   done
 
   docker stop servidor
