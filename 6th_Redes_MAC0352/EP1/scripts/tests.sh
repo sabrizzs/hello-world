@@ -10,29 +10,26 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
 
   docker run -d --name  -p 5672:5672 testes
 
-  sleep 10
+  for i in $(seq 1 $num_queues); do
+    queue_name="queue_$i"
+    amqp-declare-queue -q "$queue_name"
+  done
 
-  # Nome do arquivo de saída para os resultados
-  output_file="results_${NUM_CLIENTS}_clients.txt"
-  echo "docker stats:" > "$output_file"
-
-  i=0
-
-  # Executa medições por 60 segundos
-  for ((j = 0; j < 60; j++)); do
+  for i in $(seq 1 $num_publishers); do
     queue_name="queue_$i"
     message="message_$i"
+    amqp-publish -r "$queue_name" -b "$message"
+  done
 
-    if [ $i -lt $num_queues ]; then
-      # Declara a fila e inicia os publishers e consumers
-      amqp-declare-queue -q "$queue_name"
-      amqp-publish -r "$queue_name" -b "$message"
-      amqp-consume -q "$queue_name" -c 5 cat &
-      i=$((i + 1))
-    fi
+  sleep 10
 
-    # Aguarda 1 segundo e coleta estatísticas do Docker
-    sleep 1
+  for i in $(seq 1 $num_consumers); do
+    queue_name="queue_$i"
+    amqp-consume -q "$queue_name" -c 5 cat &
+  done
+
+  for ((j = 0; j < 60; j++)); do
+    #sleep 1
     docker stats server --no-stream --format "{{.CPUPerc}} {{.NetIO}}" >> "$output_file"
   done
 
