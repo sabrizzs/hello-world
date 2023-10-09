@@ -33,4 +33,12 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
 
   docker stop servidor
   docker rm servidor
+
+  cpu_average=$(awk '{ total += $1 } END { print total / NR }' "$output_file")
+
+  net_io_sum=$(awk '{ split($2, arr, "/"); sum += arr[1] } END { print sum }' "$output_file")
+
+  echo "Média da CPUPerc: $cpu_average" >> "$output_file"
+  echo "Soma dos bytes da NetIO: $net_io_sum" >> "$output_file"
+
 done
