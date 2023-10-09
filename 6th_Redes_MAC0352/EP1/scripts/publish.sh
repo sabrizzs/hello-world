@@ -6,5 +6,5 @@ for i in $(seq 1 $num_publishers); do
   queue_name="queue_$i"
   message="message_$i"
   amqp-publish -r "$queue_name" -b "$message"
-  sleep 1
+  sleep 2
 done
