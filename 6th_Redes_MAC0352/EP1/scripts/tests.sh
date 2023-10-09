@@ -12,13 +12,13 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
 
 
 
-  .script/declare_queues.sh $num_queues
+  ./declare_queues.sh $num_queues
 
-  .script/publish.sh $num_publishers &
+  ./publish.sh $num_publishers &
 
-  .script/consume.sh $num_consumers &
+  ./consume.sh $num_consumers &
 
-  .script/docker_stats.sh "$output_file" 60 $NUM_CLIENTS
+  ./docker_stats.sh "$output_file" 60 $NUM_CLIENTS
 
   docker stop server
   docker rm server
