@@ -14,41 +14,25 @@ for NUM_CLIENTS in "${scenarios[@]}"; do
   sleep 10
 
   output_file="results_${NUM_CLIENTS}_clients.txt"
-  
-  # Run operations alternately with intervals
-  for ((i = 1; i <= NUM_CLIENTS / 2 ; i++)); do
-    case $i in
-      1)
-        for j in $(seq 1 $num_queues); do
-          queue_name="queue_$j"
-          amqp-declare-queue -q "$queue_name"
-        done
-        sleep 1
-        ;;
-      2)
-        # Execute the publishers
-        for j in $(seq 1 $num_publishers); do
-          queue_name="queue_$j"
-          message="message_$j"
-          amqp-publish -r "$queue_name" -b "$message"
-        done
-        sleep 1
-        ;;
-      3)
-        # Execute the consumers
-        for j in $(seq 1 $num_consumers); do
-          queue_name="queue_$j"
-          amqp-consume -q "$queue_name" -c 5 cat &
-        done
-        sleep 1
-        ;;
-      4)
-        # Run 'docker stats' for 10 seconds
-        echo "Running 'docker stats' for 10 seconds..." >> "$output_file"
-        docker stats servidor --no-stream --format "table{{.CPUPerc}}\t{{.NetIO}}" >> "$output_file"
-        sleep 2
-        ;;
-    esac
+  echo "docker stats:" > "$output_file"
+
+  # Loop para as operações alternadas
+  for i in $(seq 1 $num_queues); do
+    queue_name="queue_$i"
+    message="message_$i"
+
+    # Criação de fila
+    amqp-declare-queue -q "$queue_name"
+
+    # Publicação de mensagem
+    amqp-publish -r "$queue_name" -b "$message"
+
+    # Consumo de mensagem
+    amqp-consume -q "$queue_name" -c 5 cat &
+
+    # Executa docker stats
+    docker stats servidor --no-stream --format "table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}" >> "$output_file"
+    sleep 2
   done
 
   docker stop servidor
