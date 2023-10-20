@@ -22,9 +22,9 @@ Embora o uso de SQL para esse fim não seja necessariamente uma má ideia, o MOR
 
 Melhora a Segurança: As ferramentas MOR são projetadas para mitigar riscos de ataques de injeção de SQL, uma vez que elas geralmente geram consultas parametrizadas que são menos suscetíveis a ataques de injeção de SQL.
 
-'''
+´´´
 A injeção SQL é um tipo de ataque cibernético que visa explorar vulnerabilidades em sistemas que utilizam banco de dados. Ela ocorre quando um invasor insere ou "injeta" comandos SQL maliciosos em campos de entrada de um aplicativo, como formulários da web, caixas de pesquisa ou parâmetros de URL. O principal objetivo desse ataque é manipular o comportamento do banco de dados de maneira não autorizada, permitindo que o invasor acesse, modifique ou exclua informações armazenadas no banco de dados.
-'''
+´´´
 
 Reduz a Quantidade de Código Necessário: O uso de ferramentas MOR geralmente requer menos código em comparação com o uso de SQL direto. Isso simplifica o desenvolvimento e a manutenção do código, tornando-o mais enxuto e legível.
 
