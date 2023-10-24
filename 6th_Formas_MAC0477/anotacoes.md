@@ -106,6 +106,7 @@ Imagens -> Dados: processamento de dados
         - linear: T(af + bg) = aT(f) + bT(g)
             - todo filtro linear é implementada com uma convolução
             - toda **convolução** gera um filtro linear
+            - função do espalhamento
         - não-linear
             - filtro da mediana
 
@@ -168,46 +169,82 @@ Imagens -> Dados: processamento de dados
 - produto escalar
 - Reconhecimento de formas:
     - Região 2D (f(x,y))
-    - Contorno 1D (x(t), y(t
+    - Contorno 1D (x(t), y(t))
 - Fourier
     - Domínio do sinal: transformações levam o sinal até outro domínio que facilita certas coisas
         - Transformada
+        - Transformada de Fourier
     - Para transmitir um cosseno, basta transmitir a frequência
         - Um gráfico com picos de acordo com o número de frequências
         - Representação do domínio mais barata
         - Transformada do cosseno
     - Qualquer sinal pode ser representado por uma combinação linear de senos e cossenos
     - Sinal discreto (t não é real) e finito
-
-English version
-
-- Template matching
-- Scalar product
-- Shape recognition
-    - 2D Region
-    - 1D Contour
-
-- Fourier
-    - Signal domain: transformations take the signal to another domain that facilitates certain things
-        - Transform
-    - To transmit a cosine, just transmit the frequency
-        - Cheapiest domain representation
-        - Cosine transform
-    - Any signal can be represented by a linear combination of sine and cosines
-    - Discrete and finite signal (t isn't real)
-    - 3 Fourier transform
-        - Fourier series
-        - Continuous Fourier Transform
-        - Discrete fourier transform (FFT)
-    - Fourier analysis
-        - The only thing that needs to be stored is the a and b
-        - sysntesis: linear combination of sines and cosines
-        - to calculate the coeficients a and b: intern products of input signal and sine and cosines
-        - an and bn are g(t): coordinates of the vector in a intern product
-        - base change matrix
-        - fourier pair
-     
-- Fourier and convolution
-    - Convolution theorem
+    - Mudança de base
+    - f(t) -> F(w)
+    - A base é seno e cossenos
+    - convolução no dominio do tempo é equivalente ao F(w) multiplicado pelo G(w) (teorema da convolução)
+    - f(t) * w(t) <-> F(w) * G(w)
+    - f(t) <-> H(w)
+        - f(t): transformada inversa de H(w)
+        - H(w): transformada de fourier de f(t)
 
 slide 115
+
+## 24 de outubro
+
+### Relembrando
+
+- Filtro linear
+    - g(t) = f(t) * h(t)
+    - filtro de espalhamento
+    - f(t) -> filtro -> g(t)
+    - domínio do tempo (1D): variavel independente t (domínio do espaço (2D))
+ 
+### Pipeline de classificação de formas
+
+- Imagem original -> Forma do objeto
+    -  A forma pode ser representada como imagem binária (pixels representando imagem de interesse)
+    -  Segmentação de imagens
+    -  Divisão da imagem em segmentos conectados (ex: fundo (background) e objeto (foreground); 2 segmentos)
+
+#### Componente conectada
+
+-  Componentes conectadas
+    - Dado qualquer par de pixels: existe um caminho (sequencia de pixels um é vizinho do outro) que pertence ao conjunto
+
+#### Segmentação
+
+- Segmentação: gera segmentos que são componentes conectadas
+- Segmentação semântica: atribui sentido ao pixel
+- Segmentação de instâncias: numeração de cada objeto (arvore 1, arvore 2,...)
+
+#### Image Thresholding
+
+- algoritmo de limiarização
+- com base em um histograma, define um limiar, pontos a direita sao um objeto e a esquerda sao outro
+- pode ter mais de um limiar
+- preto:0, branco: 255
+- gimp: software de edição de imagem: varinha mágica
+
+![image](https://github.com/sabrizzs/hello-world/assets/93349105/994ae14b-eb13-420a-b9be-7e7e2ec647e5)
+
+#### Edge Detection
+
+- podemos pensar na borda dos objetos em vez da região do objeto
+
+### Exercício
+
+- Implementar a convolução com o teorema da convolução, domínio de Fourier
+- em cada caso temos um g(t) e um h(t)
+- f(t) = g(t) * h(t) <-> F(w) = G(w) . H(w)
+- no outro exercicio implementamos f(t) = g(t) * h(t)
+- g, h --- FFT (transformada de fourier) ---> G, H ---- G.H (multiplicação) ----> F --- IFFT (inversa) ----> f(fourier)(t) (convolução baseado em fourier)
+- visualizar: G, H, F (são complexos)
+    - parte real: a
+    - parte imaginaria: b
+    - módulo |F|: tamanho da reta
+    - fase: angulo
+- comparar f e f(fourier)(t), colocar sobrepostos, comparar só a parte real do f(fourier)(t) complexo
+
+
