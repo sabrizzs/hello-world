@@ -1,16 +1,6 @@
 #include "amqp.h"
 #include "packets.h"
 
-/*  
-TO DO:
-
-- mudar packet do rabbit
-
-- remover prints
-
-- se algo der errado é pq to usando "" em vez de '\0'
-*/
-
 queue queues;
 
 void print(char *recvline, ssize_t length){
