@@ -1,0 +1,15 @@
+FROM gcc as base
+
+COPY . ./
+
+RUN make clean && make server
+
+FROM ubuntu
+
+WORKDIR /usr/src/app
+
+COPY --from=base ./server ./
+
+RUN chmod 777 ./server
+
+CMD ./server ${TCP_PORT} ${UDP_PORT}
