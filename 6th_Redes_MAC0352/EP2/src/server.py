@@ -1,6 +1,7 @@
 import os
 import signal
 import sys
+
 #from tcp import ServidorTCP
 #from udp import ServidorUDP
 #from backend import Backend
@@ -41,7 +42,7 @@ def main():
         
 
         # Define um sinal para matar o processo pai se ele morrer
-        os.prctl(os.PR_SET_PDEATHSIG, signal.SIGKILL)
+        # prctl(PR_SET_PDEATHSIG, SIGKILL);
 
         '''
         common/util.cpp
@@ -72,7 +73,7 @@ def main():
         
 
         # Define um sinal para matar o processo pai se ele morrer
-        os.prctl(os.PR_SET_PDEATHSIG, signal.SIGKILL)
+        # os.prctl(os.PR_SET_PDEATHSIG, signal.SIGKILL)
 
         '''
         common/util.cpp
