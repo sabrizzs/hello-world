@@ -7,10 +7,16 @@ import sys
 
 def main():
     # Verifica se foram passados dois argumentos na linha de comando
-    if len(sys.argv) != 3:
-        print("Uso: {} <Porta TCP> <Porta UDP>".format(sys.argv[0]))
-        print("Vai rodar um servidor TCP e UDP nas portas <Porta TCP> e <Porta UDP>, respectivamente")
-        sys.exit(1)
+    if len(sys.argv) == 3:
+        porta_tcp = int(sys.argv[1])
+        porta_udp = int(sys.argv[2])
+    else:
+        print("Nenhum argumento fornecido. Usando portas padrão para TCP e UDP.")
+        porta_tcp = 8080 
+        porta_udp = 12345 
+
+    print("Servidor TCP rodando na porta:", porta_tcp)
+    print("Servidor UDP rodando na porta:", porta_udp)
 
     pid_tcp, pid_udp = None, None
     '''
