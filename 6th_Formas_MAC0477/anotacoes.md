@@ -290,5 +290,11 @@ slide 115
     - células de votação
     - usado para calibração de imagens
 
+### Exercicio
+
+- Pegar a reta que aparece mais
+- Hough do scikit image
+- função: hough_line()
+
 
 
