@@ -247,4 +247,54 @@ slide 115
     - fase: angulo
 - comparar f e f(fourier)(t), colocar sobrepostos, comparar só a parte real do f(fourier)(t) complexo
 
+## 07 de novembro
+
+### Representação de formas
+
+- Podem ser 1D ou 2D
+- Na representação binária é 2D
+
+- Taxonomia
+    - representação por região: é possível dividir a imagem em diferentes formas que podem compor a imagem original (ex: chave philips tem dois retangulos)
+    - representação por contorno
+    - caminho do contorno
+    - contorno paramétrico: C(t) = (x(t), y(t))
+    - lista ordenada
+    - t = parametro do objeto
+    - C: R -> R²
+    - x, y: R -> R
+    - sinais: x(n), y(n)
+    - o gráfico dos sinais mostra as curvas do contorno (picos representam "cantos" ou curvas)
+    - o gráfico é chamado de assinatura
+    - vetor tangente da curva de cada ponto
+    - pela derivada diferenciamos linhas retas verticais e horizontais
+    - gráfico de sinais de uma circuferência é o gráfico de seno e cosseno
+    - codigo da cadeia: vetor tangente
+- representação complexa de um contorno
+    - C: R -> Complexo
+    - C(t) = x(t) + jy(t)
+    - j = raiz(-1)
+ 
+- aproximação de contorno:
+    - aproximação poligonal: guardar os vértices dos polígonos para formar o contorno
+    - pontos dominantes: no caso do polígono são os cantos
+    - Ramer's algorithm: posso representar o segmento por uma reta? se sim, problema resolvido. se não, quebra a curva em duas e refaz a pergunta
+ 
+- Transformada de Hough
+    - linhas retas são muito presentes nas coisas que fazemos
+    - detecta linhas retas em imagens
+    - parametrização normal: cada ponto x,y satisfaz -> p = xcos(@) + ysin(@)
+    - p é um gráfico senoide
+    - fixado x,y cada ponto da senoide satisfaz uma reta com base em x,y na imagem
+    - a intersecção das senoides gera um ponto que representa uma reta na imagem
+    - células de votação
+    - usado para calibração de imagens
+
+### Exercicio
+
+- Pegar a reta que aparece mais
+- Hough do scikit image
+- função: hough_line()
+
+
 
