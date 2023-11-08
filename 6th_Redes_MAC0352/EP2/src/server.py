@@ -1,6 +1,7 @@
 import sys
 import socket
 import ssl
+import threading
 from typing import Tuple
 
 class ServidorTCP:
@@ -21,6 +22,7 @@ class ServidorTCP:
                     conn, addr = s_listener.accept()
                     print(f"[S] Conexão estabelecida com {addr}")
                     cliente = Cliente(conn, addr)
+                    cliente.interpretador()
             except:
                 print("[S] Servidor finalizado")
 
@@ -40,8 +42,30 @@ class Cliente:
         print(f"[S] Recebeu resposta do cliente: {client_answer}")
 
         #"ok" caso nova conexão
-        if client_answer == 'ok':
+        if client_answer == "ok":
             print(f"[S] Cliente {addr} conectou")
+
+    def interpretador(self):
+        sslThread = threading.Thread(target=self.interpretador_ssl, args=())
+        sslThread.start()
+
+    def interpretador_ssl(self):
+        with self.ss as ss:
+            while True:
+                command = ''
+                try:
+                    command = ss.recv(1024).decode('utf-8')
+                except:
+                    print(f'[S] Cliente {self.addr} encerrou a conexão. SSL saindo')
+                    break
+                command = command.split()
+                if not command:
+                    print(f'[S] Cliente {self.addr} encerrou a conexão. SSL saindo')
+                    break
+                elif command[0] == 'teste':
+                    send_command_to_socket(ss, "Cliente enviou: teste")
+                else:
+                    send_command_to_socket(ss, "Comando não reconhecido")
 
 def create_listener_socket() -> Tuple[socket.socket, str]:
     """Cria um socket de listen usando uma porta disponível.
@@ -62,7 +86,6 @@ def setup_SSL_socket(s_listen: socket.socket):
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     context.load_cert_chain('server.pem', 'server.key', password = 'servidor')
     ssock = context.wrap_socket(s_listen, server_side = True)
-    #ssock.listen(5)
     return ssock.accept()
 
 def send_command_to_socket(s: socket.socket, msg: str):
