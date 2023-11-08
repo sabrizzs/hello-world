@@ -17,7 +17,7 @@ class ServidorTCP:
             s_listener.listen()
             try:
                 while(True):                
-                    print("[S] Esperando conexão com cliente")
+                    print("[S] Esperando conexão com algum cliente")
                     conn, addr = s_listener.accept()
                     print(f"[S] Conexão estabelecida com {addr}")
                     cliente = Cliente(conn, addr)
