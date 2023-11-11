@@ -97,6 +97,7 @@ class Cliente:
                             if usuarios.entra_usuario(usuario, senha):
                                 self.logado = True
                                 self.usuario = usuario
+                                status.entra_usuario(usuario, self.addr)
                                 envia_comando_ao_socket(ss, "[S] Usuário logado com sucesso!")
                             else:
                                 envia_comando_ao_socket(ss, "[S] Usuário e senha não encontrados.")
@@ -133,6 +134,7 @@ class Cliente:
                     elif comando[0] == 'sai':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
                         self.logado = False
+                        status.sai_usuario(self.usuario)
                         envia_comando_ao_socket(ss, f"[S] Usuário deslogado com sucesso!")
 
                     else:
@@ -195,6 +197,34 @@ class Usuarios:
                     return True
         return False
 
+class Status:
+    def __init__(self):
+        self.status_arq = 'status.txt'
+        self.status_mutex = threading.Lock()
+        with open(self.status_arq, 'a') as f:
+            pass
+    
+    def entra_usuario(self, usuario, addr):
+        self.status_mutex.acquire()
+        status = 'Disponível'
+        with open(self.status_arq, 'r') as f:
+           linhas = f.readlines()
+        with open(self.status_arq, 'a') as f:
+            f.write(f'{usuario} {addr} {status}\n')
+        self.status_mutex.release()
+
+    def sai_usuario(self, u):
+        self.status_mutex.acquire()
+        with open(self.status_arq, 'r') as f:
+            linhas = f.readlines()
+        with open(self.status_arq, 'w') as f:
+            for l in linhas:
+                linha = l.split(' ')
+                usuario = linha[0]
+                if usuario != u:
+                    f.write(l)
+        self.status_mutex.release()
+
 def cria_socket_ouvinte() -> Tuple[socket.socket, str]:
     s_ouvinte = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s_ouvinte.bind(('', 0))
@@ -207,6 +237,7 @@ def envia_comando_ao_socket(s: socket.socket, msg: str):
     s.sendall(bytearray(msg.encode()))
 
 usuarios = Usuarios()
+status =  Status()
     
 def main():
     if len(sys.argv) == 3:
