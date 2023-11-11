@@ -43,13 +43,26 @@ class Cliente:
                     if comando == 'teste':
                         resposta = envia_comando_ao_servidor(out, ss)                      
                         if not resposta:
-                            print(f"[C] Servidor não respostaondeu ao comando {comando}")
-                        else: print(f"[C] Comando: {comando}; Retornou: {resposta}")
+                            print(f"[C] Servidor não respondeu ao comando {comando}")
+                        else: print(resposta)
+
+                    elif comando == 'novo':
+                        resposta = envia_comando_ao_servidor(out, ss)                      
+                        if not resposta:
+                            print(f"[C] Servidor não respondeu ao comando {comando}")
+                        else: print(resposta)
+
+                    elif comando == 'entra':
+                        resposta = envia_comando_ao_servidor(out, ss)                      
+                        if not resposta:
+                            print(f"[C] Servidor não respondeu ao comando {comando}")
+                        else: print(resposta)
+
                     else:
                         resposta = envia_comando_ao_servidor(out, ss)                      
                         if not resposta:
-                            print(f"[C] Servidor não respostaondeu ao comando {comando}")
-                        else: print(f"[C] {resposta}")
+                            print(f"[C] Servidor não respondeu ao comando {comando}")
+                        else: print(resposta)
                 except:
                     print("[C] Terminando o programa")
                     break

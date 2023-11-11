@@ -3,6 +3,8 @@ import socket
 import threading
 from typing import Tuple
 
+
+
 class ServidorTCP:
     def __init__(self, host, port):
         self.host = host
@@ -28,6 +30,8 @@ class ServidorTCP:
 
 class Cliente:
     def __init__(self, socket: socket.socket, addr):
+        self.logado = False
+
         self.s = socket
         self.addr = addr
 
@@ -63,12 +67,80 @@ class Cliente:
                 if not comando:
                     print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
                     break
-                elif comando[0] == 'teste':
-                    print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
-                    envia_comando_ao_socket(ss, "Cliente enviou: teste")
+
+                elif not self.logado:
+
+                    if comando[0] == 'teste':
+                        print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
+                        envia_comando_ao_socket(ss, f"[S] Cliente <não logado> enviou: {comando}")
+                    
+                    elif comando[0] == 'novo':
+                        print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
+                        if len(comando) == 3:
+                            usuario = comando[1]
+                            senha = comando[2]
+
+                            if usuarios.novo_usuario(usuario, senha):
+                                envia_comando_ao_socket(ss, "[S] Usuário criado com sucesso!")
+                            else:
+                                envia_comando_ao_socket(ss, "[S] Nome de usuário já existente.")
+
+                        elif len(comando) == 2 or len(comando) == 1:
+                            print(f"[S] Cliente {self.addr} mandou um comando com número inválido de argumentos: {comando}")
+                            envia_comando_ao_socket(ss, f"[S] Número inválido de argumentos. Use: novo <usuario> <senha>")
+
+                    elif comando[0] == 'entra':
+                        print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
+                        if len(comando) == 3:
+                            envia_comando_ao_socket(ss, f"[S] Cliente enviou: {comando}")
+                        elif len(comando) == 2 or len(comando) == 1:
+                            print(f"[S] Cliente {self.addr} mandou um comando com número inválido de argumentos: {comando}")
+                            envia_comando_ao_socket(ss, f"[S] Número inválido de argumentos. Use: entra <usuario> <senha>")
+
+                    else:
+                        print(f"[S] Cliente {self.addr} mandou um comando desconhecido: {comando[0]}")
+                        envia_comando_ao_socket(ss, "[S] Comando não reconhecido para cliente não logado")
+
+                elif self.logado:
+                    if comando[0] == 'teste':
+                        print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
+                        envia_comando_ao_socket(ss, f"[S] Cliente <logado> enviou: {comando}")
+
+                    else:
+                        print(f"[S] Cliente {self.addr} mandou um comando desconhecido: {comando[0]}")
+                        envia_comando_ao_socket(ss, "[S] Comando não reconhecido para cliente logado")
+
                 else:
                     print(f"[S] Cliente {self.addr} mandou um comando desconhecido: {comando[0]}")
-                    envia_comando_ao_socket(ss, "Comando não reconhecido")
+                    envia_comando_ao_socket(ss, "[S] Comando não reconhecido")
+
+class Usuarios:
+    def __init__(self):
+        self.usuarios_arq = 'usuarios.txt'
+        self.usuarios_mutex = threading.Lock()
+        with open(self.usuarios_arq, 'a') as f:
+            pass
+
+    def novo_usuario(self, usuario, senha):
+        self.usuarios_mutex.acquire()
+        usuario_existente = False
+
+        with open(self.usuarios_arq, 'r') as f:
+           linhas = f.readlines()
+           for l in linhas:
+               nome = l.split(', ')[0]
+               if nome == usuario:
+                   usuario_existente = True
+                   break
+
+        if usuario_existente:
+            self.usuarios_mutex.release()
+            return False
+        else:
+            with open(self.usuarios_arq, 'a') as f:
+                f.write(f'{usuario}, {senha}\n')
+            self.usuarios_mutex.release()
+            return True
 
 def cria_socket_ouvinte() -> Tuple[socket.socket, str]:
     s_ouvinte = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -80,7 +152,9 @@ def cria_socket_ouvinte() -> Tuple[socket.socket, str]:
 
 def envia_comando_ao_socket(s: socket.socket, msg: str):
     s.sendall(bytearray(msg.encode()))
-        
+
+usuarios = Usuarios()
+    
 def main():
     if len(sys.argv) == 3:
         porta_tcp = int(sys.argv[1])
