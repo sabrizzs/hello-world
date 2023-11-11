@@ -5,6 +5,7 @@ import threading
 '''
 TO-DO:
 - servidor udp
+- lista de status com uma linha vazia no final
 '''
 
 class Cliente:
@@ -35,7 +36,6 @@ class Cliente:
                         out = input(self.prompt)
                 except:        
                     ss.close()
-                    backsocket.close()
                     break
 
                 comando = out.split()[0]
@@ -59,6 +59,12 @@ class Cliente:
                         else: print(resposta)
 
                     elif comando == 'entra':
+                        resposta = envia_comando_ao_servidor(out, ss)                      
+                        if not resposta:
+                            print(f"[C] Servidor não respondeu ao comando {comando}")
+                        else: print(resposta)
+
+                    elif comando == 'l':
                         resposta = envia_comando_ao_servidor(out, ss)                      
                         if not resposta:
                             print(f"[C] Servidor não respondeu ao comando {comando}")

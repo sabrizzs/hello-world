@@ -67,6 +67,11 @@ class Cliente:
                     print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
                     break
 
+                elif comando[0] == 'l':
+                    print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
+                    lista = status.lista_status()
+                    envia_comando_ao_socket(ss, lista)
+
                 elif not self.logado:
 
                     if comando[0] == 'teste':
@@ -224,6 +229,22 @@ class Status:
                 if usuario != u:
                     f.write(l)
         self.status_mutex.release()
+
+    def lista_status(self):
+        self.status_mutex.acquire()
+        lista = ""
+        with open(self.status_arq, 'r') as f:
+            linhas = f.readlines()
+            if not linhas:
+                lista = "Lista de status vazia."
+            else:
+                for l in linhas:
+                    linha = l.split(' ')
+                    usuario = linha[0]
+                    status = linha[3]
+                    lista += f'Usuário: {usuario}, Status: {status[:-1]}\n'
+        self.status_mutex.release()
+        return lista
 
 def cria_socket_ouvinte() -> Tuple[socket.socket, str]:
     s_ouvinte = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
