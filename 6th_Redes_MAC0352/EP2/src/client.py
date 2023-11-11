@@ -46,6 +46,12 @@ class Cliente:
                             print(f"[C] Servidor não respondeu ao comando {comando}")
                         else: print(resposta)
 
+                    elif comando == 'senha':
+                        resposta = envia_comando_ao_servidor(out, ss)                      
+                        if not resposta:
+                            print(f"[C] Servidor não respondeu ao comando {comando}")
+                        else: print(resposta)
+
                     elif comando == 'novo':
                         resposta = envia_comando_ao_servidor(out, ss)                      
                         if not resposta:
@@ -53,6 +59,12 @@ class Cliente:
                         else: print(resposta)
 
                     elif comando == 'entra':
+                        resposta = envia_comando_ao_servidor(out, ss)                      
+                        if not resposta:
+                            print(f"[C] Servidor não respondeu ao comando {comando}")
+                        else: print(resposta)
+
+                    elif comando == 'sai':
                         resposta = envia_comando_ao_servidor(out, ss)                      
                         if not resposta:
                             print(f"[C] Servidor não respondeu ao comando {comando}")
