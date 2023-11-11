@@ -1,4 +1,1 @@
-sabrina, 123
-s, 123
-f, 123
-sasa, 123
+sabrina 123

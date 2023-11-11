@@ -3,8 +3,6 @@ import socket
 import threading
 from typing import Tuple
 
-
-
 class ServidorTCP:
     def __init__(self, host, port):
         self.host = host
@@ -31,6 +29,7 @@ class ServidorTCP:
 class Cliente:
     def __init__(self, socket: socket.socket, addr):
         self.logado = False
+        self.usuario = None
 
         self.s = socket
         self.addr = addr
@@ -92,7 +91,16 @@ class Cliente:
                     elif comando[0] == 'entra':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
                         if len(comando) == 3:
-                            envia_comando_ao_socket(ss, f"[S] Cliente enviou: {comando}")
+                            usuario = comando[1]
+                            senha = comando[2]
+
+                            if usuarios.entra_usuario(usuario, senha):
+                                self.logado = True
+                                self.user = usuario
+                                envia_comando_ao_socket(ss, "[S] Usuário logado com sucesso!")
+                            else:
+                                envia_comando_ao_socket(ss, "[S] Usuário e senha não encontrados.")
+
                         elif len(comando) == 2 or len(comando) == 1:
                             print(f"[S] Cliente {self.addr} mandou um comando com número inválido de argumentos: {comando}")
                             envia_comando_ao_socket(ss, f"[S] Número inválido de argumentos. Use: entra <usuario> <senha>")
@@ -102,6 +110,7 @@ class Cliente:
                         envia_comando_ao_socket(ss, "[S] Comando não reconhecido para cliente não logado")
 
                 elif self.logado:
+
                     if comando[0] == 'teste':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
                         envia_comando_ao_socket(ss, f"[S] Cliente <logado> enviou: {comando}")
@@ -128,7 +137,7 @@ class Usuarios:
         with open(self.usuarios_arq, 'r') as f:
            linhas = f.readlines()
            for l in linhas:
-               nome = l.split(', ')[0]
+               nome = l.split(' ')[0]
                if nome == usuario:
                    usuario_existente = True
                    break
@@ -138,9 +147,20 @@ class Usuarios:
             return False
         else:
             with open(self.usuarios_arq, 'a') as f:
-                f.write(f'{usuario}, {senha}\n')
+                f.write(f'{usuario} {senha}\n')
             self.usuarios_mutex.release()
             return True
+
+    def entra_usuario(self, u, s):
+        with open(self.usuarios_arq, 'r') as f:
+            linhas = f.readlines()
+            for l in linhas:
+                l = l.split(' ')
+                usuario = l[0]
+                senha = l[1]
+                if usuario == u and senha[:-1] == s:
+                    return True
+        return False
 
 def cria_socket_ouvinte() -> Tuple[socket.socket, str]:
     s_ouvinte = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
