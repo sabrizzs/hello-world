@@ -1,12 +1,10 @@
 import socket
-import ssl
 import sys
 import threading
 
 '''
 TO-DO:
-- nao usar ssl
-- backsocket
+- 
 '''
 
 class Cliente:
@@ -19,18 +17,13 @@ class Cliente:
         print("[C] Estabelecendo conexão...")
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((self.IP, self.PORT))
-            SSLPORT = int(s.recv(5).decode('utf-8'))
 
-            backsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            backsocket.connect((IP, SSLPORT))
+            ss_port = int(s.recv(5).decode('utf-8'))
+            print(f"[T] port cliente: {ss_port}")
 
-            context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-            context.check_hostname = False
-            context.verify_mode = ssl.CERT_NONE
-
-            ss = context.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM), server_hostname = IP)
-            ss.connect((IP, SSLPORT))
-
+            ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            ss.connect((IP, ss_port))
+            
             envia_comando_ao_socket('ok', ss)
 
             print("[C] Cliente conectado")
@@ -48,12 +41,12 @@ class Cliente:
                 comando = out.split()[0]
                 try:
                     if comando == 'teste':
-                        resposta = envia_comando_ao_servidor(out, ss, s, backsocket, ss)                      
+                        resposta = envia_comando_ao_servidor(out, ss)                      
                         if not resposta:
                             print(f"[C] Servidor não respostaondeu ao comando {comando}")
                         else: print(f"[C] Comando: {comando}; Retornou: {resposta}")
                     else:
-                        resposta = envia_comando_ao_servidor(out, ss, s, backsocket, ss)                      
+                        resposta = envia_comando_ao_servidor(out, ss)                      
                         if not resposta:
                             print(f"[C] Servidor não respostaondeu ao comando {comando}")
                         else: print(f"[C] {resposta}")
@@ -68,6 +61,7 @@ def envia_comando_ao_socket(comando: str, s: socket.socket):
 def recebe_resposta_do_socket(s: socket.socket):
     return s.recv(1024).decode('utf-8')
 
+# coordena e sincroniza a manipulação de sockets em um contexto multithread 
 def atualiza_sockets():
     global reconectado
 
@@ -85,21 +79,21 @@ def atualiza_sockets():
     mutex_reconectado.release()
 
     if r == 1:
-        return 1, s_g[0], backsocket_g[0], ss_g[0]
+        return 1, ss_g[0]
     else:
-        return 0, None, None, None
+        return 0, None
 
-def envia_comando_ao_servidor(comando: str, used_socket: socket.socket, s: socket.socket, backsocket: socket.socket, ss: ssl.SSLSocket):
-    envia_comando_ao_socket(comando, used_socket)
-    resposta = recebe_resposta_do_socket(used_socket)
+def envia_comando_ao_servidor(comando: str, ss: socket.socket):
+    envia_comando_ao_socket(comando, ss)
+    resposta = recebe_resposta_do_socket(ss)
 
     while resposta == '':
         #Conexão fechada
-        sucesso, s, backsocket, ss = atualiza_sockets()
+        sucesso, ss = atualiza_sockets()
         if not sucesso:
             break
-        envia_comando_ao_socket(comando, s)
-        resposta = recebe_resposta_do_socket(s)
+        envia_comando_ao_socket(comando, ss)
+        resposta = recebe_resposta_do_socket(ss)
 
     return resposta
 

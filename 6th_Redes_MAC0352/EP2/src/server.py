@@ -1,6 +1,5 @@
 import sys
 import socket
-import ssl
 import threading
 from typing import Tuple
 
@@ -22,7 +21,7 @@ class ServidorTCP:
                     conn, addr = s_ouvinte.accept()
                     print(f"[S] Conexão estabelecida com {addr}")
                     cliente = Cliente(conn, addr)
-                    cliente.interpretador()
+                    cliente.threads()
             except:
                 print("[S] Servidor finalizado")
                 exit(0)
@@ -34,10 +33,9 @@ class Cliente:
 
         s_ouvinte, port = cria_socket_ouvinte()
         envia_comando_ao_socket(self.s, port)
+        print(f"[T] port servidor: {port}")
 
-        self.s_sender, addr_background = s_ouvinte.accept()
-        self.ss, addr_SSL = cria_socket_SSL(s_ouvinte)
-
+        self.ss, addr_background = s_ouvinte.accept()
         resposta = self.ss.recv(1024).decode('utf-8')
         
         print(f"[S] Recebeu resposta do cliente: {resposta}")
@@ -46,24 +44,24 @@ class Cliente:
         if resposta == "ok":
             print(f"[S] Cliente {addr} conectou")
 
-    def interpretador(self):
+    def threads(self):
         '''  O uso de threads garante que o servidor seja capaz de 
              atender a várias conexões de clientes simultaneamente '''
-        ssl_thread = threading.Thread(target=self.interpretador_ssl, args=())
-        ssl_thread.start()
+        thread = threading.Thread(target=self.interpretador, args=())
+        thread.start()
 
-    def interpretador_ssl(self):
+    def interpretador(self):
         with self.ss as ss:
             while True:
                 comando = ''
                 try:
                     comando = ss.recv(1024).decode('utf-8')
                 except:
-                    print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando SSL.')
+                    print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
                     break
                 comando = comando.split()
                 if not comando:
-                    print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando SSL.')
+                    print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
                     break
                 elif comando[0] == 'teste':
                     print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
@@ -79,12 +77,6 @@ def cria_socket_ouvinte() -> Tuple[socket.socket, str]:
     _, port1 = s_ouvinte.getsockname()
     str_port1 = '%05d' % port1
     return s_ouvinte, str_port1
-
-def cria_socket_SSL(s_ouvinte: socket.socket):
-    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-    context.load_cert_chain('server.pem', 'server.key', password = 'servidor')
-    ssock = context.wrap_socket(s_ouvinte, server_side = True)
-    return ssock.accept()
 
 def envia_comando_ao_socket(s: socket.socket, msg: str):
     s.sendall(bytearray(msg.encode()))
