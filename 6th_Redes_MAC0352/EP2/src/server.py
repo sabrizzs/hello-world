@@ -142,6 +142,29 @@ class Cliente:
                         status.sai_usuario(self.usuario)
                         envia_comando_ao_socket(ss, f"[S] Usuário deslogado com sucesso!")
 
+                    elif comando[0] == 'inicia':
+                        print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
+                        
+                        envia_comando_ao_socket(ss, f"[S] Usuário mandou <inicia>.")
+
+                    elif comando[0] == 'desafio':
+                        print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
+                        if len(comando) == 2:
+                            oponente = comando[2]
+
+                            if oponente == self.usuario:
+                                envia_comando_ao_socket(ss, f"[S] Você não pode se desafiar! Escolha um oponente válido. Use o comando <l> para encontrar os usuários disponíveis.")
+
+                            elif status.verifica_status(oponente) == "Jogando":
+                                envia_comando_ao_socket(ss, f"[S] O usuário {oponente} está em uma partida nesse momento!")
+                                
+                            elif status.verifica_status(oponente) == "Disponível":
+                                envia_comando_ao_socket(ss, "[S] Desafio.")
+
+                        elif len(comando) == 1:
+                            print(f"[S] Cliente {self.addr} mandou um comando com número inválido de argumentos: {comando}")
+                            envia_comando_ao_socket(ss, f"[S] Número inválido de argumentos. Use: desafio <oponente>")
+
                     else:
                         print(f"[S] Cliente {self.addr} mandou um comando desconhecido: {comando[0]}")
                         envia_comando_ao_socket(ss, "[S] Comando não reconhecido para cliente logado")
@@ -157,12 +180,12 @@ class Usuarios:
         with open(self.usuarios_arq, 'a') as f:
             pass
 
-    def novo_usuario(self, usuario, senha):
+    def novo_usuario(selfario, senha):
         self.usuarios_mutex.acquire()
         with open(self.usuarios_arq, 'r') as f:
            linhas = f.readlines()
            for l in linhas:
-               nome = l.split(' ')[0]
+               nome = l.split(' ')[0], usu
                if nome == usuario:
                    self.usuarios_mutex.release()
                    return False
@@ -245,6 +268,19 @@ class Status:
                     lista += f'Usuário: {usuario}, Status: {status[:-1]}\n'
         self.status_mutex.release()
         return lista
+    
+    def verifica_status(self, usuario):
+        self.status_mutex.acquire()
+        with open(self.status_arq, 'r') as f:
+            linhas = f.readlines()
+            for l in linhas:
+                linha = l.split(' ')
+                if linha[0] == usuario:
+                    status = linha[3]
+                    self.status_mutex.release()
+                    return status[:-1]
+        self.status_mutex.release()
+        return f'Não encontrado.'
 
 def cria_socket_ouvinte() -> Tuple[socket.socket, str]:
     s_ouvinte = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

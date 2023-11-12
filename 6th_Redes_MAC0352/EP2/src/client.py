@@ -6,6 +6,10 @@ import threading
 TO-DO:
 - servidor udp
 - lista de status com uma linha vazia no final
+
+- lideres
+- inicia
+...
 '''
 
 class Cliente:
@@ -65,6 +69,18 @@ class Cliente:
                         else: print(resposta)
 
                     elif comando == 'l':
+                        resposta = envia_comando_ao_servidor(out, ss)                      
+                        if not resposta:
+                            print(f"[C] Servidor não respondeu ao comando {comando}")
+                        else: print(resposta)
+
+                    elif comando == 'inicia':
+                        resposta = envia_comando_ao_servidor(out, ss)                      
+                        if not resposta:
+                            print(f"[C] Servidor não respondeu ao comando {comando}")
+                        else: print(resposta)
+
+                    elif comando == 'desafio':
                         resposta = envia_comando_ao_servidor(out, ss)                      
                         if not resposta:
                             print(f"[C] Servidor não respondeu ao comando {comando}")
