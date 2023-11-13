@@ -6,6 +6,10 @@ import threading
 TO-DO:
 - servidor udp
 - lista de status com uma linha vazia no final
+- out
+- atualiza sockets
+- ok
+- atualizar caixa de entrada quando usuario sai
 
 - lideres
 - inicia
@@ -29,15 +33,23 @@ class Cliente:
             ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             ss.connect((IP, ss_port))
             
-            envia_comando_ao_socket('ok', ss)
+            envia_comando_ao_servidor('ok', ss)
 
             print("[C] Cliente conectado")
 
+            backsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            #backsocket.connect((IP, ss_port))
+            
+            servidor_ouvinte_thread = threading.Thread(target=self.servidor_ouvinte, args=(backsocket, s))
+            servidor_ouvinte_thread.start()
+
             while True:
+                
                 out = ''
-                try:
+                try:                   
                     while not out:
                         out = input(self.prompt)
+  
                 except:        
                     ss.close()
                     break
@@ -99,7 +111,21 @@ class Cliente:
                         else: print(resposta)
                 except:
                     print("[C] Terminando o programa")
+                    envia_comando_ao_servidor("exit", ss) 
                     break
+
+    def servidor_ouvinte(self, backsocket: socket.socket, s: socket.socket):
+        while True:
+            resposta = "0"
+            try:
+                while resposta == "0":
+                    resposta = envia_comando_ao_servidor("caixadeentrada", s)
+                if resposta != "0":
+                    print(resposta, end='')
+                    resposta = "0"
+            except:        
+                s.close()
+                break
 
 def envia_comando_ao_socket(comando: str, s: socket.socket):
     comando = bytearray(comando.encode())

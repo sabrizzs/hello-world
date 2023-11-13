@@ -1,7 +1,7 @@
 import sys
 import socket
 import threading
-from typing import Tuple
+from typing import Tuple, List
 
 class ServidorTCP:
     def __init__(self, host, port):
@@ -21,6 +21,7 @@ class ServidorTCP:
                     conn, addr = s_ouvinte.accept()
                     print(f"[S] Conexão estabelecida com {addr}")
                     cliente = Cliente(conn, addr)
+                    clientes.append(cliente)
                     cliente.threads()
             except:
                 print("[S] Servidor finalizado")
@@ -31,6 +32,10 @@ class Cliente:
         self.logado = False
         self.usuario = None
 
+        self.caixa_de_entrada = None
+        self.desafiado = False
+        self.desafiando = False
+
         self.s = socket
         self.addr = addr
 
@@ -40,6 +45,7 @@ class Cliente:
 
         self.ss, addr_background = s_ouvinte.accept()
         resposta = self.ss.recv(1024).decode('utf-8')
+        envia_comando_ao_socket(self.ss, "ok")
         
         print(f"[S] Recebeu resposta do cliente: {resposta}")
 
@@ -48,10 +54,41 @@ class Cliente:
             print(f"[S] Cliente {addr} conectou")
 
     def threads(self):
-        '''  O uso de threads garante que o servidor seja capaz de 
-             atender a várias conexões de clientes simultaneamente '''
         thread = threading.Thread(target=self.interpretador, args=())
         thread.start()
+        caixa_de_entrada = threading.Thread(target=self.interpretador_caixa_de_entrada, args=())
+        caixa_de_entrada.start()
+
+    def interpretador_caixa_de_entrada(self):
+        with self.s as s:
+            while True:
+                comando = ''
+                try:
+                    comando = s.recv(1024).decode('utf-8')
+                except:
+                    print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
+                    self.logado = False
+                    status.sai_usuario(self.usuario)
+                    break
+
+                comando = comando.split()
+
+                if len(comando) > 0 and comando[0] == 'caixadeentrada':
+                    if self.caixa_de_entrada is not None and not self.desafiado:
+                        envia_comando_ao_socket(s, f"{self.caixa_de_entrada}")
+                        self.desafiado = True
+                    else: envia_comando_ao_socket(s, "0")
+
+    def envia_desafio(self, oponente):
+        print("[T] Encontrando oponente...")
+        for cliente in clientes:
+            if cliente.usuario == oponente:
+                print(f"[T] {self.usuario} achou oponente {oponente} na lista de clientes.")
+                if cliente.caixa_de_entrada == None:
+                    prompt = "Pac-Man> "
+                    cliente.caixa_de_entrada = f"\nDesafio: {self.usuario} te desafiou!\n{prompt}"
+                    return 1
+                else: return 0
 
     def interpretador(self):
         with self.ss as ss:
@@ -61,11 +98,28 @@ class Cliente:
                     comando = ss.recv(1024).decode('utf-8')
                 except:
                     print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
+                    self.logado = False
+                    status.sai_usuario(self.usuario)
                     break
+
                 comando = comando.split()
-                if not comando:
+
+                if not comando or comando[0] == 'exit':
                     print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
+                    self.logado = False
+                    status.sai_usuario(self.usuario)
                     break
+
+                elif comando[0] == 'caixadeentrada':
+                    if self.caixa_de_entrada != None:
+                        envia_comando_ao_socket(ss, f"[S] {self.caixa_de_entrada}")
+                    else: envia_comando_ao_socket(ss, "0")
+
+                elif comando[0] == 'exit':
+                    print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
+                    self.logado = False
+                    status.sai_usuario(self.usuario)
+                    envia_comando_ao_socket(ss, f"[S] Usuário deslogado com sucesso!")
 
                 elif comando[0] == 'l':
                     print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
@@ -150,16 +204,22 @@ class Cliente:
                     elif comando[0] == 'desafio':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
                         if len(comando) == 2:
-                            oponente = comando[2]
+                            oponente = comando[1]
 
                             if oponente == self.usuario:
                                 envia_comando_ao_socket(ss, f"[S] Você não pode se desafiar! Escolha um oponente válido. Use o comando <l> para encontrar os usuários disponíveis.")
 
                             elif status.verifica_status(oponente) == "Jogando":
-                                envia_comando_ao_socket(ss, f"[S] O usuário {oponente} está em uma partida nesse momento!")
+                                envia_comando_ao_socket(ss, f"[S] O usuário {oponente} está em uma partida neste momento!")
+
+                            elif status.verifica_status(oponente) == "Não encontrado":
+                                envia_comando_ao_socket(ss, f"[S] O usuário {oponente} não existe ou não está online.")    
                                 
                             elif status.verifica_status(oponente) == "Disponível":
-                                envia_comando_ao_socket(ss, "[S] Desafio.")
+                                if self.envia_desafio(oponente) == 1:
+                                    self.desafiando = True
+                                    envia_comando_ao_socket(ss, "[S] Desafio enviado.")
+                                else: envia_comando_ao_socket(ss, f"[S] O jogador {oponente} já está sendo desafiado.")
 
                         elif len(comando) == 1:
                             print(f"[S] Cliente {self.addr} mandou um comando com número inválido de argumentos: {comando}")
@@ -180,12 +240,12 @@ class Usuarios:
         with open(self.usuarios_arq, 'a') as f:
             pass
 
-    def novo_usuario(selfario, senha):
+    def novo_usuario(self, usuario, senha):
         self.usuarios_mutex.acquire()
         with open(self.usuarios_arq, 'r') as f:
            linhas = f.readlines()
            for l in linhas:
-               nome = l.split(' ')[0], usu
+               nome = l.split(' ')[0]
                if nome == usuario:
                    self.usuarios_mutex.release()
                    return False
@@ -280,7 +340,7 @@ class Status:
                     self.status_mutex.release()
                     return status[:-1]
         self.status_mutex.release()
-        return f'Não encontrado.'
+        return f'Não encontrado'
 
 def cria_socket_ouvinte() -> Tuple[socket.socket, str]:
     s_ouvinte = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -295,6 +355,7 @@ def envia_comando_ao_socket(s: socket.socket, msg: str):
 
 usuarios = Usuarios()
 status =  Status()
+clientes = list()
     
 def main():
     if len(sys.argv) == 3:
