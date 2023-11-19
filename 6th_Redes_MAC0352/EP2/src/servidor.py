@@ -3,6 +3,10 @@ import socket
 import threading
 from typing import Tuple, List
 
+'''
+TO-DO
+- encerrar desafiante quando o jogo dar gameover
+'''
 
 class ServidorTCP:
     def __init__(self, host, port):
@@ -128,6 +132,11 @@ class Cliente:
                     lista = status.lista_status()
                     envia_comando_ao_socket(ss, lista)
 
+                elif comando[0] == 'lideres':
+                    print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
+                    lideres = classificacao.lista_classificacao()
+                    envia_comando_ao_socket(ss, lideres)
+
                 elif not self.logado:
 
                     if comando[0] == 'teste':
@@ -141,6 +150,7 @@ class Cliente:
                             senha = comando[2]
 
                             if usuarios.novo_usuario(usuario, senha):
+                                classificacao.adiciona_usuario(usuario)
                                 envia_comando_ao_socket(ss, "[S] Usuário criado com sucesso!")
                             else:
                                 envia_comando_ao_socket(ss, "[S] Nome de usuário já existente.")
@@ -166,7 +176,7 @@ class Cliente:
                         elif len(comando) == 2 or len(comando) == 1:
                             print(f"[S] Cliente {self.addr} mandou um comando com número inválido de argumentos: {comando}")
                             envia_comando_ao_socket(ss, f"[S] Número inválido de argumentos. Use: entra <usuario> <senha>")
-
+                    
                     else:
                         print(f"[S] Cliente {self.addr} mandou um comando desconhecido: {comando[0]}")
                         envia_comando_ao_socket(ss, "[S] Comando não reconhecido para cliente não logado")
@@ -365,7 +375,35 @@ class Status:
         with open(self.status_arq, 'w') as f:
             pass
         self.status_mutex.release()
-        
+
+class Classificacao:
+    def __init__(self):
+        self.classificacao_arq = 'classificacao.txt'
+        self.classificacao_mutex = threading.Lock()
+        with open(self.classificacao_arq, 'a') as f:
+            pass
+
+    def adiciona_usuario(self, usuario):
+        self.classificacao_mutex.acquire()
+        with open(self.classificacao_arq, 'a') as f:
+            f.write(f'{usuario} 00000\n')
+        self.classificacao_mutex.release()
+
+    def lista_classificacao(self):
+        self.classificacao_mutex.acquire()
+        lista = ""
+        with open(self.classificacao_arq, 'r') as f:
+            linhas = f.readlines()
+            if not linhas:
+                lista = "Lista de classificação vazia."
+            else:
+                linhas_ordenadas = sorted(linhas, key=lambda x: int(x.split()[1]), reverse=True)
+                for l in linhas_ordenadas:
+                    usuario, classificacao = l.split()
+                    lista += f'Usuário: {usuario}, Pontuação: {classificacao[:-1]}\n'
+        self.classificacao_mutex.release()
+        return lista
+
 def cria_socket_ouvinte() -> Tuple[socket.socket, str]:
     s_ouvinte = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s_ouvinte.bind(('', 0))
@@ -380,6 +418,7 @@ def envia_comando_ao_socket(s: socket.socket, msg: str):
 usuarios = Usuarios()
 status =  Status()
 clientes = list()
+classificacao = Classificacao()
     
 def main():
     if len(sys.argv) == 3:

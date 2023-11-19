@@ -5,7 +5,8 @@ import time
 
 '''
 TO-DO:
-- fantasma nao come pacdot
+- cliente nao recebe desafio no meio do jogo
+- fantasma local persegue o pacman?
 
 '''
 
@@ -24,6 +25,7 @@ class PacMan:
         self.fantasma_local = self.posicao_aleatoria()
         self.fantasma_remoto = self.posicao_aleatoria()
         self.game_over = False
+        self.pacman_pontuacao = 0
 
         # atributos da conexão
         self.socket = None
@@ -67,6 +69,11 @@ class PacMan:
             y = (y - 1) % len(self.arena[0])
         elif direcao == 'd':
             y = (y + 1) % len(self.arena[0])
+        
+        if self.arena[x][y] == '.':
+            self.pacman_pontuacao += 1
+            print(f"[P] Pac-Man comeu um pacdot! Pontuação: {self.pacman_pontuacao}")
+            self.arena[x] = self.arena[x][:y] + ' ' + self.arena[x][y + 1:]
 
         if self.arena[x][y] != '*':
             self.pacman = (x, y)

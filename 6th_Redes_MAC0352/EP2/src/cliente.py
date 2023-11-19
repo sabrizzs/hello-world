@@ -11,7 +11,6 @@ TO-DO:
 - out
 - atualiza sockets
 - ok
-- atualizar caixa de entrada quando usuario sai
 
 - lideres
 - inicia
@@ -76,6 +75,12 @@ class Cliente:
                         else: print(resposta)
 
                     elif comando == 'entra':
+                        resposta = envia_comando_ao_servidor(out, ss)                      
+                        if not resposta:
+                            print(f"[C] Servidor não respondeu ao comando {comando}")
+                        else: print(resposta)
+
+                    elif comando == 'lideres':
                         resposta = envia_comando_ao_servidor(out, ss)                      
                         if not resposta:
                             print(f"[C] Servidor não respondeu ao comando {comando}")

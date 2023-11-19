@@ -1,1 +1,1 @@
-sabrina ('127.0.0.1', 56098) Jogando
+sabrina ('127.0.0.1', 43038) Disponível
