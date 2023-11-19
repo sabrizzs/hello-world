@@ -1,8 +1,10 @@
 import socket
 import sys
 import threading
+from pacman import PacMan
 
-'''
+
+''' 
 TO-DO:
 - servidor udp
 - lista de status com uma linha vazia no final
@@ -21,7 +23,7 @@ class Cliente:
         self.IP = host
         self.PORT = port
         self.prompt = "Pac-Man> "
-    
+          
     def conexao(self):
         print("[C] Estabelecendo conexão...")
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -36,11 +38,8 @@ class Cliente:
             envia_comando_ao_servidor('ok', ss)
 
             print("[C] Cliente conectado")
-
-            backsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            #backsocket.connect((IP, ss_port))
-            
-            servidor_ouvinte_thread = threading.Thread(target=self.servidor_ouvinte, args=(backsocket, s))
+ 
+            servidor_ouvinte_thread = threading.Thread(target=self.servidor_ouvinte, args=(s,))
             servidor_ouvinte_thread.start()
 
             while True:
@@ -55,6 +54,8 @@ class Cliente:
                     break
 
                 comando = out.split()[0]
+
+                #diminuir uso de ifs >:(
                 try:
                     if comando == 'teste':
                         resposta = envia_comando_ao_servidor(out, ss)                      
@@ -91,6 +92,7 @@ class Cliente:
                         if not resposta:
                             print(f"[C] Servidor não respondeu ao comando {comando}")
                         else: print(resposta)
+                        self.inicia_jogo()
 
                     elif comando == 'desafio':
                         resposta = envia_comando_ao_servidor(out, ss)                      
@@ -114,7 +116,12 @@ class Cliente:
                     envia_comando_ao_servidor("exit", ss) 
                     break
 
-    def servidor_ouvinte(self, backsocket: socket.socket, s: socket.socket):
+    def inicia_jogo(self):
+        jogo = PacMan()
+        while not jogo.checa_game_over():
+            jogo.turno()
+
+    def servidor_ouvinte(self, s: socket.socket):
         while True:
             resposta = "0"
             try:
@@ -161,7 +168,6 @@ def envia_comando_ao_servidor(comando: str, ss: socket.socket):
     resposta = recebe_resposta_do_socket(ss)
 
     while resposta == '':
-        #Conexão fechada
         sucesso, ss = atualiza_sockets()
         if not sucesso:
             break

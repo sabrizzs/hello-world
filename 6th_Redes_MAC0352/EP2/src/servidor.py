@@ -3,6 +3,7 @@ import socket
 import threading
 from typing import Tuple, List
 
+
 class ServidorTCP:
     def __init__(self, host, port):
         self.host = host
@@ -25,6 +26,7 @@ class ServidorTCP:
                     cliente.threads()
             except:
                 print("[S] Servidor finalizado")
+                status.reseta_status()
                 exit(0)
 
 class Cliente:
@@ -198,8 +200,8 @@ class Cliente:
 
                     elif comando[0] == 'inicia':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
-                        
-                        envia_comando_ao_socket(ss, f"[S] Usuário mandou <inicia>.")
+                        status.altera_status(self.usuario, self.addr, 'Jogando')
+                        envia_comando_ao_socket(ss, f"[S] Jogo iniciado.")
 
                     elif comando[0] == 'desafio':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
@@ -209,13 +211,13 @@ class Cliente:
                             if oponente == self.usuario:
                                 envia_comando_ao_socket(ss, f"[S] Você não pode se desafiar! Escolha um oponente válido. Use o comando <l> para encontrar os usuários disponíveis.")
 
-                            elif status.verifica_status(oponente) == "Jogando":
-                                envia_comando_ao_socket(ss, f"[S] O usuário {oponente} está em uma partida neste momento!")
+                            elif status.verifica_status(oponente) == "Disponível":
+                                envia_comando_ao_socket(ss, f"[S] O usuário {oponente} não está em uma partida neste momento!")
 
                             elif status.verifica_status(oponente) == "Não encontrado":
-                                envia_comando_ao_socket(ss, f"[S] O usuário {oponente} não existe ou não está online.")    
+                                envia_comando_ao_socket(ss, f"[S] O usuário {oponente} não existe ou não está em uma partida.")    
                                 
-                            elif status.verifica_status(oponente) == "Disponível":
+                            elif status.verifica_status(oponente) == "Jogando":
                                 if self.envia_desafio(oponente) == 1:
                                     self.desafiando = True
                                     envia_comando_ao_socket(ss, "[S] Desafio enviado.")
@@ -342,6 +344,28 @@ class Status:
         self.status_mutex.release()
         return f'Não encontrado'
 
+    def altera_status(self, usuario, addr, novo_status):
+        alterou = False
+        self.status_mutex.acquire()
+        with open(self.status_arq, 'r') as f:
+            linhas = f.readlines()
+        with open(self.status_arq, 'w') as f:
+            for l in linhas:
+                linha = l.split(' ')
+                if linha[0] == usuario:
+                    f.write(f'{usuario} {addr} {novo_status}\n')
+                    alterou = True
+                else:
+                    f.write(l)
+        self.status_mutex.release()
+        return alterou
+
+    def reseta_status(self):
+        self.status_mutex.acquire()
+        with open(self.status_arq, 'w') as f:
+            pass
+        self.status_mutex.release()
+        
 def cria_socket_ouvinte() -> Tuple[socket.socket, str]:
     s_ouvinte = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s_ouvinte.bind(('', 0))
