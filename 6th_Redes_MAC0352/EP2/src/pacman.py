@@ -30,7 +30,7 @@ class PacMan:
         # atributos da conexão
         self.socket = None
         self.socket_ouvinte = None
-        self.port = None
+        self.porta = None
         self.addr = None
         print("[P] PacMan iniciado!")
 
@@ -121,9 +121,15 @@ class PacMan:
              
     # métodos da conexão
 
-    def conexao(self):
-        self.socket_ouvinte, self.port = cria_socket_ouvinte()
+    def conexao_desafiado(self):
+        self.socket_ouvinte, self.porta = cria_socket_ouvinte()
         self.socket_ouvinte.listen()
+
+        mensagem = f"jogo {porta}"
+
+        envia_comando_ao_servidor(mensagem)
+
+
 
 def cria_socket_ouvinte() -> Tuple[socket.socket, str]:
     s_ouvinte = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -132,5 +138,42 @@ def cria_socket_ouvinte() -> Tuple[socket.socket, str]:
     _, port1 = s_ouvinte.getsockname()
     str_port1 = '%05d' % port1
     return s_ouvinte, str_port1
+
+def atualiza_sockets():
+    global reconectado
+
+    mutex_reconectado.acquire()
+    r = reconectado
+    mutex_reconectado.release()
+    while r == 0:
+        time.sleep(1)
+        mutex_reconectado.acquire()
+        r = reconectado
+        mutex_reconectado.release()
+
+    mutex_reconectado.acquire()
+    reconectado = 0
+    mutex_reconectado.release()
+
+    if r == 1:
+        return 1, ss_g[0]
+    else:
+        return 0, None
+
+def envia_comando_ao_servidor(comando: str, ss: socket.socket):
+    envia_comando_ao_socket(comando, ss)
+    resposta = recebe_resposta_do_socket(ss)
+
+    while resposta == '':
+        sucesso, ss = atualiza_sockets()
+        if not sucesso:
+            break
+        envia_comando_ao_socket(comando, ss)
+        resposta = recebe_resposta_do_socket(ss)
+
+    return resposta
+
+
+
 
 

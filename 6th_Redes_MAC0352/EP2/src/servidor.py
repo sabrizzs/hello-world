@@ -41,6 +41,7 @@ class Cliente:
         self.caixa_de_entrada = None
         self.desafiado = False
         self.desafiando = False
+        self.desafiante_addr = None
 
         self.s = socket
         self.addr = addr
@@ -59,6 +60,14 @@ class Cliente:
         if resposta == "ok":
             print(f"[S] Cliente {addr} conectou")
 
+    def reseta_cliente(self):
+        self.logado = False
+        self.caixa_de_entrada = None
+        self.desafiado = False
+        self.desafiando = False
+        self.desafiante_addr = None
+        status.sai_usuario(self.usuario)
+
     def threads(self):
         thread = threading.Thread(target=self.interpretador, args=())
         thread.start()
@@ -73,8 +82,7 @@ class Cliente:
                     comando = s.recv(1024).decode('utf-8')
                 except:
                     print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
-                    self.logado = False
-                    status.sai_usuario(self.usuario)
+                    self.reseta_cliente()
                     break
 
                 comando = comando.split()
@@ -92,7 +100,8 @@ class Cliente:
                 print(f"[T] {self.usuario} achou oponente {oponente} na lista de clientes.")
                 if cliente.caixa_de_entrada == None:
                     prompt = "Pac-Man> "
-                    cliente.caixa_de_entrada = f"\nDesafio: {self.usuario} te desafiou!\n{prompt}"
+                    cliente.desafiante_addr = self.addr
+                    cliente.caixa_de_entrada = f"\nDesafio: {self.usuario} {cliente.desafiante_addr} te desafiou  e entrou na partida como um fantasma!\n{prompt}"    
                     return 1
                 else: return 0
 
@@ -104,16 +113,14 @@ class Cliente:
                     comando = ss.recv(1024).decode('utf-8')
                 except:
                     print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
-                    self.logado = False
-                    status.sai_usuario(self.usuario)
+                    self.reseta_cliente()
                     break
 
                 comando = comando.split()
 
                 if not comando or comando[0] == 'exit':
                     print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
-                    self.logado = False
-                    status.sai_usuario(self.usuario)
+                    self.reseta_cliente()
                     break
 
                 elif comando[0] == 'caixadeentrada':
@@ -128,8 +135,7 @@ class Cliente:
 
                 elif comando[0] == 'exit':
                     print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
-                    self.logado = False
-                    status.sai_usuario(self.usuario)
+                    self.reseta_cliente()
                     envia_comando_ao_socket(ss, f"[S] Usuário deslogado com sucesso!")
 
                 elif comando[0] == 'l':
@@ -209,17 +215,13 @@ class Cliente:
 
                     elif comando[0] == 'sai':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
-                        self.logado = False
-                        status.sai_usuario(self.usuario)
+                        self.reseta_cliente()
                         envia_comando_ao_socket(ss, f"[S] Usuário deslogado com sucesso!")
 
                     elif comando[0] == 'inicia':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
                         status.altera_status(self.usuario, self.addr, 'Jogando')
                         envia_comando_ao_socket(ss, f"[S] Jogo iniciado.")
-
-                        #pontuacao = ss.recv(1024).decode('utf-8')
-                        #print(f"[S] A pontuação do Pac-Man foi de: {pontuacao}")
 
                     elif comando[0] == 'desafio':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
@@ -244,6 +246,18 @@ class Cliente:
                         elif len(comando) == 1:
                             print(f"[S] Cliente {self.addr} mandou um comando com número inválido de argumentos: {comando}")
                             envia_comando_ao_socket(ss, f"[S] Número inválido de argumentos. Use: desafio <oponente>")
+
+                    elif comando[0] == 'desafiado':
+                        print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
+                        
+                        jogo_porta = comando[1] #recebo a porta do jogo do desafiado
+                        mensagem = f"Conexão: desafiante {jogo_porta} {self.addr[0]}" #mandar para o desafiante
+
+                        for cliente in clientes:
+                            if cliente.addr == self.desafiante_addr:
+                                cliente.caixa_de_entrada = mensagem
+
+                        envia_comando_ao_socket(ss, "ok") #manda ao desafiado que a porta foi enviada ao desafiante
 
                     else:
                         print(f"[S] Cliente {self.addr} mandou um comando desconhecido: {comando[0]}")
@@ -408,7 +422,7 @@ class Classificacao:
                 linhas_ordenadas = sorted(linhas, key=lambda x: int(x.split()[1]), reverse=True)
                 for l in linhas_ordenadas:
                     usuario, classificacao = l.split()
-                    lista += f'Usuário: {usuario}, Pontuação: {classificacao[:-1]}\n'
+                    lista += f'Usuário: {usuario}, Pontuação: {classificacao}\n'
         self.classificacao_mutex.release()
         return lista
 

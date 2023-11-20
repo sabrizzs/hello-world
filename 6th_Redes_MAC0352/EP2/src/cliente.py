@@ -2,6 +2,7 @@ import socket
 import sys
 import threading
 from pacman import PacMan
+from typing import Tuple
 
 
 ''' 
@@ -11,10 +12,8 @@ TO-DO:
 - out
 - atualiza sockets
 - ok
+- esvaziar caixa de entrada apenas quando o jogo acabar
 
-- lideres
-- inicia
-...
 '''
 
 class Cliente:
@@ -38,7 +37,7 @@ class Cliente:
 
             print("[C] Cliente conectado")
  
-            servidor_ouvinte_thread = threading.Thread(target=self.servidor_ouvinte, args=(s,))
+            servidor_ouvinte_thread = threading.Thread(target=self.servidor_ouvinte, args=(s, ss))
             servidor_ouvinte_thread.start()
 
             while True:
@@ -103,7 +102,10 @@ class Cliente:
                         resposta = envia_comando_ao_servidor(out, ss)                      
                         if not resposta:
                             print(f"[C] Servidor não respondeu ao comando {comando}")
-                        else: print(resposta)
+                        else: 
+                            print(resposta)
+
+                            # desafiante manda o desafio !!
 
                     elif comando == 'sai':
                         resposta = envia_comando_ao_servidor(out, ss)                      
@@ -130,18 +132,61 @@ class Cliente:
             jogo.turno()
         envia_comando_ao_servidor(f'pontuacao {pontuacao}', ss)
 
-    def servidor_ouvinte(self, s: socket.socket):
+    def servidor_ouvinte(self, s: socket.socket, ss: socket.socket):
         while True:
             resposta = "0"
             try:
                 while resposta == "0":
                     resposta = envia_comando_ao_servidor("caixadeentrada", s)
                 if resposta != "0":
-                    print(resposta, end='')
-                    resposta = "0"
+                    if resposta.split()[0] == "Desafio:":
+                        print(resposta, end='')
+
+                        # desafiado recebe desafio e cria a conexao do jogo !
+                        print("[T] Iniciando conexão do jogo")
+                        self.conexao_desafiado(ss)
+                        print("[T] Criou a conexão do jogo")
+
+                        resposta = "0"
+
+                    elif resposta.split()[0] == "Conexão:": 
+                        self.conexao_desafiante(ss, resposta)
             except:        
                 s.close()
                 break
+
+    def conexao_desafiado(self, ss:socket.socket):
+        jogo_socket_ouvinte, jogo_porta = cria_socket_ouvinte()
+        jogo_socket_ouvinte.listen()
+
+        mensagem = f"desafiado {jogo_porta}" #mando a porta do jogo para o servidor
+
+        resposta = envia_comando_ao_servidor(mensagem, ss)
+
+        if not resposta: return
+        if resposta != "ok": jogo_socket_ouvinte.close()
+        else:
+            print("[T] 5")
+            print(f"Jogo porta: {jogo_porta}")
+            jogo_socket, jogo_addr = jogo_socket_ouvinte.accept() #esta esperando uma resposta
+            print("[T] Jogo deve iniciar aqui: conexão desafiado.")
+            jogo_socket_ouvinte.close()
+
+            with jogo_socket:
+                pass
+            
+
+    def conexao_desafiante(self, ss:socket.socket, mensagem):
+        print("[T] Na função conexao_desafiante")
+        print(mensagem)
+        jogo_porta = int(mensagem.split()[2])
+        jogo_ip = mensagem.split()[3]
+        print(f"Jogo porta: {jogo_porta} , Jogo ip: {jogo_ip}")
+
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as jogo_socket:
+            jogo_socket.connect((jogo_ip, jogo_porta))
+
+            # resposta = envia_comando_ao_servidor("ok", ss) envia resultado do jogo ao servidor
 
 def envia_comando_ao_socket(comando: str, s: socket.socket):
     comando = bytearray(comando.encode())
@@ -184,6 +229,14 @@ def envia_comando_ao_servidor(comando: str, ss: socket.socket):
         resposta = recebe_resposta_do_socket(ss)
 
     return resposta
+
+def cria_socket_ouvinte() -> Tuple[socket.socket, str]:
+    s_ouvinte = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s_ouvinte.bind(('', 0))
+    s_ouvinte.listen(5)
+    _, port1 = s_ouvinte.getsockname()
+    str_port1 = '%05d' % port1
+    return s_ouvinte, str_port1
 
 def main():
     global IP
