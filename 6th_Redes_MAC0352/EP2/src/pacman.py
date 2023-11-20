@@ -104,7 +104,7 @@ class PacMan:
             self.game_over = True
 
     def checa_game_over(self):
-        return self.game_over
+        return self.game_over, self.pacman_pontuacao
 
     def turno(self):
         self.mostra_arena()

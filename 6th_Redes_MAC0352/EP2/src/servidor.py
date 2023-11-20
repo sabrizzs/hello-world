@@ -121,6 +121,11 @@ class Cliente:
                         envia_comando_ao_socket(ss, f"[S] {self.caixa_de_entrada}")
                     else: envia_comando_ao_socket(ss, "0")
 
+                elif comando[0] == 'pontuacao':
+                    print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
+                    envia_comando_ao_socket(ss, "ok")
+                    classificacao.atualiza_pontuacao(self.usuario, comando[1])
+
                 elif comando[0] == 'exit':
                     print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
                     self.logado = False
@@ -212,6 +217,9 @@ class Cliente:
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
                         status.altera_status(self.usuario, self.addr, 'Jogando')
                         envia_comando_ao_socket(ss, f"[S] Jogo iniciado.")
+
+                        #pontuacao = ss.recv(1024).decode('utf-8')
+                        #print(f"[S] A pontuação do Pac-Man foi de: {pontuacao}")
 
                     elif comando[0] == 'desafio':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
@@ -386,7 +394,7 @@ class Classificacao:
     def adiciona_usuario(self, usuario):
         self.classificacao_mutex.acquire()
         with open(self.classificacao_arq, 'a') as f:
-            f.write(f'{usuario} 00000\n')
+            f.write(f'{usuario} 0\n')
         self.classificacao_mutex.release()
 
     def lista_classificacao(self):
@@ -403,6 +411,23 @@ class Classificacao:
                     lista += f'Usuário: {usuario}, Pontuação: {classificacao[:-1]}\n'
         self.classificacao_mutex.release()
         return lista
+
+    def atualiza_pontuacao(self, usuario, pontos):
+        self.classificacao_mutex.acquire()
+        linhas = []
+        with open(self.classificacao_arq, 'r') as f:
+            linhas = f.readlines()
+        for i, linha in enumerate(linhas):
+            u, pontuacao = linha.split()
+            if u == usuario:
+                pontuacao_atual = int(pontuacao)
+                pontos_int = int(pontos)
+                nova_pontuacao = pontuacao_atual + pontos_int
+                linhas[i] = f'{usuario} {nova_pontuacao}\n'
+                break
+        with open(self.classificacao_arq, 'w') as f:
+            f.writelines(linhas)
+        self.classificacao_mutex.release()
 
 def cria_socket_ouvinte() -> Tuple[socket.socket, str]:
     s_ouvinte = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

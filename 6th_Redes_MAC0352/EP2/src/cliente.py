@@ -97,7 +97,7 @@ class Cliente:
                         if not resposta:
                             print(f"[C] Servidor não respondeu ao comando {comando}")
                         else: print(resposta)
-                        self.inicia_jogo()
+                        self.inicia_jogo(ss)
 
                     elif comando == 'desafio':
                         resposta = envia_comando_ao_servidor(out, ss)                      
@@ -121,10 +121,14 @@ class Cliente:
                     envia_comando_ao_servidor("exit", ss) 
                     break
 
-    def inicia_jogo(self):
+    def inicia_jogo(self, ss: socket.socket):
         jogo = PacMan()
-        while not jogo.checa_game_over():
+        while True:
+            game_over, pontuacao = jogo.checa_game_over()
+            if game_over:
+                break  
             jogo.turno()
+        envia_comando_ao_servidor(f'pontuacao {pontuacao}', ss)
 
     def servidor_ouvinte(self, s: socket.socket):
         while True:
