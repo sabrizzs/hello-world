@@ -296,5 +296,10 @@ slide 115
 - Hough do scikit image
 - função: hough_line()
 
+## 21 de novembro
+
+- Perimetro
+    - Número de códigos pares (linha reta) e número de códigos ímpares (linha diagonal)
+    - P = Ne + No raiz(2)
 
 
