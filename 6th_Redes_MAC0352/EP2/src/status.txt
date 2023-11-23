@@ -1,2 +1,2 @@
-sabrina ('127.0.0.1', 33054) Jogando
-bina ('127.0.0.1', 53570) Disponível
+sabrina ('127.0.0.1', 39114) Jogando
+bina ('127.0.0.1', 40580) Disponível

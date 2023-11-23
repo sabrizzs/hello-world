@@ -101,7 +101,7 @@ class Cliente:
                 if cliente.caixa_de_entrada == None:
                     prompt = "Pac-Man> "
                     cliente.desafiante_addr = self.addr
-                    cliente.caixa_de_entrada = f"\nDesafio: {self.usuario} {cliente.desafiante_addr} te desafiou  e entrou na partida como um fantasma!\n{prompt}"    
+                    cliente.caixa_de_entrada = f"\nDesafio: {self.usuario} {cliente.desafiante_addr} te desafiou  e irá entrar na partida como um fantasma!\n{prompt}"    
                     return 1
                 else: return 0
 
@@ -229,23 +229,23 @@ class Cliente:
                             oponente = comando[1]
 
                             if oponente == self.usuario:
-                                envia_comando_ao_socket(ss, f"[S] Você não pode se desafiar! Escolha um oponente válido. Use o comando <l> para encontrar os usuários disponíveis.")
+                                envia_comando_ao_socket(ss, f"[S] Erro: Você não pode se desafiar! Escolha um oponente válido. Use o comando <l> para encontrar os usuários disponíveis.")
 
                             elif status.verifica_status(oponente) == "Disponível":
-                                envia_comando_ao_socket(ss, f"[S] O usuário {oponente} não está em uma partida neste momento!")
+                                envia_comando_ao_socket(ss, f"[S] Erro: O usuário {oponente} não está em uma partida neste momento!")
 
                             elif status.verifica_status(oponente) == "Não encontrado":
-                                envia_comando_ao_socket(ss, f"[S] O usuário {oponente} não existe ou não está em uma partida.")    
+                                envia_comando_ao_socket(ss, f"[S] Erro: O usuário {oponente} não existe ou não está em uma partida.")    
                                 
                             elif status.verifica_status(oponente) == "Jogando":
                                 if self.envia_desafio(oponente) == 1:
                                     self.desafiando = True
                                     envia_comando_ao_socket(ss, "[S] Desafio enviado.")
-                                else: envia_comando_ao_socket(ss, f"[S] O jogador {oponente} já está sendo desafiado.")
+                                else: envia_comando_ao_socket(ss, f"[S] Erro: O jogador {oponente} já está sendo desafiado.")
 
                         elif len(comando) == 1:
                             print(f"[S] Cliente {self.addr} mandou um comando com número inválido de argumentos: {comando}")
-                            envia_comando_ao_socket(ss, f"[S] Número inválido de argumentos. Use: desafio <oponente>")
+                            envia_comando_ao_socket(ss, f"[S] Erro: Número inválido de argumentos. Use: desafio <oponente>")
 
                     elif comando[0] == 'desafiado':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
