@@ -17,7 +17,7 @@ TO-DO:
 - atualizar multiplayer quando jogo acabar 
 - desafio nao funciona quando o cliente reseta e o servidor nao
 - lidar com gameover antes do desafiante chegar
-
+- pontuacao nao atualiza
 
 '''
 
@@ -31,8 +31,6 @@ class Cliente:
         self.multiplayer = False
         self.jogador_remoto = False
         self.terminou_jogo = False
-
-
 
         self.jogo_ip = None
         self.jogo_porta = None
@@ -57,16 +55,13 @@ class Cliente:
             while True:
                 
                 if self.jogador_remoto:
-                    while not self.terminou_jogo:
+                    while not self.terminou_jogo: # interrompe o input dessa thread enquanto esta jogando
                         pass
-                    #interrompe o input dessa thread enquanto esta jogando
-                    #depois enviar comando ao servidor com op resultado do jogo
-                    #redefinir variaveis multiplayer e jogador remoto
-
+                    self.terminou_jogo = False
+                    
                 out = ''
                 try:                   
                     while not out:
-                        if self.jogador_remoto: print("JOgador remoto! true!")
                         out = input(self.prompt)
   
                 except:        
@@ -118,7 +113,10 @@ class Cliente:
                         if not resposta:
                             print(f"[C] Servidor não respondeu ao comando {comando}")
                         else: print(resposta)
-                        self.inicia_jogo(1)
+                        #self.inicia_jogo(1)
+
+                        pontuacao_pacman, pontuacao_fantasma_remoto = self.inicia_jogo(1)
+                        envia_comando_ao_servidor(f'pontuacao {pontuacao_pacman}', ss)
 
                     elif comando == 'desafio':
                         resposta = envia_comando_ao_servidor(out, ss)                      
@@ -204,7 +202,7 @@ class Cliente:
                     
                     primeira_rodada_jogador_2 = False
 
-                jogo.mostra_arena()
+                print(jogo.mostra_arena())
                 time.sleep(1)
 
                 # fantasma local
@@ -222,8 +220,8 @@ class Cliente:
                     
                 
                 print("[P] Fantasma local fez uma movimentação!")
-                jogo.mostra_arena()
-                if jogo.checa_colisao(): break
+                print(jogo.mostra_arena())
+                if jogo.game_over: break
                 time.sleep(1)
                 
                 # fantasma remoto
@@ -241,8 +239,8 @@ class Cliente:
 
                 
                 print("[P] Fantasma remoto fez uma movimentação!")
-                jogo.mostra_arena()
-                if jogo.checa_colisao(): break
+                print(jogo.mostra_arena())
+                if jogo.game_over: break
                 time.sleep(1)
 
                 # pacman
@@ -259,15 +257,40 @@ class Cliente:
 
                 
                 print("[P] Pacman fez uma movimentação!")
-                if jogo.checa_colisao():
-                    jogo.mostra_arena()
+                jogo.mostra_arena()
+                if jogo.game_over:
+                    print(jogo.mostra_arena)
                     break
+                time.sleep(1)
                 
             else:
-                jogo.turno()
+                print(jogo.mostra_arena())
+                time.sleep(1)
 
-        pontuacao = jogo.game_over()
-                    
+                print("[P] Fantasma local fez uma movimentação!")
+                jogo.move_fantasma_local(1, -1, -1)
+                print(jogo.mostra_arena())    
+                if jogo.game_over: break   
+                time.sleep(1)
+                
+                direcao = input("Pac-Man> Digite a direção para mover o Pac-Man (w/a/s/d):\nPac-Man> ")
+                jogo.move_pacman(direcao)
+                jogo.mostra_arena()
+                if jogo.game_over:
+                    print(jogo.mostra_arena)
+                    break
+                time.sleep(1)
+
+        #pontuacao_pacman, pontuacao_fantasma_remoto = jogo.pontuacoes()
+        self.finaliza_jogo()
+        return jogo.pontuacoes()
+
+    def finaliza_jogo(self):
+        self.jogo_socket = None
+        self.multiplayer = False
+        self.jogador_remoto = False
+        self.terminou_jogo = True
+
     def servidor_ouvinte(self, s: socket.socket, ss: socket.socket):
         while True:
             resposta = "0"
@@ -312,16 +335,14 @@ class Cliente:
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as jogo_socket:
             jogo_socket.connect((jogo_ip, jogo_porta))
-            #refatorar
+
             self.jogo_ip = jogo_ip
             self.jogo_porta = jogo_porta
             self.multiplayer = True
-            self.jogo_socket = jogo_socket         
-            self.inicia_jogo(2)
+            self.jogo_socket = jogo_socket   
 
-            self.terminou_jogo = True
-            
-            # resposta = envia_comando_ao_servidor("ok", ss) envia resultado do jogo ao servidor
+            pontuacao_pacman, pontuacao_fantasma_remoto = self.inicia_jogo(2)
+            envia_comando_ao_servidor(f'pontuacao {pontuacao_fantasma_remoto}', ss)
 
 def envia_comando_ao_socket(comando: str, s: socket.socket):
     comando = bytearray(comando.encode())

@@ -7,7 +7,8 @@ import time
 TO-DO:
 - cliente nao recebe desafio no meio do jogo
 - fantasma local persegue o pacman?
-
+- mudar o game over para vitoria?
+- checa colisao no turno sozinho
 '''
 
 class PacMan:
@@ -28,6 +29,7 @@ class PacMan:
 
         self.game_over = False
         self.pacman_pontuacao = 0
+        self.fantasma_remoto_pontuacao = 0
 
         print("[P] PacMan iniciado!")
 
@@ -51,7 +53,6 @@ class PacMan:
             arena_com_personagens[x] = (
                 arena_com_personagens[x][:y] + 'H' + arena_com_personagens[x][y + 1:]
             )
-
         else:
             x, y = self.fantasma_local
             arena_com_personagens[x] = (
@@ -64,10 +65,16 @@ class PacMan:
                     arena_com_personagens[x][:y] + 'f' + arena_com_personagens[x][y + 1:]
                 )
 
+        if self.checa_colisao():
+            x, y = self.pacman
+            arena_com_personagens[x] = arena_com_personagens[x][:y] + 'X' + arena_com_personagens[x][y + 1:]
+            self.game_over = True
+
         self.arena_com_personagens = arena_com_personagens
-        for linha in arena_com_personagens:
+        '''for linha in arena_com_personagens:
             print(linha)
-        print()
+        print()'''
+        return '\n'.join(arena_com_personagens)
 
     def move_pacman(self, direcao):
         x, y = self.pacman
@@ -131,33 +138,29 @@ class PacMan:
 
     def checa_colisao(self):
         if self.pacman == self.fantasma_local:
-            x, y = self.pacman
-            self.arena[x] = self.arena[x][:y] + 'X' + self.arena[x][y + 1:]
             print("[P] Pac-Man colidiu com o fantasma local! GAME-OVER!")
             return True
         elif self.pacman == self.fantasma_remoto:
+            self.fantasma_remoto_pontuacao = 10
             x, y = self.pacman
             self.arena[x] = self.arena[x][:y] + 'X' + self.arena[x][y + 1:]
             print("[P] Pac-Man colidiu com o fantasma remoto! GAME-OVER!")
             return True
 
-    def game_over(self):
-        return self.pacman_pontuacao
+    def pontuacoes(self):
+        return self.pacman_pontuacao, self.fantasma_remoto_pontuacao
 
     def turno(self):
-        self.mostra_arena()
+        print(self.mostra_arena())
         time.sleep(1)
 
         print("[P] Fantasma local fez uma movimentação!")
         self.move_fantasma_local(1, -1, -1)
-        self.checa_colisao()
-
-        self.mostra_arena()
+        print(self.mostra_arena())       
         time.sleep(1)
         
         direcao = input("Pac-Man> Digite a direção para mover o Pac-Man (w/a/s/d):\nPac-Man> ")
         self.move_pacman(direcao)
-        self.checa_colisao()
 
 
 
