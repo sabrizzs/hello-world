@@ -5,7 +5,18 @@ from typing import Tuple, List
 
 '''
 TO-DO
-- encerrar desafiante quando o jogo dar gameover
+- servidor udp
+- arquivo log
+- servidor daemon, segundo plano invocado por &
+- heartbeat
+- latencia
+- encerra: encerramento da partida antes de terminar
+- tchau: finaliza cliente
+- servidor cair, esperar 20s
+
+- video
+- makefile
+- leiame
 '''
 
 class ServidorTCP:
@@ -67,6 +78,13 @@ class Cliente:
         self.desafiando = False
         self.desafiante_addr = None
         status.sai_usuario(self.usuario)
+
+    def reseta_jogo(self):
+        self.caixa_de_entrada = None
+        self.desafiado = False
+        self.desafiando = False
+        self.desafiante_addr = None
+        status.altera_status(self.usuario, self.addr, 'Disponível')
 
     def threads(self):
         thread = threading.Thread(target=self.interpretador, args=())
@@ -132,7 +150,8 @@ class Cliente:
                     print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
                     envia_comando_ao_socket(ss, "ok")
                     classificacao.atualiza_pontuacao(self.usuario, comando[1])
-
+                    self.reseta_jogo()
+                    
                 elif comando[0] == 'exit':
                     print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
                     self.reseta_cliente()
@@ -240,6 +259,7 @@ class Cliente:
                             elif status.verifica_status(oponente) == "Jogando":
                                 if self.envia_desafio(oponente) == 1:
                                     self.desafiando = True
+                                    status.altera_status(self.usuario, self.addr, 'Jogando')
                                     envia_comando_ao_socket(ss, "[S] Desafio enviado.")
                                 else: envia_comando_ao_socket(ss, f"[S] Erro: O jogador {oponente} já está sendo desafiado.")
 

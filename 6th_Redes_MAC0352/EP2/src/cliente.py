@@ -8,16 +8,12 @@ import time
 
 ''' 
 TO-DO:
-- servidor udp
 - lista de status com uma linha vazia no final
 - out
 - atualiza sockets
 - ok
-- esvaziar caixa de entrada apenas quando o jogo acabar
-- atualizar multiplayer quando jogo acabar 
 - desafio nao funciona quando o cliente reseta e o servidor nao
 - lidar com gameover antes do desafiante chegar
-- pontuacao nao atualiza
 
 '''
 
@@ -113,8 +109,6 @@ class Cliente:
                         if not resposta:
                             print(f"[C] Servidor não respondeu ao comando {comando}")
                         else: print(resposta)
-                        #self.inicia_jogo(1)
-
                         pontuacao_pacman, pontuacao_fantasma_remoto = self.inicia_jogo(1)
                         envia_comando_ao_servidor(f'pontuacao {pontuacao_pacman}', ss)
 
@@ -127,8 +121,6 @@ class Cliente:
                         else:
                             self.jogador_remoto = True
                             print(resposta)
-
-                            # desafiante manda o desafio !!
 
                     elif comando == 'sai':
                         resposta = envia_comando_ao_servidor(out, ss)                      
@@ -259,7 +251,7 @@ class Cliente:
                 print("[P] Pacman fez uma movimentação!")
                 jogo.mostra_arena()
                 if jogo.game_over:
-                    print(jogo.mostra_arena)
+                    print(jogo.mostra_arena())
                     break
                 time.sleep(1)
                 
@@ -277,11 +269,10 @@ class Cliente:
                 jogo.move_pacman(direcao)
                 jogo.mostra_arena()
                 if jogo.game_over:
-                    print(jogo.mostra_arena)
+                    print(jogo.mostra_arena())
                     break
                 time.sleep(1)
 
-        #pontuacao_pacman, pontuacao_fantasma_remoto = jogo.pontuacoes()
         self.finaliza_jogo()
         return jogo.pontuacoes()
 
@@ -299,7 +290,6 @@ class Cliente:
                     resposta = envia_comando_ao_servidor("caixadeentrada", s)
                 if resposta != "0":
                     if resposta.split()[0] == "Desafio:":
-
                         print(resposta, end='')
 
                         # desafiado recebe desafio e cria a conexao do jogo !
