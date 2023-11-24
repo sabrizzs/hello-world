@@ -219,6 +219,11 @@ class Cliente:
                 # fantasma remoto
                 if jogador == 2:
                     direcao = input("Pac-Man> Digite a direção para mover o fantasma remoto (w/a/s/d):\nPac-Man> ")
+                    if direcao == "encerra":
+                        envia_comando_ao_socket(direcao, s)
+                        print("[P] Partida encerrada!")
+                        self.finaliza_jogo()
+                        return jogo.pontuacoes()
                     jogo.move_fantasma_remoto(direcao)
                     envia_comando_ao_socket(direcao, s)
 
@@ -227,33 +232,47 @@ class Cliente:
                     direcao = ''
                     while not direcao:
                         direcao = recebe_resposta_do_socket(s)
-                    jogo.move_fantasma_remoto(direcao)
+                    if direcao == "encerra":
+                            print("[P] O jogador 2 encerrou a partida!")
+                            self.jogo_socket = None
+                            primeira_rodada_jogador_2 = True
+                            jogo.remove_fantasma_remoto()
+                    else: jogo.move_fantasma_remoto(direcao)
 
-                
-                print("[P] Fantasma remoto fez uma movimentação!")
-                print(jogo.mostra_arena())
-                if jogo.game_over: break
-                time.sleep(1)
-
-                # pacman
-                if jogador == 1:
-                    direcao = input("Pac-Man> Digite a direção para mover o Pac-Man (w/a/s/d):\nPac-Man> ")
-                    jogo.move_pacman(direcao)
-                    envia_comando_ao_socket(direcao, s)
-                else:
-                    print("[P] Aguardando movimentação do pacman (jogador 1)...")
-                    direcao = ''
-                    while not direcao:
-                        direcao = recebe_resposta_do_socket(s)
-                    jogo.move_pacman(direcao)
-
-                
-                print("[P] Pacman fez uma movimentação!")
-                jogo.mostra_arena()
-                if jogo.game_over:
+                if self.jogo_socket != None:
+                    print("[P] Fantasma remoto fez uma movimentação!")
                     print(jogo.mostra_arena())
-                    break
-                time.sleep(1)
+                    if jogo.game_over: break
+                    time.sleep(1)
+
+                    # pacman
+                    if jogador == 1:
+                        direcao = input("Pac-Man> Digite a direção para mover o Pac-Man (w/a/s/d):\nPac-Man> ")
+                        if direcao == "encerra":
+                            print("[P] Partida encerrada!")
+                            self.finaliza_jogo()
+                            envia_comando_ao_socket(direcao, s)
+                            return jogo.pontuacoes()
+                        jogo.move_pacman(direcao)
+                        envia_comando_ao_socket(direcao, s)
+                    else:
+                        print("[P] Aguardando movimentação do pacman (jogador 1)...")
+                        direcao = ''
+                        while not direcao:
+                            direcao = recebe_resposta_do_socket(s)
+                            if direcao == "encerra":
+                                print("[P] O jogador 1 encerrou a partida!")
+                                self.finaliza_jogo()
+                                return jogo.pontuacoes()
+                        jogo.move_pacman(direcao)
+
+                    
+                    print("[P] Pacman fez uma movimentação!")
+                    jogo.mostra_arena()
+                    if jogo.game_over:
+                        print(jogo.mostra_arena())
+                        break
+                    time.sleep(1)
                 
             else:
                 print(jogo.mostra_arena())
@@ -266,6 +285,10 @@ class Cliente:
                 time.sleep(1)
                 
                 direcao = input("Pac-Man> Digite a direção para mover o Pac-Man (w/a/s/d):\nPac-Man> ")
+                if direcao == "encerra":
+                    print("[P] Partida encerrada!")
+                    self.finaliza_jogo()
+                    return jogo.pontuacoes()
                 jogo.move_pacman(direcao)
                 jogo.mostra_arena()
                 if jogo.game_over:

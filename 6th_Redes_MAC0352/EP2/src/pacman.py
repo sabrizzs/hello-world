@@ -5,10 +5,9 @@ import time
 
 '''
 TO-DO:
-- cliente nao recebe desafio no meio do jogo
 - fantasma local persegue o pacman?
 - mudar o game over para vitoria?
-- checa colisao no turno sozinho
+- quantos pontos o fantasma ganha?
 '''
 
 class PacMan:
@@ -69,11 +68,9 @@ class PacMan:
             x, y = self.pacman
             arena_com_personagens[x] = arena_com_personagens[x][:y] + 'X' + arena_com_personagens[x][y + 1:]
             self.game_over = True
+            print("[P] Pac-Man colidiu com um fantasma! GAME-OVER!")
 
         self.arena_com_personagens = arena_com_personagens
-        '''for linha in arena_com_personagens:
-            print(linha)
-        print()'''
         return '\n'.join(arena_com_personagens)
 
     def move_pacman(self, direcao):
@@ -138,14 +135,17 @@ class PacMan:
 
     def checa_colisao(self):
         if self.pacman == self.fantasma_local:
-            print("[P] Pac-Man colidiu com o fantasma local! GAME-OVER!")
             return True
         elif self.pacman == self.fantasma_remoto:
             self.fantasma_remoto_pontuacao = 10
             x, y = self.pacman
             self.arena[x] = self.arena[x][:y] + 'X' + self.arena[x][y + 1:]
-            print("[P] Pac-Man colidiu com o fantasma remoto! GAME-OVER!")
             return True
+
+    def remove_fantasma_remoto(self):
+        self.fantasma_remoto = None
+        self.fantasma_remoto_pontuacao = 0
+
 
     def pontuacoes(self):
         return self.pacman_pontuacao, self.fantasma_remoto_pontuacao

@@ -3,6 +3,7 @@ import socket
 import threading
 from typing import Tuple, List
 
+
 '''
 TO-DO
 - servidor udp
@@ -18,6 +19,7 @@ TO-DO
 - makefile
 - leiame
 '''
+
 
 class ServidorTCP:
     def __init__(self, host, port):
@@ -51,7 +53,7 @@ class Cliente:
 
         self.caixa_de_entrada = None
         self.desafiado = False
-        self.desafiando = False
+        self.desafiando = None
         self.desafiante_addr = None
 
         self.s = socket
@@ -75,14 +77,16 @@ class Cliente:
         self.logado = False
         self.caixa_de_entrada = None
         self.desafiado = False
-        self.desafiando = False
+        self.desafiando = None
         self.desafiante_addr = None
+        self.reseta_jogo()
         status.sai_usuario(self.usuario)
+        print("[T] Cliente resetado com sucesso")
 
     def reseta_jogo(self):
         self.caixa_de_entrada = None
         self.desafiado = False
-        self.desafiando = False
+        self.desafiando = None
         self.desafiante_addr = None
         status.altera_status(self.usuario, self.addr, 'Disponível')
 
@@ -109,7 +113,9 @@ class Cliente:
                     if self.caixa_de_entrada is not None and not self.desafiado:
                         envia_comando_ao_socket(s, f"{self.caixa_de_entrada}")
                         self.desafiado = True
-                    else: envia_comando_ao_socket(s, "0")
+                        print("[T] Leu desafio da caixa de entrada")
+                    else:
+                        envia_comando_ao_socket(s, "0")
 
     def envia_desafio(self, oponente):
         print("[T] Encontrando oponente...")
@@ -120,8 +126,11 @@ class Cliente:
                     prompt = "Pac-Man> "
                     cliente.desafiante_addr = self.addr
                     cliente.caixa_de_entrada = f"\nDesafio: {self.usuario} {cliente.desafiante_addr} te desafiou  e irá entrar na partida como um fantasma!\n{prompt}"    
+                    print("[T] desafio foi enviado para a caixa de entrada!")
                     return 1
-                else: return 0
+                else: 
+                    print("[T] caixa de entrada cheia!")
+                    return 0
 
     def interpretador(self):
         with self.ss as ss:
@@ -150,6 +159,13 @@ class Cliente:
                     print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
                     envia_comando_ao_socket(ss, "ok")
                     classificacao.atualiza_pontuacao(self.usuario, comando[1])
+                    
+                    # caso o jogador 2 saia no meio da partida, o jogador 1 não está mais sendo desafiado
+                    for cliente in clientes:
+                        if cliente.usuario == self.desafiando:
+                            cliente.caixa_de_entrada = None
+                            cliente.desafiado = False
+
                     self.reseta_jogo()
                     
                 elif comando[0] == 'exit':
@@ -187,7 +203,7 @@ class Cliente:
 
                         elif len(comando) == 2 or len(comando) == 1:
                             print(f"[S] Cliente {self.addr} mandou um comando com número inválido de argumentos: {comando}")
-                            envia_comando_ao_socket(ss, f"[S] Número inválido de argumentos. Use: novo <usuario> <senha>")
+                            envia_comando_ao_socket(ss, f"[S] Erro: Número inválido de argumentos. Use: novo <usuario> <senha>")
 
                     elif comando[0] == 'entra':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
@@ -205,11 +221,11 @@ class Cliente:
 
                         elif len(comando) == 2 or len(comando) == 1:
                             print(f"[S] Cliente {self.addr} mandou um comando com número inválido de argumentos: {comando}")
-                            envia_comando_ao_socket(ss, f"[S] Número inválido de argumentos. Use: entra <usuario> <senha>")
+                            envia_comando_ao_socket(ss, f"[S] Erro: Número inválido de argumentos. Use: entra <usuario> <senha>")
                     
                     else:
                         print(f"[S] Cliente {self.addr} mandou um comando desconhecido: {comando[0]}")
-                        envia_comando_ao_socket(ss, "[S] Comando não reconhecido para cliente não logado")
+                        envia_comando_ao_socket(ss, "[S] Erro: Comando não reconhecido para cliente não logado")
 
                 elif self.logado:
 
@@ -230,7 +246,7 @@ class Cliente:
 
                         elif len(comando) == 2 or len(comando) == 1:
                             print(f"[S] Cliente {self.addr} mandou um comando com número inválido de argumentos: {comando}")
-                            envia_comando_ao_socket(ss, f"[S] Número inválido de argumentos. Use: entra <usuario> <senha>")
+                            envia_comando_ao_socket(ss, f"[S] Erro: Número inválido de argumentos. Use: entra <usuario> <senha>")
 
                     elif comando[0] == 'sai':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
@@ -258,7 +274,7 @@ class Cliente:
                                 
                             elif status.verifica_status(oponente) == "Jogando":
                                 if self.envia_desafio(oponente) == 1:
-                                    self.desafiando = True
+                                    self.desafiando = oponente
                                     status.altera_status(self.usuario, self.addr, 'Jogando')
                                     envia_comando_ao_socket(ss, "[S] Desafio enviado.")
                                 else: envia_comando_ao_socket(ss, f"[S] Erro: O jogador {oponente} já está sendo desafiado.")
@@ -281,11 +297,11 @@ class Cliente:
 
                     else:
                         print(f"[S] Cliente {self.addr} mandou um comando desconhecido: {comando[0]}")
-                        envia_comando_ao_socket(ss, "[S] Comando não reconhecido para cliente logado")
+                        envia_comando_ao_socket(ss, "[S] Erro: Comando não reconhecido para cliente logado")
 
                 else:
                     print(f"[S] Cliente {self.addr} mandou um comando desconhecido: {comando[0]}")
-                    envia_comando_ao_socket(ss, "[S] Comando não reconhecido")
+                    envia_comando_ao_socket(ss, "[S] Erro: Comando não reconhecido")
 
 class Usuarios:
     def __init__(self):
