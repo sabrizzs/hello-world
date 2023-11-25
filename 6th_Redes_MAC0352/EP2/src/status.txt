@@ -1,2 +1,2 @@
-sabrina ('127.0.0.1', 59368) Disponível
-bina ('127.0.0.1', 59370) Disponível
+sabrina ('127.0.0.1', 45738) Disponível
+bina ('127.0.0.1', 43242) Disponível

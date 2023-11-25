@@ -11,9 +11,11 @@ TO-DO
 - servidor daemon, segundo plano invocado por &
 - heartbeat
 - latencia
-- encerra: encerramento da partida antes de terminar
-- tchau: finaliza cliente
 - servidor cair, esperar 20s
+
+- addr background
+- testar jogo com cliente tcp e cliente udp
+- udp e tcp devem estar em uma thread?
 
 - video
 - makefile
@@ -27,7 +29,7 @@ class ServidorTCP:
         self.port = port
 
     def inicia(self):
-        print(f"[S] Servidor TCP rodando na porta {self.port} e no host {self.host}")
+        print(f"[S] TCP: Servidor TCP rodando na porta {self.port} e no host {self.host}")
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_ouvinte:
             s_ouvinte.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -35,19 +37,48 @@ class ServidorTCP:
             s_ouvinte.listen()
             try:
                 while(True):                
-                    print("[S] Esperando conexão com algum cliente")
-                    conn, addr = s_ouvinte.accept()
-                    print(f"[S] Conexão estabelecida com {addr}")
-                    cliente = Cliente(conn, addr)
+                    print("[S] TCP: Esperando conexão com algum cliente")
+                    s, addr = s_ouvinte.accept()
+                    print(f"[S] TCP: Conexão estabelecida com {addr}")
+                    
+                    cliente = Cliente(s, addr, 'tcp')
                     clientes.append(cliente)
                     cliente.threads()
             except:
-                print("[S] Servidor finalizado")
+                print("[S] TCP: Servidor finalizado")
+                status.reseta_status()
+                exit(0)
+
+class ServidorUDP:
+    def __init__(self, host, port):
+        self.host = host
+        self.port = port
+
+    def inicia(self):
+        print(f"[S] UDP: Servidor UDP rodando na porta {self.port} e no host {self.host}")
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+            s.bind((self.host, self.port))
+            try:
+                while True:
+                    print("[S] UDP: Esperando conexão com algum cliente")
+                    msg, addr = s.recvfrom(1024)
+                    mensagem = msg.decode('utf-8')
+                    if mensagem == "conectado":
+                        print(f"[S] UDP: Conexão estabelecida com {addr}: {mensagem}")
+                    
+                    cliente = Cliente(s, addr, 'udp')
+                    #clientes.append(cliente)
+                    #cliente.threads()
+            except:
+                print("[S] UDP: Servidor finalizado")
                 status.reseta_status()
                 exit(0)
 
 class Cliente:
-    def __init__(self, socket: socket.socket, addr):
+    def __init__(self, socket: socket.socket, addr, protocolo):
+        self.s = socket
+        self.addr = addr
+
         self.logado = False
         self.usuario = None
 
@@ -56,22 +87,32 @@ class Cliente:
         self.desafiando = None
         self.desafiante_addr = None
 
-        self.s = socket
-        self.addr = addr
+        if protocolo == "tcp":
+            s_ouvinte, porta = cria_socket_ouvinte()
+            envia_comando_ao_socket(self.s, porta)
+            print(f"[T] porta servidor: {porta}")
 
-        s_ouvinte, port = cria_socket_ouvinte()
-        envia_comando_ao_socket(self.s, port)
-        print(f"[T] port servidor: {port}")
+            self.ss, addr_background = s_ouvinte.accept()
+            resposta = self.ss.recv(1024).decode('utf-8')
+            envia_comando_ao_socket(self.ss, "ok")
+            
+            print(f"[S] Recebeu resposta do cliente: {resposta}")
 
-        self.ss, addr_background = s_ouvinte.accept()
-        resposta = self.ss.recv(1024).decode('utf-8')
-        envia_comando_ao_socket(self.ss, "ok")
+            #"ok" caso nova conexão
+            if resposta == "ok":
+                print(f"[S] Cliente {addr} conectou")
         
-        print(f"[S] Recebeu resposta do cliente: {resposta}")
+        elif protocolo == "udp":
+            print("[T] teste")
+            msg, addr = self.s.recvfrom(1024)
+            resposta = msg.decode('utf-8')
+            print("[T] teste 2")
+            print(f"[S] Recebeu resposta do cliente: {resposta}")
 
-        #"ok" caso nova conexão
-        if resposta == "ok":
-            print(f"[S] Cliente {addr} conectou")
+            #"ok" caso nova conexão
+            if resposta == "ok":
+                print(f"[S] Cliente {addr} conectou")
+
 
     def reseta_cliente(self):
         self.logado = False
@@ -140,14 +181,16 @@ class Cliente:
                     comando = ss.recv(1024).decode('utf-8')
                 except:
                     print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
+                    envia_comando_ao_socket(ss, 'tchau')
                     self.reseta_cliente()
                     break
 
                 comando = comando.split()
 
-                if not comando or comando[0] == 'exit':
+                if not comando or comando[0] == 'tchau':
                     print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
-                    self.reseta_cliente()
+                    envia_comando_ao_socket(ss, 'tchau')
+                    self.reseta_cliente() 
                     break
 
                 elif comando[0] == 'caixadeentrada':
@@ -157,7 +200,7 @@ class Cliente:
 
                 elif comando[0] == 'pontuacao':
                     print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
-                    envia_comando_ao_socket(ss, "ok")
+                    envia_comando_ao_socket(ss, f"Você ganhou {comando[1]} pontos! Pontuação total: {classificacao.obtem_pontuacao(self.usuario)} pontos.")
                     classificacao.atualiza_pontuacao(self.usuario, comando[1])
                     
                     # caso o jogador 2 saia no meio da partida, o jogador 1 não está mais sendo desafiado
@@ -167,11 +210,6 @@ class Cliente:
                             cliente.desafiado = False
 
                     self.reseta_jogo()
-                    
-                elif comando[0] == 'exit':
-                    print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
-                    self.reseta_cliente()
-                    envia_comando_ao_socket(ss, f"[S] Usuário deslogado com sucesso!")
 
                 elif comando[0] == 'l':
                     print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
@@ -479,6 +517,19 @@ class Classificacao:
             f.writelines(linhas)
         self.classificacao_mutex.release()
 
+    def obtem_pontuacao(self, usuario):
+        self.classificacao_mutex.acquire()
+        pontuacao = None
+        with open(self.classificacao_arq, 'r') as f:
+            linhas = f.readlines()
+            for linha in linhas:
+                u, pontos = linha.split()
+                if u == usuario:
+                    pontuacao = int(pontos)
+                    break
+        self.classificacao_mutex.release()
+        return pontuacao
+
 def cria_socket_ouvinte() -> Tuple[socket.socket, str]:
     s_ouvinte = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s_ouvinte.bind(('', 0))
@@ -506,11 +557,13 @@ def main():
         porta_udp = 12345
         #exit(1)
 
-    print(f"[S] Servidor irá rodar na porta {porta_tcp} do TCP.")
+    print(f"[S] Servidor irá rodar na porta {porta_tcp} do UDP.")
 
     servidor_tcp = ServidorTCP('', porta_tcp)
     servidor_tcp.inicia()
-    
+
+    #servidor_udp = ServidorUDP('', porta_tcp)
+    #servidor_udp.inicia()
     
     #servidor_udp = ServidorUDP('127.0.0.1', porta_udp)
 
