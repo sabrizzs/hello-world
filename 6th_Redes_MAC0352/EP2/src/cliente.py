@@ -21,6 +21,7 @@ class Cliente:
     def __init__(self, host, port):
         self.IP = host
         self.PORT = port
+        self.ss_port = None
         self.protocolo = None
         self.prompt = "Pac-Man> "
 
@@ -37,11 +38,12 @@ class Cliente:
         print("[C] Estabelecendo conexão...")
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((self.IP, self.PORT))
-            ss_port = int(s.recv(5).decode('utf-8'))
+
+            self.ss_port = int(s.recv(5).decode('utf-8'))
 
             ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            ss.connect((IP, ss_port))
-            envia_comando_ao_servidor('ok', ss, self.protocolo)
+            ss.connect((IP, self.ss_port))
+            envia_comando_ao_servidor('ok', ss, self.protocolo, None)
             print("[C] Cliente conectado")
  
             servidor_ouvinte_thread = threading.Thread(target=self.servidor_ouvinte, args=(s, ss))
@@ -53,10 +55,14 @@ class Cliente:
         self.protocolo = 'udp'
         print("[C] Estabelecendo conexão...")
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
-            s.sendto(b"conectado", (self.IP, self.PORT))
+            s.sendto(b"conectado", ('', self.PORT)) #ip era self.IP
+
+            msg, addr = s.recvfrom(1024)
+            self.ss_port = int(msg.decode('utf-8'))
+            print(f"[T] Porta: {self.ss_port}")
 
             ss = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            ss.sendto(b'ok', (self.IP, self.PORT))
+            ss.sendto(b'ok', ('', self.ss_port))
             print(f"[C] Cliente conectado.")
 
             servidor_ouvinte_thread = threading.Thread(target=self.servidor_ouvinte, args=(s, ss))
@@ -85,52 +91,56 @@ class Cliente:
 
             try:
                 if comando == 'teste':
-                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo)                   
+                    print("[T] comando teste")
+                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo, self.ss_port)                   
                     if not resposta:
                         print(f"[C] Servidor não respondeu ao comando {comando}")
                     else: print(resposta)
 
                 elif comando == 'senha':
-                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo)                     
+                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo, self.ss_port)                     
                     if not resposta:
                         print(f"[C] Servidor não respondeu ao comando {comando}")
                     else: print(resposta)
 
                 elif comando == 'novo':
-                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo)                    
+                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo, self.ss_port)                       
                     if not resposta:
                         print(f"[C] Servidor não respondeu ao comando {comando}")
                     else: print(resposta)
 
                 elif comando == 'entra':
-                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo)                 
+                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo, self.ss_port)                    
                     if not resposta:
                         print(f"[C] Servidor não respondeu ao comando {comando}")
                     else: print(resposta)
 
                 elif comando == 'lideres':
-                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo)                  
+                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo, self.ss_port)                     
                     if not resposta:
                         print(f"[C] Servidor não respondeu ao comando {comando}")
                     else: print(resposta)
 
                 elif comando == 'l':
-                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo)                      
+                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo, self.ss_port)                        
                     if not resposta:
                         print(f"[C] Servidor não respondeu ao comando {comando}")
                     else: print(resposta)
 
                 elif comando == 'inicia':
-                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo)                      
+                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo, self.ss_port)                         
                     if not resposta:
                         print(f"[C] Servidor não respondeu ao comando {comando}")
-                    else: print(resposta)
-                    pontuacao_pacman, pontuacao_fantasma_remoto = self.inicia_jogo(1)
-                    resposta = envia_comando_ao_servidor(f'pontuacao {pontuacao_pacman}', ss, self.protocolo)
-                    print(resposta)
+                    elif resposta.split()[1] == "Erro:":
+                        print(resposta)
+                    else: 
+                        print(resposta)
+                        pontuacao_pacman, pontuacao_fantasma_remoto, vitoria = self.inicia_jogo(1)
+                        resposta = envia_comando_ao_servidor(f'pontuacao {"vitoria" if vitoria else "derrota"} {pontuacao_pacman}', ss, self.protocolo, self.ss_port)   
+                        print(resposta)
 
                 elif comando == 'desafio':
-                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo)                     
+                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo, self.ss_port)                       
                     if not resposta:
                         print(f"[C] Servidor não respondeu ao comando {comando}")
                     elif resposta.split()[1] == "Erro:":
@@ -140,25 +150,25 @@ class Cliente:
                         print(resposta)
 
                 elif comando == 'sai':
-                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo)                  
+                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo, self.ss_port)                     
                     if not resposta:
                         print(f"[C] Servidor não respondeu ao comando {comando}")
                     else: print(resposta)
 
                 elif comando == 'tchau':
                     print("[C] Terminando o programa")
-                    envia_comando_ao_servidor("tchau", ss, self.protocolo)
+                    envia_comando_ao_servidor("tchau", ss, self.protocolo, self.ss_port)   
                     ss.close()
                     break
 
                 else:
-                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo)                     
+                    resposta = envia_comando_ao_servidor(out, ss, self.protocolo, self.ss_port)                        
                     if not resposta:
                         print(f"[C] Servidor não respondeu ao comando {comando}")
                     else: print(resposta)
             except:
                 print("[C] Terminando o programa")
-                envia_comando_ao_servidor("tchau", ss, self.protocolo)
+                envia_comando_ao_servidor("tchau", ss, self.protocolo, self.ss_port)   
                 ss.close()
                 break
 
@@ -176,7 +186,8 @@ class Cliente:
 
                     if jogador == 1:
                         atributos = f"{jogo.pacman}/{jogo.fantasma_local}"
-                        envia_comando_ao_socket(atributos, s, 'tcp')
+                        envia_comando_ao_socket(s, atributos, 'tcp', None)
+                        print("[T] teste!")
 
                     else:
                         atributos = ''
@@ -203,7 +214,7 @@ class Cliente:
                         while jogo.fantasma_remoto == jogo.pacman: 
                             jogo.fantasma_remoto = jogo.posicao_aleatoria()
                         atributos = f"{jogo.fantasma_remoto}"
-                        envia_comando_ao_socket(atributos, s, 'tcp')
+                        envia_comando_ao_socket(s, atributos, 'tcp', None)
 
                     else:
                         atributos = ''
@@ -223,7 +234,7 @@ class Cliente:
                 if jogador == 1:
                     x, y = jogo.move_fantasma_local(1, -1, -1)
                     direcao = f"{x} {y}"
-                    envia_comando_ao_socket(direcao, s, 'tcp')
+                    envia_comando_ao_socket(s, direcao, 'tcp', None)
                 else:
                     direcao = ''
                     while not direcao:
@@ -235,19 +246,21 @@ class Cliente:
                 
                 print("[P] Fantasma local fez uma movimentação!")
                 print(jogo.mostra_arena())
-                if jogo.game_over: break
+                if jogo.game_over:
+                    if jogador == 2: jogo.vitoria = True
+                    break
                 time.sleep(1)
                 
                 # fantasma remoto
                 if jogador == 2:
                     direcao = input("Pac-Man> Digite a direção para mover o fantasma remoto (w/a/s/d):\nPac-Man> ")
                     if direcao == "encerra":
-                        envia_comando_ao_socket(direcao, s, 'tcp')
+                        envia_comando_ao_socket(s, direcao, 'tcp', None)
                         print("[P] Partida encerrada!")
                         self.finaliza_jogo()
                         return jogo.pontuacoes()
                     jogo.move_fantasma_remoto(direcao)
-                    envia_comando_ao_socket(direcao, s, 'tcp')
+                    envia_comando_ao_socket(s, direcao, 'tcp', None)
 
                 else:
                     print("[P] Aguardando movimentação do fantasma remoto (jogador 2)...")
@@ -264,7 +277,9 @@ class Cliente:
                 if self.jogo_socket != None:
                     print("[P] Fantasma remoto fez uma movimentação!")
                     print(jogo.mostra_arena())
-                    if jogo.game_over: break
+                    if jogo.game_over:
+                        if jogador == 2: jogo.vitoria = True
+                        break
                     time.sleep(1)
 
                     # pacman
@@ -273,10 +288,10 @@ class Cliente:
                         if direcao == "encerra":
                             print("[P] Partida encerrada!")
                             self.finaliza_jogo()
-                            envia_comando_ao_socket(direcao, s, 'tcp')
+                            envia_comando_ao_socket(s, direcao, 'tcp', None)
                             return jogo.pontuacoes()
                         jogo.move_pacman(direcao)
-                        envia_comando_ao_socket(direcao, s, 'tcp')
+                        envia_comando_ao_socket(s, direcao, 'tcp', None)
                     else:
                         print("[P] Aguardando movimentação do pacman (jogador 1)...")
                         direcao = ''
@@ -291,7 +306,11 @@ class Cliente:
                     
                     print("[P] Pacman fez uma movimentação!")
                     jogo.mostra_arena()
-                    if jogo.game_over:
+                    if jogo.vitoria:
+                        print(jogo.mostra_arena())
+                        break
+                    elif jogo.game_over:
+                        if jogador == 2: jogo.vitoria = True
                         print(jogo.mostra_arena())
                         break
                     time.sleep(1)
@@ -303,7 +322,8 @@ class Cliente:
                 print("[P] Fantasma local fez uma movimentação!")
                 jogo.move_fantasma_local(1, -1, -1)
                 print(jogo.mostra_arena())    
-                if jogo.game_over: break   
+                if jogo.game_over:
+                    break   
                 time.sleep(1)
                 
                 direcao = input("Pac-Man> Digite a direção para mover o Pac-Man (w/a/s/d):\nPac-Man> ")
@@ -313,7 +333,11 @@ class Cliente:
                     return jogo.pontuacoes()
                 jogo.move_pacman(direcao)
                 jogo.mostra_arena()
-                if jogo.game_over:
+                if jogo.vitoria:
+                    print(jogo.mostra_arena())
+                    break
+                elif jogo.game_over:
+                    jogo.vitoria = True
                     print(jogo.mostra_arena())
                     break
                 time.sleep(1)
@@ -332,7 +356,7 @@ class Cliente:
             resposta = "0"
             try:
                 while resposta == "0":
-                    resposta = envia_comando_ao_servidor("caixadeentrada", s, self.protocolo)
+                    resposta = envia_comando_ao_servidor("caixadeentrada", s, self.protocolo, self.PORT)   
                 if resposta != "0":
                     if resposta.split()[0] == "Desafio:":
                         print(resposta, end='')
@@ -353,7 +377,7 @@ class Cliente:
 
         mensagem = f"desafiado {jogo_porta}" #mando a porta do jogo para o servidor
 
-        resposta = envia_comando_ao_servidor(mensagem, ss, self.protocolo)
+        resposta = envia_comando_ao_servidor(mensagem, ss, self.protocolo, self.ss_port)   
 
         if not resposta: return
         if resposta != "ok": jogo_socket_ouvinte.close()
@@ -376,30 +400,31 @@ class Cliente:
             self.multiplayer = True
             self.jogo_socket = jogo_socket   
 
-            pontuacao_pacman, pontuacao_fantasma_remoto = self.inicia_jogo(2)
-            resposta = envia_comando_ao_servidor(f'pontuacao {pontuacao_fantasma_remoto}', ss, self.protocolo)
+            pontuacao_pacman, pontuacao_fantasma_remoto, vitoria = self.inicia_jogo(2)
+            resposta = envia_comando_ao_servidor(f'pontuacao {"vitoria" if vitoria else "derrota"} {pontuacao_fantasma_remoto}', ss, self.protocolo, self.ss_port)      
             print(f"{resposta}\nPac-Man> ")
 
-def envia_comando_ao_socket(comando: str, s: socket.socket, protocolo):
+def envia_comando_ao_socket(s: socket.socket, comando: str, protocolo, udp_port):
     comando = bytearray(comando.encode())
     if protocolo == 'tcp':
         s.sendall(comando)
     elif protocolo == 'udp':
-        s.sendto(comando, s.getpeername())
+        s.sendto(comando, ('', udp_port))
 
 def recebe_resposta_do_socket(s: socket.socket, protocolo):
     if protocolo == 'tcp':
         return s.recv(1024).decode('utf-8')
     elif protocolo == 'udp':
-        resposta, _ = s.recvfrom(1024)
-        return resposta.decode('utf-8')
+        resposta, addr = s.recvfrom(1024)
+        resposta = resposta.decode('utf-8')
+        return resposta
 
-def envia_comando_ao_servidor(comando: str, ss: socket.socket, protocolo):
-    envia_comando_ao_socket(comando, ss, protocolo)
+def envia_comando_ao_servidor(comando: str, ss: socket.socket, protocolo, udp_port):
+    envia_comando_ao_socket(ss, comando, protocolo, udp_port)
     resposta = recebe_resposta_do_socket(ss, protocolo)
 
     while resposta == '':
-        envia_comando_ao_socket(comando, ss, protocolo)
+        envia_comando_ao_socket(ss, comando, protocolo, udp_port)
         resposta = recebe_resposta_do_socket(ss, protocolo)
     return resposta
 
@@ -415,21 +440,27 @@ def main():
     global IP
     global PORT
 
-    if len(sys.argv) == 3:
+    if len(sys.argv) == 4:
         IP = sys.argv[1]
         PORT = int(sys.argv[2])
+        protocolo = sys.argv[3].lower()
     else:
-        print("Nenhum argumento fornecido. Forneça as portas como argumentos, por exemplo: python client.py 127.0.0.1 8080") 
-        #temporario
+        print("Forneca o IP, a porta e o protocolo como argumentos, por exemplo: python client.py 127.0.0.1 8080 tcp")
+        print("[C] Rodando o cliente nos argumentos pré definidos ip: 127.0.0.1 porta: 8080 protocolo: x")
         IP = '127.0.0.1'
         PORT = 8080
-        #exit(1)
+        protocolo = 'tcp'
+        # exit(1)
 
-    print(f"[C] Cliente no IP {IP} irá conectar na porta {PORT} do TCP.")
-    
+    print(f"[C] Cliente no IP {IP} irá conectar na porta {PORT} usando o protocolo {protocolo.upper()}.")
     cliente = Cliente(IP, PORT)
-    cliente.conexao_tcp()
-    #cliente.conexao_udp()
+
+    if protocolo == 'tcp':
+        cliente.conexao_tcp()
+    elif protocolo == 'udp':
+        cliente.conexao_udp()
+    else:
+        print("Protocolo inválido. Use 'tcp' ou 'udp'.")
 
 
 if __name__ == "__main__":

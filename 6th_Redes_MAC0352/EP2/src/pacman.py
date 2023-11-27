@@ -27,6 +27,7 @@ class PacMan:
         self.fantasma_remoto = None
 
         self.game_over = False
+        self.vitoria = False
         self.pacman_pontuacao = 0
         self.fantasma_remoto_pontuacao = 0
 
@@ -93,6 +94,8 @@ class PacMan:
             self.pacman = (x, y)
         else: print("[P] O pacman bateu na parede")
 
+        self.checa_vitoria()
+
     def move_fantasma_remoto(self, direcao):
         x, y = self.fantasma_remoto
         if direcao == 'w':
@@ -142,13 +145,18 @@ class PacMan:
             self.arena[x] = self.arena[x][:y] + 'X' + self.arena[x][y + 1:]
             return True
 
+    def checa_vitoria(self):
+        if all(row.count('.') == 0 for row in self.arena):
+            self.vitoria = True 
+
     def remove_fantasma_remoto(self):
         self.fantasma_remoto = None
         self.fantasma_remoto_pontuacao = 0
 
-
     def pontuacoes(self):
-        return self.pacman_pontuacao, self.fantasma_remoto_pontuacao
+        if self.vitoria: print("Parabéns! Você venceu!")
+        else: print("Que azar! Você perdeu!")
+        return self.pacman_pontuacao, self.fantasma_remoto_pontuacao, self.vitoria
 
     def turno(self):
         print(self.mostra_arena())

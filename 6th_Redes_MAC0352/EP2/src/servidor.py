@@ -2,6 +2,7 @@ import sys
 import socket
 import threading
 from typing import Tuple, List
+from datetime import datetime
 
 
 '''
@@ -15,7 +16,6 @@ TO-DO
 
 - addr background
 - testar jogo com cliente tcp e cliente udp
-- udp e tcp devem estar em uma thread?
 
 - video
 - makefile
@@ -30,6 +30,7 @@ class ServidorTCP:
 
     def inicia(self):
         print(f"[S] TCP: Servidor TCP rodando na porta {self.port} e no host {self.host}")
+        log.servidor_iniciado('TCP', True, False)
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_ouvinte:
             s_ouvinte.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -37,15 +38,17 @@ class ServidorTCP:
             s_ouvinte.listen()
             try:
                 while(True):                
-                    print("[S] TCP: Esperando conexão com algum cliente")
+                    print("[T] TCP: Esperando conexão com algum cliente")
                     s, addr = s_ouvinte.accept()
                     print(f"[S] TCP: Conexão estabelecida com {addr}")
-                    
+                    log.conexao_cliente(addr[0], 'tcp')
+            
                     cliente = Cliente(s, addr, 'tcp')
                     clientes.append(cliente)
                     cliente.threads()
             except:
                 print("[S] TCP: Servidor finalizado")
+                log.servidor_finalizado()
                 status.reseta_status()
                 exit(0)
 
@@ -56,28 +59,37 @@ class ServidorUDP:
 
     def inicia(self):
         print(f"[S] UDP: Servidor UDP rodando na porta {self.port} e no host {self.host}")
+        log.servidor_iniciado('UDP', True, False)
+
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             s.bind((self.host, self.port))
+
+            #PAREI EM CLIENTE THREADS
             try:
                 while True:
-                    print("[S] UDP: Esperando conexão com algum cliente")
+                    print("[T] UDP: Esperando conexão com algum cliente")
                     msg, addr = s.recvfrom(1024)
                     mensagem = msg.decode('utf-8')
                     if mensagem == "conectado":
                         print(f"[S] UDP: Conexão estabelecida com {addr}: {mensagem}")
+                        log.conexao_cliente(addr[0], 'udp')
                     
                     cliente = Cliente(s, addr, 'udp')
-                    #clientes.append(cliente)
-                    #cliente.threads()
+                    clientes.append(cliente)
+                    cliente.threads()
             except:
                 print("[S] UDP: Servidor finalizado")
+                log.servidor_finalizado()
                 status.reseta_status()
                 exit(0)
 
 class Cliente:
-    def __init__(self, socket: socket.socket, addr, protocolo):
-        self.s = socket
+    def __init__(self, s: socket.socket, addr, protocolo):
+        self.s = s
+        self.protocolo = protocolo
         self.addr = addr
+        self.s_porta = addr[1]
+        self.ss_porta = None
 
         self.logado = False
         self.usuario = None
@@ -89,29 +101,36 @@ class Cliente:
 
         if protocolo == "tcp":
             s_ouvinte, porta = cria_socket_ouvinte()
-            envia_comando_ao_socket(self.s, porta)
-            print(f"[T] porta servidor: {porta}")
+            envia_comando_ao_socket(self.s, porta, self.protocolo, None)
+            print(f"[T] TCP: porta servidor: {porta}") #envia porta
 
             self.ss, addr_background = s_ouvinte.accept()
             resposta = self.ss.recv(1024).decode('utf-8')
-            envia_comando_ao_socket(self.ss, "ok")
+            envia_comando_ao_socket(self.ss, "ok", self.protocolo, None)
             
-            print(f"[S] Recebeu resposta do cliente: {resposta}")
+            print(f"[S] TCP: Recebeu resposta do cliente: {resposta}")
 
             #"ok" caso nova conexão
             if resposta == "ok":
-                print(f"[S] Cliente {addr} conectou")
+                print(f"[S] TCP: Cliente {addr} conectou")
         
         elif protocolo == "udp":
-            print("[T] teste")
-            msg, addr = self.s.recvfrom(1024)
+            self.ss = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            self.ss.bind(('', 0))
+            self.ss_porta = str(self.ss.getsockname()[1]).encode('utf-8')
+            self.s.sendto(self.ss_porta, self.addr)
+
+            self.ss_porta = int(self.ss_porta.decode('utf-8'))
+            print(f"[T] UDP: porta ss_porta servidor: {self.ss_porta}") #envia porta
+            print(f"[T] UDP: porta s_porta servidor: {self.s_porta}")
+
+            msg, addr = self.ss.recvfrom(1024)
             resposta = msg.decode('utf-8')
-            print("[T] teste 2")
-            print(f"[S] Recebeu resposta do cliente: {resposta}")
+            print(f"[S] UDP: Recebeu resposta do cliente: {resposta}")
 
             #"ok" caso nova conexão
             if resposta == "ok":
-                print(f"[S] Cliente {addr} conectou")
+                print(f"[S] UDP: Cliente {addr} conectou")
 
 
     def reseta_cliente(self):
@@ -122,6 +141,7 @@ class Cliente:
         self.desafiante_addr = None
         self.reseta_jogo()
         status.sai_usuario(self.usuario)
+        log.desconexao_cliente(self.addr[0], self.protocolo)
         print("[T] Cliente resetado com sucesso")
 
     def reseta_jogo(self):
@@ -152,12 +172,12 @@ class Cliente:
 
                 if len(comando) > 0 and comando[0] == 'caixadeentrada':
                     if self.caixa_de_entrada is not None and not self.desafiado:
-                        envia_comando_ao_socket(s, f"{self.caixa_de_entrada}")
+                        envia_comando_ao_socket(s, f"{self.caixa_de_entrada}", self.protocolo, self.s_porta)
                         self.desafiado = True
                         print("[T] Leu desafio da caixa de entrada")
                     else:
-                        envia_comando_ao_socket(s, "0")
-
+                        envia_comando_ao_socket(s, "0", self.protocolo, self.s_porta)
+                    
     def envia_desafio(self, oponente):
         print("[T] Encontrando oponente...")
         for cliente in clientes:
@@ -178,10 +198,14 @@ class Cliente:
             while True:
                 comando = ''
                 try:
-                    comando = ss.recv(1024).decode('utf-8')
+                    if self.protocolo == "tcp":
+                        comando = self.ss.recv(1024).decode('utf-8')
+                    elif self.protocolo == "udp":
+                        comando, _ = self.ss.recvfrom(1024)
+                        comando = comando.decode('utf-8')
                 except:
                     print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
-                    envia_comando_ao_socket(ss, 'tchau')
+                    envia_comando_ao_socket(ss, 'tchau', self.protocolo, self.ss_porta)
                     self.reseta_cliente()
                     break
 
@@ -189,43 +213,58 @@ class Cliente:
 
                 if not comando or comando[0] == 'tchau':
                     print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
-                    envia_comando_ao_socket(ss, 'tchau')
+                    envia_comando_ao_socket(ss, 'tchau', self.protocolo, self.ss_porta)
                     self.reseta_cliente() 
                     break
 
                 elif comando[0] == 'caixadeentrada':
                     if self.caixa_de_entrada != None:
-                        envia_comando_ao_socket(ss, f"[S] {self.caixa_de_entrada}")
-                    else: envia_comando_ao_socket(ss, "0")
+                        envia_comando_ao_socket(ss, f"[S] {self.caixa_de_entrada}", self.protocolo, self.s_porta)
+                    else: envia_comando_ao_socket(ss, "0", self.protocolo, self.s_porta)
 
                 elif comando[0] == 'pontuacao':
                     print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
-                    envia_comando_ao_socket(ss, f"Você ganhou {comando[1]} pontos! Pontuação total: {classificacao.obtem_pontuacao(self.usuario)} pontos.")
-                    classificacao.atualiza_pontuacao(self.usuario, comando[1])
+                    envia_comando_ao_socket(ss, f"Você ganhou {comando[2]} pontos! Pontuação total: {classificacao.obtem_pontuacao(self.usuario)} pontos.", self.protocolo, self.ss_porta)
+                    classificacao.atualiza_pontuacao(self.usuario, comando[2])
+
+                    vitoria = False
+                    if comando[1] == 'vitoria': vitoria = True
                     
+                    if self.desafiado == False:
+                        enderecos_ip = [self.addr[0]]
+                        nomes_usuarios = [self.usuario]
+                        vencedor = f"{self.usuario} de Pac-Man" if vitoria else "Fantasma"
+                        log.finalizacao_partida(enderecos_ip, nomes_usuarios, vencedor)
+
                     # caso o jogador 2 saia no meio da partida, o jogador 1 não está mais sendo desafiado
                     for cliente in clientes:
                         if cliente.usuario == self.desafiando:
                             cliente.caixa_de_entrada = None
                             cliente.desafiado = False
+                            log.entrada_saida_fantasma(self.addr[0], self.usuario, False)
+
+                            enderecos_ip = [cliente.addr[0], self.addr[0]]
+                            nomes_usuarios = [cliente.usuario, self.usuario]
+                            vencedor = f"{self.usuario} de Fantasma" if vitoria else f"{cliente.usuario} de Pac-Man"
+                            log.finalizacao_partida(enderecos_ip, nomes_usuarios, vencedor)
 
                     self.reseta_jogo()
 
                 elif comando[0] == 'l':
                     print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
                     lista = status.lista_status()
-                    envia_comando_ao_socket(ss, lista)
+                    envia_comando_ao_socket(ss, lista, self.protocolo, self.ss_porta)
 
                 elif comando[0] == 'lideres':
                     print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
                     lideres = classificacao.lista_classificacao()
-                    envia_comando_ao_socket(ss, lideres)
+                    envia_comando_ao_socket(ss, lideres, self.protocolo, self.ss_porta)
 
                 elif not self.logado:
 
                     if comando[0] == 'teste':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
-                        envia_comando_ao_socket(ss, f"[S] Cliente <não logado> enviou: {comando}")
+                        envia_comando_ao_socket(ss, f"[S] Cliente <não logado> enviou: {comando}", self.protocolo, self.ss_porta)
                     
                     elif comando[0] == 'novo':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
@@ -235,13 +274,13 @@ class Cliente:
 
                             if usuarios.novo_usuario(usuario, senha):
                                 classificacao.adiciona_usuario(usuario)
-                                envia_comando_ao_socket(ss, "[S] Usuário criado com sucesso!")
+                                envia_comando_ao_socket(ss, "[S] Usuário criado com sucesso!", self.protocolo, self.ss_porta)
                             else:
-                                envia_comando_ao_socket(ss, "[S] Nome de usuário já existente.")
+                                envia_comando_ao_socket(ss, "[S] Nome de usuário já existente.", self.protocolo, self.ss_porta)
 
                         elif len(comando) == 2 or len(comando) == 1:
                             print(f"[S] Cliente {self.addr} mandou um comando com número inválido de argumentos: {comando}")
-                            envia_comando_ao_socket(ss, f"[S] Erro: Número inválido de argumentos. Use: novo <usuario> <senha>")
+                            envia_comando_ao_socket(ss, f"[S] Erro: Número inválido de argumentos. Use: novo <usuario> <senha>", self.protocolo, self.ss_porta)
 
                     elif comando[0] == 'entra':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
@@ -253,23 +292,25 @@ class Cliente:
                                 self.logado = True
                                 self.usuario = usuario
                                 status.entra_usuario(usuario, self.addr)
-                                envia_comando_ao_socket(ss, "[S] Usuário logado com sucesso!")
+                                envia_comando_ao_socket(ss, "[S] Usuário logado com sucesso!", self.protocolo, self.ss_porta)
+                                log.login(self.usuario, self.addr[0], True)
                             else:
-                                envia_comando_ao_socket(ss, "[S] Usuário e senha não encontrados.")
+                                envia_comando_ao_socket(ss, "[S] Usuário e senha não encontrados.", self.protocolo, self.ss_porta)
+                                log.login(self.usuario, self.addr[0], False)
 
                         elif len(comando) == 2 or len(comando) == 1:
                             print(f"[S] Cliente {self.addr} mandou um comando com número inválido de argumentos: {comando}")
-                            envia_comando_ao_socket(ss, f"[S] Erro: Número inválido de argumentos. Use: entra <usuario> <senha>")
+                            envia_comando_ao_socket(ss, f"[S] Erro: Número inválido de argumentos. Use: entra <usuario> <senha>", self.protocolo, self.ss_porta)
                     
                     else:
                         print(f"[S] Cliente {self.addr} mandou um comando desconhecido: {comando[0]}")
-                        envia_comando_ao_socket(ss, "[S] Erro: Comando não reconhecido para cliente não logado")
+                        envia_comando_ao_socket(ss, "[S] Erro: Comando não reconhecido para cliente não logado", self.protocolo, self.ss_porta)
 
                 elif self.logado:
 
                     if comando[0] == 'teste':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
-                        envia_comando_ao_socket(ss, f"[S] Cliente <logado> enviou: {comando}")
+                        envia_comando_ao_socket(ss, f"[S] Cliente <logado> enviou: {comando}", self.protocolo, self.ss_porta)
 
                     elif comando[0] == 'senha':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
@@ -278,23 +319,24 @@ class Cliente:
                             senha_nova = comando[2]
 
                             if usuarios.altera_senha(senha_antiga, senha_nova, self.usuario):
-                                envia_comando_ao_socket(ss, "[S] Senha alterada com sucesso!")
+                                envia_comando_ao_socket(ss, "[S] Senha alterada com sucesso!", self.protocolo, self.ss_porta)
                             else:
-                                envia_comando_ao_socket(ss, "[S] Não foi possível alterar a senha.")
+                                envia_comando_ao_socket(ss, "[S] Não foi possível alterar a senha.", self.protocolo, self.ss_porta)
 
                         elif len(comando) == 2 or len(comando) == 1:
                             print(f"[S] Cliente {self.addr} mandou um comando com número inválido de argumentos: {comando}")
-                            envia_comando_ao_socket(ss, f"[S] Erro: Número inválido de argumentos. Use: entra <usuario> <senha>")
+                            envia_comando_ao_socket(ss, f"[S] Erro: Número inválido de argumentos. Use: entra <usuario> <senha>", self.protocolo, self.ss_porta)
 
                     elif comando[0] == 'sai':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
                         self.reseta_cliente()
-                        envia_comando_ao_socket(ss, f"[S] Usuário deslogado com sucesso!")
+                        envia_comando_ao_socket(ss, f"[S] Usuário deslogado com sucesso!", self.protocolo, self.ss_porta)
 
                     elif comando[0] == 'inicia':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
                         status.altera_status(self.usuario, self.addr, 'Jogando')
-                        envia_comando_ao_socket(ss, f"[S] Jogo iniciado.")
+                        envia_comando_ao_socket(ss, f"[S] Jogo iniciado.", self.protocolo, self.ss_porta)
+                        log.inicio_partida(self.addr[0], self.usuario)
 
                     elif comando[0] == 'desafio':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
@@ -302,44 +344,45 @@ class Cliente:
                             oponente = comando[1]
 
                             if oponente == self.usuario:
-                                envia_comando_ao_socket(ss, f"[S] Erro: Você não pode se desafiar! Escolha um oponente válido. Use o comando <l> para encontrar os usuários disponíveis.")
+                                envia_comando_ao_socket(ss, f"[S] Erro: Você não pode se desafiar! Escolha um oponente válido. Use o comando <l> para encontrar os usuários disponíveis.", self.protocolo, self.ss_porta)
 
                             elif status.verifica_status(oponente) == "Disponível":
-                                envia_comando_ao_socket(ss, f"[S] Erro: O usuário {oponente} não está em uma partida neste momento!")
+                                envia_comando_ao_socket(ss, f"[S] Erro: O usuário {oponente} não está em uma partida neste momento!", self.protocolo, self.ss_porta)
 
                             elif status.verifica_status(oponente) == "Não encontrado":
-                                envia_comando_ao_socket(ss, f"[S] Erro: O usuário {oponente} não existe ou não está em uma partida.")    
+                                envia_comando_ao_socket(ss, f"[S] Erro: O usuário {oponente} não existe ou não está em uma partida.", self.protocolo, self.ss_porta)
                                 
                             elif status.verifica_status(oponente) == "Jogando":
                                 if self.envia_desafio(oponente) == 1:
                                     self.desafiando = oponente
                                     status.altera_status(self.usuario, self.addr, 'Jogando')
-                                    envia_comando_ao_socket(ss, "[S] Desafio enviado.")
-                                else: envia_comando_ao_socket(ss, f"[S] Erro: O jogador {oponente} já está sendo desafiado.")
+                                    envia_comando_ao_socket(ss, "[S] Desafio enviado.", self.protocolo, self.ss_porta)
+                                    log.entrada_saida_fantasma(self.addr[0], self.usuario, True)
+                                else: envia_comando_ao_socket(ss, f"[S] Erro: O jogador {oponente} já está sendo desafiado.", self.protocolo, self.ss_porta)
 
                         elif len(comando) == 1:
                             print(f"[S] Cliente {self.addr} mandou um comando com número inválido de argumentos: {comando}")
-                            envia_comando_ao_socket(ss, f"[S] Erro: Número inválido de argumentos. Use: desafio <oponente>")
+                            envia_comando_ao_socket(ss, f"[S] Erro: Número inválido de argumentos. Use: desafio <oponente>", self.protocolo, self.ss_porta)
 
                     elif comando[0] == 'desafiado':
                         print(f"[S] Cliente {self.addr} mandou: {comando[0]}")
                         
-                        jogo_porta = comando[1] #recebo a porta do jogo do desafiado
+                        jogo_porta = comando[1] 
                         mensagem = f"Conexão: desafiante {jogo_porta} {self.addr[0]}" #mandar para o desafiante
 
                         for cliente in clientes:
                             if cliente.addr == self.desafiante_addr:
                                 cliente.caixa_de_entrada = mensagem
 
-                        envia_comando_ao_socket(ss, "ok") #manda ao desafiado que a porta foi enviada ao desafiante
+                        envia_comando_ao_socket(ss, "ok", self.protocolo, self.ss_porta) #manda ao desafiado que a porta foi enviada ao desafiante
 
                     else:
                         print(f"[S] Cliente {self.addr} mandou um comando desconhecido: {comando[0]}")
-                        envia_comando_ao_socket(ss, "[S] Erro: Comando não reconhecido para cliente logado")
+                        envia_comando_ao_socket(ss, "[S] Erro: Comando não reconhecido para cliente logado", self.protocolo, self.ss_porta)
 
                 else:
                     print(f"[S] Cliente {self.addr} mandou um comando desconhecido: {comando[0]}")
-                    envia_comando_ao_socket(ss, "[S] Erro: Comando não reconhecido")
+                    envia_comando_ao_socket(ss, "[S] Erro: Comando não reconhecido", self.protocolo, self.ss_porta)
 
 class Usuarios:
     def __init__(self):
@@ -530,42 +573,136 @@ class Classificacao:
         self.classificacao_mutex.release()
         return pontuacao
 
+class Log:
+    def __init__(self):
+        self.log_arq = 'log.txt'
+        self.log_mutex = threading.Lock()
+        with open(self.log_arq, 'a') as f:
+            pass
+
+    # Servidor iniciado
+    def servidor_iniciado(self, protocolo, sucesso, partida_em_execucao):
+        self.log_mutex.acquire()
+        with open(self.log_arq, 'a') as f:
+            tempo = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            status_execucao = "com sucesso" if sucesso else "com falha"
+            if not sucesso and partida_em_execucao:
+                f.write(f"[{tempo}] Servidor {protocolo} iniciado {status_execucao}. Retomando controle da partida em execução.\n")
+            else:
+                f.write(f"[{tempo}] Servidor {protocolo} iniciado {status_execucao}.\n")
+        self.log_mutex.release()
+        # falta
+    '''
+    Caso houve falha, e se havia alguma partida em execuc ̧ ̃ao, ele deve retomar o “controle”
+    dessa partida passando a enviar os heartbeats para os clientes, caso eles ainda estejam conectados
+    entre eles)
+    '''
+
+    def conexao_cliente(self, endereco_ip, protocolo):
+        self.log_mutex.acquire()
+        with open(self.log_arq, 'a') as f:
+            tempo = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            f.write(f"[{tempo}] Conexão realizada por um cliente ({'UDP' if protocolo == 'udp' else 'TCP'}). Endereço IP: {endereco_ip}\n")
+        self.log_mutex.release()
+
+    def login(self, usuario, endereco_ip, sucesso):
+        self.log_mutex.acquire()
+        with open(self.log_arq, 'a') as f:
+            tempo = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            status_login = "com sucesso" if sucesso else "sem sucesso"
+            f.write(f"[{tempo}] Login de usuário: {usuario}. Endereço IP: {endereco_ip}. Status: {status_login}\n")
+        self.log_mutex.release()
+        #falta quando nao da sucesso
+
+    def desconexao_cliente(self, endereco_ip, protocolo):
+        self.log_mutex.acquire()
+        with open(self.log_arq, 'a') as f:
+            tempo = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            f.write(f"[{tempo}] Desconexão realizada por um cliente ({'UDP' if protocolo == 'udp' else 'TCP'}). Endereço IP: {endereco_ip}\n")
+        self.log_mutex.release()
+
+    def inicio_partida(self, endereco_ip, usuario):
+        self.log_mutex.acquire()
+        with open(self.log_arq, 'a') as f:
+            tempo = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            f.write(f"[{tempo}] Início de uma partida. Endereço IP: {endereco_ip}, Nome do Usuário: {usuario}\n")
+        self.log_mutex.release()
+
+    def entrada_saida_fantasma(self, endereco_ip, usuario, entrada):
+        self.log_mutex.acquire()
+        with open(self.log_arq, 'a') as f:
+            tempo = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            acao = "Entrada" if entrada else "Saída"
+            f.write(f"[{tempo}] {acao} de um fantasma da partida existente. Endereço IP: {endereco_ip}, Nome do Usuário: {usuario}\n")
+        self.log_mutex.release()
+
+    def finalizacao_partida(self, enderecos_ip, nomes_usuarios, vencedor):
+        self.log_mutex.acquire()
+        with open(self.log_arq, 'a') as f:
+            tempo = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            enderecos_ip_str = ', '.join(enderecos_ip)
+            nomes_usuarios_str = ', '.join(nomes_usuarios)
+            f.write(f"[{tempo}] Finalização de uma partida. Endereços IP: {enderecos_ip_str}, Nomes dos Usuários: {nomes_usuarios_str}, Vencedor: {vencedor}\n")
+        self.log_mutex.release()
+
+    def desconexao_inesperada(self, endereco_ip):
+        self.log_mutex.acquire()
+        with open(self.log_arq, 'a') as f:
+            tempo = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            f.write(f"[{tempo}] Desconexão inesperada de um cliente, verificada pelos heartbeats. Endereço IP: {endereco_ip}\n")
+        self.log_mutex.release()
+    # falta implementar heartbeats
+
+    # Servidor finalizado
+    def servidor_finalizado(self):
+        self.log_mutex.acquire()
+        with open(self.log_file, 'a') as f:
+            tempo = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            f.write(f"[{tempo}] Servidor finalizado.\n")
+        self.log_mutex.release()
+
+
 def cria_socket_ouvinte() -> Tuple[socket.socket, str]:
     s_ouvinte = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s_ouvinte.bind(('', 0))
+    s_ouvinte.bind(('', 0)) #sistema escolhe uma porta disponível
     s_ouvinte.listen(5)
     _, port1 = s_ouvinte.getsockname()
     str_port1 = '%05d' % port1
     return s_ouvinte, str_port1
 
-def envia_comando_ao_socket(s: socket.socket, msg: str):
-    s.sendall(bytearray(msg.encode()))
+def envia_comando_ao_socket(s: socket.socket, comando: str, protocolo, udp_port):
+    comando = bytearray(comando.encode())
+    if protocolo == 'tcp':
+        s.sendall(comando)
+    elif protocolo == 'udp':
+        s.sendto(comando, ('', udp_port))
 
 usuarios = Usuarios()
 status =  Status()
 clientes = list()
 classificacao = Classificacao()
+log = Log()
     
 def main():
     if len(sys.argv) == 3:
         porta_tcp = int(sys.argv[1])
         porta_udp = int(sys.argv[2])
     else:
-        print("[S] Nenhum argumento fornecido. Forneça as portas como argumentos, por exemplo: python servidor.py 8080 12345")
-        #temporario
+        print("[S] Nenhum argumento fornecido. Forneça as portas como argumentos, por exemplo: python servidor.py <porta TCP> <porta UDP>")
+        print("[S] Rodando o servidor nas portas pré definidas tcp: 8080 e udp: 8081")
         porta_tcp = 8080
-        porta_udp = 12345
-        #exit(1)
+        porta_udp = 8080
+        # exit(1)
 
-    print(f"[S] Servidor irá rodar na porta {porta_tcp} do UDP.")
-
+    print(f"[S] Servidor TCP irá rodar na porta {porta_tcp}.")
     servidor_tcp = ServidorTCP('', porta_tcp)
-    servidor_tcp.inicia()
+    thread_tcp = threading.Thread(target=servidor_tcp.inicia)
+    thread_tcp.start()
 
-    #servidor_udp = ServidorUDP('', porta_tcp)
-    #servidor_udp.inicia()
-    
-    #servidor_udp = ServidorUDP('127.0.0.1', porta_udp)
+    print(f"[S] Servidor UDP irá rodar na porta {porta_udp}.")
+    servidor_udp = ServidorUDP('', porta_udp)
+    thread_udp = threading.Thread(target=servidor_udp.inicia)
+    thread_udp.start()
 
 if __name__ == "__main__":
     main()
