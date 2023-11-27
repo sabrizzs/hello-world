@@ -38,20 +38,20 @@ O jogo é implementado no arquivo pacman.py. Ele possui uma arena, onde o Pac-Ma
 
 Utilize os comandos abaixo para interagir com o servidor:
 
-- novo <usuario> <senha>: Cria um novo usuário.
-- senha <senha antiga> <senha nova>: Altera a senha do usuário.
-- entra <usuario> <senha>: O usuário faz login no servidor.
+- novo < usuario > < senha >: Cria um novo usuário.
+- senha < senha antiga > < senha nova >: Altera a senha do usuário.
+- entra < usuario > < senha >: O usuário faz login no servidor.
 - lideres: Informa a tabela de pontuação de todos os usuários registrados no sistema.
 - l: Lista todos os usuários conectados no momento e indica se estão jogando ou não.
 - inicia: O jogador inicia uma nova partida como Pac-Man.
-- desafio <oponente>: Entra na partida sendo jogada pelo outro jogador. Nesse caso, entrará como fantasma. É permitido no máximo 1 fantasma remoto por partida, além do fantasma local.
+- desafio < oponente >: Entra na partida sendo jogada pelo outro jogador. Nesse caso, entrará como fantasma. É permitido no máximo 1 fantasma remoto por partida, além do fantasma local.
 - sai: Desloga.
 - tchau: Finaliza a execução do cliente e retorna para o shell do sistema operacional.
 
 Utilize os comandos abaixo para jogar Pac-Man:
 
-- move <direcao>: movimenta o Pac-Man, use as teclas a - esquerda, s - baixo, d - direita e w - cima.
-- move <direcao>: movimenta o fantasma remoto (no modo multiplayer), use as teclas a - esquerda, s - baixo, d - direita e w - cima.
+- move < direcao >: movimenta o Pac-Man, use as teclas a - esquerda, s - baixo, d - direita e w - cima.
+- move < direcao >: movimenta o fantasma remoto (no modo multiplayer), use as teclas a - esquerda, s - baixo, d - direita e w - cima.
 - encerra: Encerra uma partida antes do término.
 
 ## Implementação
@@ -82,5 +82,5 @@ O código do cliente também lida com a conexão dos dois jogadores em um jogo d
 
 ## Dificuldades de implementação
 
-Tive dificuldades em implementar a verificação periódica da latência entre os clientes, assim como a execução do comando <atraso> que depende dessa implementação. Consegui implementar o início do servidor UDP, porém ao lidar com comandos dos clientes, algum erro ocorre e o servidor não consegue interpretá-los.
+Tive dificuldades em implementar a verificação periódica da latência entre os clientes, assim como a execução do comando < atraso > que depende dessa implementação. Consegui implementar o início do servidor UDP, porém ao lidar com comandos dos clientes, algum erro ocorre e o servidor não consegue interpretá-los.
 
