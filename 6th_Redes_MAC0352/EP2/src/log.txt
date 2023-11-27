@@ -279,3 +279,21 @@
 [2023-11-27 01:43:30] Servidor UDP iniciado com sucesso.
 [2023-11-27 01:43:36] Conexão realizada por um cliente (UDP). Endereço IP: 127.0.0.1
 [2023-11-27 01:43:41] Conexão realizada por um cliente (TCP). Endereço IP: 127.0.0.1
+[2023-11-27 01:57:10] Servidor TCP iniciado com sucesso.
+[2023-11-27 01:57:10] Servidor UDP iniciado com sucesso.
+[2023-11-27 01:57:28] Servidor TCP iniciado com sucesso.
+[2023-11-27 01:57:28] Servidor UDP iniciado com sucesso.
+[2023-11-27 01:57:38] Conexão realizada por um cliente (UDP). Endereço IP: 127.0.0.1
+[2023-11-27 01:57:45] Desconexão realizada por um cliente (UDP). Endereço IP: 127.0.0.1
+[2023-11-27 01:57:59] Conexão realizada por um cliente (TCP). Endereço IP: 127.0.0.1
+[2023-11-27 01:58:06] Login de usuário: sabrina. Endereço IP: 127.0.0.1. Status: com sucesso
+[2023-11-27 01:58:07] Início de uma partida. Endereço IP: 127.0.0.1, Nome do Usuário: sabrina
+[2023-11-27 02:20:32] Servidor TCP iniciado com sucesso.
+[2023-11-27 02:20:32] Servidor UDP iniciado com sucesso.
+[2023-11-27 02:20:35] Conexão realizada por um cliente (UDP). Endereço IP: 127.0.0.1
+[2023-11-27 02:20:38] Login de usuário: sabrina. Endereço IP: 127.0.0.1. Status: com sucesso
+[2023-11-27 02:20:49] Servidor TCP iniciado com sucesso.
+[2023-11-27 02:20:49] Servidor UDP iniciado com sucesso.
+[2023-11-27 02:20:53] Conexão realizada por um cliente (TCP). Endereço IP: 127.0.0.1
+[2023-11-27 02:20:58] Login de usuário: sabrina. Endereço IP: 127.0.0.1. Status: com sucesso
+[2023-11-27 02:20:59] Início de uma partida. Endereço IP: 127.0.0.1, Nome do Usuário: sabrina

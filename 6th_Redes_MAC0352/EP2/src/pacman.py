@@ -3,13 +3,6 @@ import socket
 import random
 import time
 
-'''
-TO-DO:
-- fantasma local persegue o pacman?
-- mudar o game over para vitoria?
-- quantos pontos o fantasma ganha?
-'''
-
 class PacMan:
     def __init__(self):
 

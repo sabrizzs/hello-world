@@ -5,23 +5,6 @@ import os
 from typing import Tuple, List
 from datetime import datetime
 
-
-'''
-TO-DO
-- servidor udp
-- servidor daemon, segundo plano invocado por &
-- heartbeat
-- latencia
-- servidor cair, esperar 20s
-
-- testar jogo com cliente tcp e cliente udp
-
-- video
-- makefile
-- leiame
-'''
-
-
 class ServidorTCP:
     def __init__(self, host, port):
         self.host = host

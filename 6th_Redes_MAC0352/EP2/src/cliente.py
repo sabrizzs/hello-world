@@ -5,18 +5,6 @@ from pacman import PacMan
 from typing import Tuple
 import time
 
-
-''' 
-TO-DO:
-- lista de status com uma linha vazia no final
-- out
-- atualiza sockets
-- ok
-- desafio nao funciona quando o cliente reseta e o servidor nao
-- lidar com gameover antes do desafiante chegar
-
-'''
-
 class Cliente:
     def __init__(self, host, port):
         self.IP = host
@@ -249,7 +237,8 @@ class Cliente:
                 
                 # fantasma remoto
                 if jogador == 2:
-                    direcao = input("Pac-Man> Digite a direção para mover o fantasma remoto (w/a/s/d):\nPac-Man> ")
+                    direcao = input("Pac-Man> Digite move <direcao> para mover o fantasma remoto (w/a/s/d):\nPac-Man> ")
+                    direcao = direcao.split()[1]
                     if direcao == "encerra":
                         envia_comando_ao_socket(s, direcao, 'tcp', None)
                         print("[P] Partida encerrada!")
@@ -280,7 +269,8 @@ class Cliente:
 
                     # pacman
                     if jogador == 1:
-                        direcao = input("Pac-Man> Digite a direção para mover o Pac-Man (w/a/s/d):\nPac-Man> ")
+                        direcao = input("Pac-Man> Digite move <direcao> para mover o Pac-Man (w/a/s/d):\nPac-Man> ")
+                        direcao = direcao.split()[1]
                         if direcao == "encerra":
                             print("[P] Partida encerrada!")
                             self.finaliza_jogo()
@@ -322,7 +312,8 @@ class Cliente:
                     break   
                 time.sleep(1)
                 
-                direcao = input("Pac-Man> Digite a direção para mover o Pac-Man (w/a/s/d):\nPac-Man> ")
+                direcao = input("Pac-Man> Digite move <direcao> para mover o Pac-Man (w/a/s/d):\nPac-Man> ")
+                direcao = direcao.split()[1]
                 if direcao == "encerra":
                     print("[P] Partida encerrada!")
                     self.finaliza_jogo()
