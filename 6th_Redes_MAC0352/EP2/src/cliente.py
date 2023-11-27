@@ -217,7 +217,6 @@ class Cliente:
                         atributos = ''
                         while not atributos:
                             atributos = recebe_resposta_do_socket(s, 'tcp')
-                        print(atributos)
                         x = int((atributos.split(', ')[0])[1:])
                         y = int((atributos.split(', ')[1])[:-1])
                         jogo.fantasma_remoto = (x, y)
@@ -353,7 +352,7 @@ class Cliente:
             resposta = "0"
             try:
                 while resposta == "0":
-                    resposta = envia_comando_ao_servidor("caixadeentrada", s, self.protocolo, self.PORT)   
+                    resposta = envia_comando_ao_servidor("heartbeat", s, self.protocolo, self.PORT)   
                 if resposta != "0":
                     if resposta.split()[0] == "Desafio:":
                         print(resposta, end='')
@@ -384,10 +383,8 @@ class Cliente:
             self.jogo_socket = jogo_socket
             
     def conexao_desafiante(self, ss:socket.socket, mensagem):
-        print(mensagem)
         jogo_porta = int(mensagem.split()[2])
         jogo_ip = mensagem.split()[3]
-        print(f"Jogo porta: {jogo_porta} , Jogo ip: {jogo_ip}")
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as jogo_socket:
             jogo_socket.connect((jogo_ip, jogo_porta))

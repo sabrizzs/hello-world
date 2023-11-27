@@ -31,7 +31,7 @@ class PacMan:
         self.pacman_pontuacao = 0
         self.fantasma_remoto_pontuacao = 0
 
-        print("[P] PacMan iniciado!")
+        #print("[P] PacMan iniciado!")
 
     def posicao_aleatoria(self):
         while True:
