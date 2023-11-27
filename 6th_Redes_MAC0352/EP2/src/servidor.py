@@ -1,6 +1,7 @@
 import sys
 import socket
 import threading
+import os
 from typing import Tuple, List
 from datetime import datetime
 
@@ -8,13 +9,12 @@ from datetime import datetime
 '''
 TO-DO
 - servidor udp
-- arquivo log
 - servidor daemon, segundo plano invocado por &
+
 - heartbeat
 - latencia
 - servidor cair, esperar 20s
 
-- addr background
 - testar jogo com cliente tcp e cliente udp
 
 - video
@@ -29,7 +29,7 @@ class ServidorTCP:
         self.port = port
 
     def inicia(self):
-        print(f"[S] TCP: Servidor TCP rodando na porta {self.port} e no host {self.host}")
+        #print(f"[S] TCP: Servidor TCP rodando na porta {self.port} e no host {self.host}")
         log.servidor_iniciado('TCP', True, False)
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s_ouvinte:
@@ -38,16 +38,16 @@ class ServidorTCP:
             s_ouvinte.listen()
             try:
                 while(True):                
-                    print("[T] TCP: Esperando conexão com algum cliente")
+                    #print("[T] TCP: Esperando conexão com algum cliente")
                     s, addr = s_ouvinte.accept()
-                    print(f"[S] TCP: Conexão estabelecida com {addr}")
+                    #print(f"[S] TCP: Conexão estabelecida com {addr}")
                     log.conexao_cliente(addr[0], 'tcp')
             
                     cliente = Cliente(s, addr, 'tcp')
                     clientes.append(cliente)
                     cliente.threads()
             except:
-                print("[S] TCP: Servidor finalizado")
+                #print("[S] TCP: Servidor finalizado")
                 log.servidor_finalizado()
                 status.reseta_status()
                 exit(0)
@@ -58,7 +58,7 @@ class ServidorUDP:
         self.port = port
 
     def inicia(self):
-        print(f"[S] UDP: Servidor UDP rodando na porta {self.port} e no host {self.host}")
+        #print(f"[S] UDP: Servidor UDP rodando na porta {self.port} e no host {self.host}")
         log.servidor_iniciado('UDP', True, False)
 
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
@@ -67,18 +67,18 @@ class ServidorUDP:
             #PAREI EM CLIENTE THREADS
             try:
                 while True:
-                    print("[T] UDP: Esperando conexão com algum cliente")
+                    #print("[T] UDP: Esperando conexão com algum cliente")
                     msg, addr = s.recvfrom(1024)
                     mensagem = msg.decode('utf-8')
                     if mensagem == "conectado":
-                        print(f"[S] UDP: Conexão estabelecida com {addr}: {mensagem}")
+                        #print(f"[S] UDP: Conexão estabelecida com {addr}: {mensagem}")
                         log.conexao_cliente(addr[0], 'udp')
                     
                     cliente = Cliente(s, addr, 'udp')
                     clientes.append(cliente)
                     cliente.threads()
             except:
-                print("[S] UDP: Servidor finalizado")
+                #print("[S] UDP: Servidor finalizado")
                 log.servidor_finalizado()
                 status.reseta_status()
                 exit(0)
@@ -102,15 +102,13 @@ class Cliente:
         if protocolo == "tcp":
             s_ouvinte, porta = cria_socket_ouvinte()
             envia_comando_ao_socket(self.s, porta, self.protocolo, None)
-            print(f"[T] TCP: porta servidor: {porta}") #envia porta
 
-            self.ss, addr_background = s_ouvinte.accept()
+            self.ss, addr_ouvinte = s_ouvinte.accept()
             resposta = self.ss.recv(1024).decode('utf-8')
             envia_comando_ao_socket(self.ss, "ok", self.protocolo, None)
             
-            print(f"[S] TCP: Recebeu resposta do cliente: {resposta}")
+            #print(f"[T] TCP: Recebeu resposta do cliente: {resposta}")
 
-            #"ok" caso nova conexão
             if resposta == "ok":
                 print(f"[S] TCP: Cliente {addr} conectou")
         
@@ -121,14 +119,13 @@ class Cliente:
             self.s.sendto(self.ss_porta, self.addr)
 
             self.ss_porta = int(self.ss_porta.decode('utf-8'))
-            print(f"[T] UDP: porta ss_porta servidor: {self.ss_porta}") #envia porta
-            print(f"[T] UDP: porta s_porta servidor: {self.s_porta}")
+            #print(f"[T] UDP: porta ss_porta servidor: {self.ss_porta}") #envia porta
+            #print(f"[T] UDP: porta s_porta servidor: {self.s_porta}")
 
             msg, addr = self.ss.recvfrom(1024)
             resposta = msg.decode('utf-8')
-            print(f"[S] UDP: Recebeu resposta do cliente: {resposta}")
+            #print(f"[S] UDP: Recebeu resposta do cliente: {resposta}")
 
-            #"ok" caso nova conexão
             if resposta == "ok":
                 print(f"[S] UDP: Cliente {addr} conectou")
 
@@ -142,7 +139,7 @@ class Cliente:
         self.reseta_jogo()
         status.sai_usuario(self.usuario)
         log.desconexao_cliente(self.addr[0], self.protocolo)
-        print("[T] Cliente resetado com sucesso")
+        #print("[T] Cliente resetado com sucesso")
 
     def reseta_jogo(self):
         self.caixa_de_entrada = None
@@ -164,7 +161,7 @@ class Cliente:
                 try:
                     comando = s.recv(1024).decode('utf-8')
                 except:
-                    print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
+                    #print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
                     self.reseta_cliente()
                     break
 
@@ -174,23 +171,20 @@ class Cliente:
                     if self.caixa_de_entrada is not None and not self.desafiado:
                         envia_comando_ao_socket(s, f"{self.caixa_de_entrada}", self.protocolo, self.s_porta)
                         self.desafiado = True
-                        print("[T] Leu desafio da caixa de entrada")
                     else:
                         envia_comando_ao_socket(s, "0", self.protocolo, self.s_porta)
                     
     def envia_desafio(self, oponente):
-        print("[T] Encontrando oponente...")
+        #print("[T] Encontrando oponente...")
         for cliente in clientes:
             if cliente.usuario == oponente:
-                print(f"[T] {self.usuario} achou oponente {oponente} na lista de clientes.")
+                #print(f"[T] {self.usuario} achou oponente {oponente} na lista de clientes.")
                 if cliente.caixa_de_entrada == None:
                     prompt = "Pac-Man> "
                     cliente.desafiante_addr = self.addr
-                    cliente.caixa_de_entrada = f"\nDesafio: {self.usuario} {cliente.desafiante_addr} te desafiou  e irá entrar na partida como um fantasma!\n{prompt}"    
-                    print("[T] desafio foi enviado para a caixa de entrada!")
+                    cliente.caixa_de_entrada = f"\nDesafio: {self.usuario} {cliente.desafiante_addr} te desafiou  e irá entrar na partida como um fantasma!\n{prompt}"
                     return 1
                 else: 
-                    print("[T] caixa de entrada cheia!")
                     return 0
 
     def interpretador(self):
@@ -204,7 +198,7 @@ class Cliente:
                         comando, _ = self.ss.recvfrom(1024)
                         comando = comando.decode('utf-8')
                 except:
-                    print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
+                    #print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
                     envia_comando_ao_socket(ss, 'tchau', self.protocolo, self.ss_porta)
                     self.reseta_cliente()
                     break
@@ -212,7 +206,7 @@ class Cliente:
                 comando = comando.split()
 
                 if not comando or comando[0] == 'tchau':
-                    print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
+                    #print(f'[S] Cliente {self.addr} encerrou a conexão. Desconectando...')
                     envia_comando_ao_socket(ss, 'tchau', self.protocolo, self.ss_porta)
                     self.reseta_cliente() 
                     break
@@ -580,7 +574,6 @@ class Log:
         with open(self.log_arq, 'a') as f:
             pass
 
-    # Servidor iniciado
     def servidor_iniciado(self, protocolo, sucesso, partida_em_execucao):
         self.log_mutex.acquire()
         with open(self.log_arq, 'a') as f:
@@ -591,12 +584,7 @@ class Log:
             else:
                 f.write(f"[{tempo}] Servidor {protocolo} iniciado {status_execucao}.\n")
         self.log_mutex.release()
-        # falta
-    '''
-    Caso houve falha, e se havia alguma partida em execuc ̧ ̃ao, ele deve retomar o “controle”
-    dessa partida passando a enviar os heartbeats para os clientes, caso eles ainda estejam conectados
-    entre eles)
-    '''
+        # falta heartbeats
 
     def conexao_cliente(self, endereco_ip, protocolo):
         self.log_mutex.acquire()
@@ -612,7 +600,6 @@ class Log:
             status_login = "com sucesso" if sucesso else "sem sucesso"
             f.write(f"[{tempo}] Login de usuário: {usuario}. Endereço IP: {endereco_ip}. Status: {status_login}\n")
         self.log_mutex.release()
-        #falta quando nao da sucesso
 
     def desconexao_cliente(self, endereco_ip, protocolo):
         self.log_mutex.acquire()
@@ -646,14 +633,8 @@ class Log:
         self.log_mutex.release()
 
     def desconexao_inesperada(self, endereco_ip):
-        self.log_mutex.acquire()
-        with open(self.log_arq, 'a') as f:
-            tempo = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            f.write(f"[{tempo}] Desconexão inesperada de um cliente, verificada pelos heartbeats. Endereço IP: {endereco_ip}\n")
-        self.log_mutex.release()
-    # falta implementar heartbeats
+        pass
 
-    # Servidor finalizado
     def servidor_finalizado(self):
         self.log_mutex.acquire()
         with open(self.log_file, 'a') as f:
@@ -666,16 +647,16 @@ def cria_socket_ouvinte() -> Tuple[socket.socket, str]:
     s_ouvinte = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s_ouvinte.bind(('', 0)) #sistema escolhe uma porta disponível
     s_ouvinte.listen(5)
-    _, port1 = s_ouvinte.getsockname()
-    str_port1 = '%05d' % port1
-    return s_ouvinte, str_port1
+    _, porta = s_ouvinte.getsockname()
+    s_porta = '%05d' % porta
+    return s_ouvinte, s_porta
 
-def envia_comando_ao_socket(s: socket.socket, comando: str, protocolo, udp_port):
+def envia_comando_ao_socket(s: socket.socket, comando: str, protocolo, udp_porta):
     comando = bytearray(comando.encode())
     if protocolo == 'tcp':
         s.sendall(comando)
     elif protocolo == 'udp':
-        s.sendto(comando, ('', udp_port))
+        s.sendto(comando, ('', udp_porta))
 
 usuarios = Usuarios()
 status =  Status()
@@ -689,10 +670,10 @@ def main():
         porta_udp = int(sys.argv[2])
     else:
         print("[S] Nenhum argumento fornecido. Forneça as portas como argumentos, por exemplo: python servidor.py <porta TCP> <porta UDP>")
-        print("[S] Rodando o servidor nas portas pré definidas tcp: 8080 e udp: 8081")
+        '''print("[S] Rodando o servidor nas portas pré definidas tcp: 8080 e udp: 8081")
         porta_tcp = 8080
-        porta_udp = 8080
-        # exit(1)
+        porta_udp = 8080'''
+        exit(1)
 
     print(f"[S] Servidor TCP irá rodar na porta {porta_tcp}.")
     servidor_tcp = ServidorTCP('', porta_tcp)

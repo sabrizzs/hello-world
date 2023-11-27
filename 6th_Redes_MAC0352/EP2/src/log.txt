@@ -164,3 +164,13 @@
 [2023-11-26 22:44:33] Entrada de um fantasma da partida existente. Endereço IP: 127.0.0.1, Nome do Usuário: bina
 [2023-11-26 22:44:46] Saída de um fantasma da partida existente. Endereço IP: 127.0.0.1, Nome do Usuário: bina
 [2023-11-26 22:44:46] Finalização de uma partida. Endereços IP: 127.0.0.1, 127.0.0.1, Nomes dos Usuários: sabrina, bina, Vencedor: bina de Fantasma
+[2023-11-26 22:52:33] Servidor TCP iniciado com sucesso.
+[2023-11-26 22:52:33] Servidor UDP iniciado com sucesso.
+[2023-11-26 22:52:35] Conexão realizada por um cliente (TCP). Endereço IP: 127.0.0.1
+[2023-11-26 22:52:44] Conexão realizada por um cliente (TCP). Endereço IP: 127.0.0.1
+[2023-11-26 23:02:20] Servidor TCP iniciado com sucesso.
+[2023-11-26 23:02:20] Servidor UDP iniciado com sucesso.
+[2023-11-26 23:02:25] Conexão realizada por um cliente (TCP). Endereço IP: 127.0.0.1
+[2023-11-26 23:02:29] Conexão realizada por um cliente (TCP). Endereço IP: 127.0.0.1
+[2023-11-26 23:06:04] Desconexão realizada por um cliente (TCP). Endereço IP: 127.0.0.1
+[2023-11-26 23:06:48] Conexão realizada por um cliente (TCP). Endereço IP: 127.0.0.1

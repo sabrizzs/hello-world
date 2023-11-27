@@ -35,7 +35,7 @@ class Cliente:
           
     def conexao_tcp(self):
         self.protocolo = 'tcp'
-        print("[C] Estabelecendo conexão...")
+        #print("[C] Estabelecendo conexão...")
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((self.IP, self.PORT))
 
@@ -44,7 +44,7 @@ class Cliente:
             ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             ss.connect((IP, self.ss_port))
             envia_comando_ao_servidor('ok', ss, self.protocolo, None)
-            print("[C] Cliente conectado")
+            print("[C] Conectado!")
  
             servidor_ouvinte_thread = threading.Thread(target=self.servidor_ouvinte, args=(s, ss))
             servidor_ouvinte_thread.start()
@@ -53,17 +53,16 @@ class Cliente:
 
     def conexao_udp(self):
         self.protocolo = 'udp'
-        print("[C] Estabelecendo conexão...")
+        #print("[C] Estabelecendo conexão...")
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
             s.sendto(b"conectado", ('', self.PORT)) #ip era self.IP
 
             msg, addr = s.recvfrom(1024)
             self.ss_port = int(msg.decode('utf-8'))
-            print(f"[T] Porta: {self.ss_port}")
 
             ss = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             ss.sendto(b'ok', ('', self.ss_port))
-            print(f"[C] Cliente conectado.")
+            print(f"[C] Conectado!")
 
             servidor_ouvinte_thread = threading.Thread(target=self.servidor_ouvinte, args=(s, ss))
             servidor_ouvinte_thread.start()
@@ -91,7 +90,6 @@ class Cliente:
 
             try:
                 if comando == 'teste':
-                    print("[T] comando teste")
                     resposta = envia_comando_ao_servidor(out, ss, self.protocolo, self.ss_port)                   
                     if not resposta:
                         print(f"[C] Servidor não respondeu ao comando {comando}")
@@ -187,7 +185,6 @@ class Cliente:
                     if jogador == 1:
                         atributos = f"{jogo.pacman}/{jogo.fantasma_local}"
                         envia_comando_ao_socket(s, atributos, 'tcp', None)
-                        print("[T] teste!")
 
                     else:
                         atributos = ''
@@ -445,12 +442,12 @@ def main():
         PORT = int(sys.argv[2])
         protocolo = sys.argv[3].lower()
     else:
-        print("Forneca o IP, a porta e o protocolo como argumentos, por exemplo: python client.py 127.0.0.1 8080 tcp")
-        print("[C] Rodando o cliente nos argumentos pré definidos ip: 127.0.0.1 porta: 8080 protocolo: x")
+        print("Forneça o IP, a porta e o protocolo como argumentos, por exemplo: python client.py 127.0.0.1 8080 tcp")
+        '''print("[C] Rodando o cliente nos argumentos pré definidos ip: 127.0.0.1 porta: 8080 protocolo: x")
         IP = '127.0.0.1'
         PORT = 8080
-        protocolo = 'tcp'
-        # exit(1)
+        protocolo = 'tcp' '''
+        exit(1)
 
     print(f"[C] Cliente no IP {IP} irá conectar na porta {PORT} usando o protocolo {protocolo.upper()}.")
     cliente = Cliente(IP, PORT)
