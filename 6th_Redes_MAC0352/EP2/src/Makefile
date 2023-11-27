@@ -12,8 +12,5 @@ cliente_udp:
 cliente_tcp:
 	$(PYTHON) cliente.py localhost 8080 tcp
 
-pacman:
-	$(PYTHON) pacman.py
-
 clean:
-	$(RM) classificacao.txt status.txt usuarios.txt
+	$(RM) classificacao.txt status.txt usuarios.txt log.txt

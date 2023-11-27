@@ -1,3 +1,5 @@
+Sabrina Araújo nUSP: 12566182
+
 # MAC0352 - Redes de Computadores e Sistemas Distribuídos - 2s2023 - EP2
 
 Neste EP, foi implementado um sistema distribuído que possibilita uma partida multi-player de Pac-Man em modo texto em uma arquitetura híbrida (P2P e cliente/servidor)
