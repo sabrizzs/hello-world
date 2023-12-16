@@ -28,7 +28,6 @@ Builder.load_string('''
 
     Camera:
         id: camera
-        resolution: (724, 724)
         play: False
 
     BoxLayout:
@@ -59,6 +58,9 @@ class CameraClick(BoxLayout):
         self.classified_label = self.ids['classified_label']
 
     def capture(self):
+        if not os.path.exists(f"fotos"):
+            os.makedirs(f"fotos")
+
         camera = self.ids['camera']
         timestr = time.strftime("%Y%m%d_%H%M%S")
         file_name = "fotos/{}.png".format(timestr)
