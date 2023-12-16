@@ -1,0 +1,4 @@
+Classe: garfo
+Objeto: A
+ID do objeto: 3
+Cor do fundo: escuro

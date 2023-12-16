@@ -1,0 +1,4 @@
+Classe: livro
+Objeto: B
+ID do objeto: 3
+Cor do fundo: claro
