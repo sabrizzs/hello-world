@@ -171,6 +171,7 @@ Imagens -> Dados: processamento de dados
     - Região 2D (f(x,y))
     - Contorno 1D (x(t), y(t))
 - Fourier
+    - soma de senos e cossenos
     - Domínio do sinal: transformações levam o sinal até outro domínio que facilita certas coisas
         - Transformada
         - Transformada de Fourier
@@ -301,5 +302,28 @@ slide 115
 - Perimetro
     - Número de códigos pares (linha reta) e número de códigos ímpares (linha diagonal)
     - P = Ne + No raiz(2)
+ 
+## 05 de novembro
+
+- Shape signatures
+    - A partir do 2D extrair o 1D
+ 
+    - 2D:
+        - c(t) = (x(t), y(t))
+        - u(t) = x(t) + jy(t) [j=raiz(-1)] sinal complexo
+        - desvantagem: precisa de dois sinais ou de um sinal complexo
+          
+    - Curvatura do sinal: quanto o vetor tangente está variando; velocidade de mudança do vetor tangente
+        - forma representada na curva paramétrica: c(t) = ...
+        - mudanças são importantes
+        - erros: pontos de curvatura
+        - Feature Point Detectors
+            - SIFT
+            - SURF
+              
+- Descritores de Fouries
+    - F(w) e G(w) são assinaturas de f(t) e g(t) pois o F e o G são o que mudam
+    - descritores de Fourier mais usados sao baseados no módulo de F(w)
+        - baixas frequências
 
 
