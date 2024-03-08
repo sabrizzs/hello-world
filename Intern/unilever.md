@@ -1,27 +1,3 @@
-## Apresentação pessoal -------------
-
-Ola, bom dia estou muito feliz de estar aqui com voces
-
-meu nome eh sabrina araujo, tenho 20 anos e sou de sao paulo
-
-faço ciência da computação na usp
-
-sou uma pessoa que está constantemente buscando fazer a diferença e trazer um impacto social na vida das pessoas
-
-e acredito que um dos meus projetos atuais se baseia nisso
-
-que eh a criação de um software que calcula a melhor rota para pedestres com base em imagens da calçada, obstáculos e outros elementos do meio urbano
-
-bem semelhante ao waze ou google maps
-
-porém esse projeto tem foco especial para pessoas idosas ou com dificuldade de locomoção
-
-porque muitas vezes o caminho mais rápido não é o de melhor acesso para esse público 
-
-acredito que assim como a unilever traz em seus princípios, o meu projeto irá conseguir trazer inovação, inclusão e cuidado com as pessoas
-
-eh isso, obrigada pela atenção :)
-
 # Unilever
 
 ## Marcas e produtos unilever -------------
