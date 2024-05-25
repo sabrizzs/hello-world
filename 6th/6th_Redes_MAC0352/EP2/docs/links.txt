@@ -1,0 +1,5 @@
+https://github.com/louhmmsb/EP2-Redes python
+https://github.com/gvmossato/redes-ep2 python (imagem)
+https://github.com/iangalvao/EP2_REDES python
+https://github.com/danielkza/mac0448-chat/tree/master python 
+https://github.com/limapvictor/redes-ep2 c++

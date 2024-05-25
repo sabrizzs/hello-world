@@ -1,4 +1,0 @@
-Classe: garfo
-Objeto: B
-ID do objeto: 2
-Cor do fundo: claro

@@ -1,0 +1,29 @@
+MAC0420 EP2
+
+Sabrina Araujo da Silva
+nUSP 12566182
+
+INTRODUÇÃO
+
+O jogo consiste em uma pescaria, onde os peixes nadam no mar e um arpão fica na areia. O jogador assume o papel de um pescador, e o seu objetivo é acertar os peixes usando o arpão e as bolhas lançadas. Quando um peixe é capturado, outros aparecem pelo mar. Cada peixe capturado adiciona pontos à pontuação do jogador. Há ainda os botões de pausa e passo. O botão de passo permite depurar o programa. A barra de controle de velocidade permite definir a velocidade dos peixes.
+
+HORAS DE TRABALHO
+
+Aproximadamente 12h durante duas semanas.
+
+DIFICULDADES
+
+Fazer as funções de atualização de cada objeto, pois tive que pensar no ambiente normalizado.
+
+Implementar o botão de passo. Tive que pensar em como pausar o jogo e ainda assim atualizar o próximo movimento dos objetos.
+´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´p´´´´´´ç´´ç´´´´´~´´~~´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´
+BUGS
+
+Alguns peixes ficavam presos nas bordas do canvas quando as suas posições eram geradas aleatoriamente, tive que diminuir o tamanho da área em que eles eram gerados.
+
+OPCIONAIS
+
+Adicionei uma pontuação de peixes capturados. Quando o pescador captura um peixe no meu jogo, outro peixe reaparece, garantindo que mar nunca fique sem peixes. Então achei interessante ter uma pontuação.
+
+´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´p´p´p´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´
+´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´~´´= ´´´=´= =´´´´´´ ´´         ´        ´        ´         ´       ´         ´        ´        ´        ´        ´        ´  ´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´=´´ ´´ ´´´§§§§§§´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´~´=´~´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´

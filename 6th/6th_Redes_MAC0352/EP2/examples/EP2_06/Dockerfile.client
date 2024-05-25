@@ -1,0 +1,21 @@
+FROM gcc as base
+
+COPY . ./
+
+RUN make clean && make client
+
+FROM ubuntu
+
+WORKDIR /usr/src/app
+
+EXPOSE 3000
+
+EXPOSE 3001
+
+COPY --from=base ./client ./
+
+COPY --from=base ./scripts ./
+
+RUN chmod 777 ./client
+
+CMD tail -f /dev/null

@@ -1,9 +1,0 @@
-0s: 
-CONTAINER   NAME       CPU %     MEM USAGE / LIMIT     NET I/O
-servidor    servidor   7.80%     64.69MiB / 7.631GiB   21.4kB / 19.1kB
-15s: 
-CONTAINER   NAME       CPU %     MEM USAGE / LIMIT     NET I/O
-servidor    servidor   0.00%     64.68MiB / 7.631GiB   22.3kB / 19.9kB
-30s: 
-CONTAINER   NAME       CPU %     MEM USAGE / LIMIT     NET I/O
-servidor    servidor   0.00%     64.68MiB / 7.631GiB   22.6kB / 20.3kB

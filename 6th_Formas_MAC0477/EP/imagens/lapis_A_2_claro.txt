@@ -1,4 +1,0 @@
-Classe: lapis
-Objeto: A
-ID do objeto: 2
-Cor do fundo: claro

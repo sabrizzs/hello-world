@@ -1,0 +1,87 @@
+body {
+    margin-top: 25px;   
+}
+
+#title-mode {
+    font-size: 30px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+#display-time {
+    font-size: 45px;
+    text-align: center;
+    margin-top: 12px;
+    margin-bottom: 20px;
+}
+
+#display-main {
+    font-size: 60px;
+    text-align: center;
+}
+
+#teclado {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 7px;
+    width: 50%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+#teclado button:hover {  
+    position: relative;  
+    top: 1px;  
+    left: 1px;  
+    border-color: #c29bb2;  
+    cursor: pointer;  
+}
+
+#teclado button {
+    height: 80px;
+    padding: 10px;
+    font-size: 27px;
+    background-color: #f3e6f2;
+    color: #000000;
+    border-radius: 5px;
+    border: 1px solid #ffffff;
+}
+
+#teclado #zero {
+    grid-column: 2;
+}
+
+#teclado #clear {
+    grid-column: 3;
+    background-color: #f5d9c2;
+}
+
+#controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    
+}
+
+#controls button {
+    width: 20%;
+    padding: 10px;
+    font-size: 18px;
+    margin-right: 10px;
+
+    height: 80px;
+    padding: 10px;
+    font-size: 18px;
+    background-color: #6e466a;
+    color: #ffffff;
+    border-radius: 5px;
+    border: 1px solid #ffffff;
+}
+
+#controls button:hover {  
+    position: relative;  
+    top: 1px;  
+    left: 1px;  
+    border-color: #2c1723;  
+    cursor: pointer;  
+}

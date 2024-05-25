@@ -1,7 +1,0 @@
-.vscode
-/client
-/server
-src/*/*.o
-scripts/statsGenerator
-scripts/agregateStats
-results/

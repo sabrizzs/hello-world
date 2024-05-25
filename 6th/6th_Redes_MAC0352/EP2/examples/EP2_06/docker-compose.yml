@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    environment:
+      - TCP_PORT=8000
+      - UDP_PORT=9000
+    volumes:
+      - /tmp/ep2:/tmp/ep2
+    tty: true
+  client1:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    environment:
+      - SERVER_PORT=8000
+      - P2P_PORT=3000
+  client2:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    environment:
+      - SERVER_PORT=8000
+      - P2P_PORT=3001
+  
