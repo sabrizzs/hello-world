@@ -1,0 +1,117 @@
+0:
+    0: 197.218.0.0
+    1: 197.218.24.255
+    2: AF
+    3: MZ
+    4: Maputo City
+    5: Maputo (Alto Maé "B")
+    6: -25.9648
+    7: 32.5639
+1:
+    0: 197.218.26.0
+    1: 197.218.89.255
+    2: AF
+    3: MZ
+    4: Maputo City
+    5: Maputo (Alto Maé "B")
+    6: -25.9648
+    7: 32.5639
+2:
+    0: 197.218.95.0
+    1: 197.218.98.255
+    2: AF
+    3: MZ
+    4: Maputo City
+    5: Maputo (Alto Maé "B")
+    6: -25.9648
+    7: 32.5639
+3:
+    0: 169.225.0.0
+    1: 169.225.255.255
+    2: NA
+    3: US
+    4: Illinois
+    5: Chicago (Near North Side)
+    6: 41.8884
+    7: -87.6305
+4:
+    0: 169.226.0.0
+    1: 169.226.255.255
+    2: NA
+    3: US
+    4: New York
+    5: Albany
+    6: 42.6891
+    7: -73.825
+5:
+    0: 169.227.0.0
+    1: 169.227.255.255
+    2: NA
+    3: US
+    4: Wisconsin
+    5: Milwaukee (Wick Field)
+    6: 43.0484
+    7: -87.9797
+6:
+    0: 169.228.0.0
+    1: 169.228.255.255
+    2: NA
+    3: US
+    4: California
+    5: San Diego (La Jolla)
+    6: 32.8328
+    7: -117.271
+7:
+    0: 169.229.0.0
+    1: 169.229.255.255
+    2: NA
+    3: US
+    4: California
+    5: Berkeley (Downtown Berkeley)
+    6: 37.8641
+    7: -122.268
+8:
+    0: 169.230.0.0
+    1: 169.230.255.255
+    2: NA
+    3: US
+    4: California
+    5: San Francisco (Mission San Rafael)
+    6: 37.7674
+    7: -122.415
+9:
+    0: 169.231.0.0
+    1: 169.231.255.255
+    2: NA
+    3: US
+    4: California
+    5: Santa Barbara
+    6: 34.4208
+    7: -119.698
+10:
+    0: 169.232.0.0
+    1: 169.232.255.255
+    2: NA
+    3: US
+    4: California
+    5: Los Angeles (Westwood, Los Angeles)
+    6: 34.0675
+    7: -118.447
+11:
+    0: 169.233.0.0
+    1: 169.233.255.255
+    2: NA
+    3: US
+    4: California
+    5: Santa Cruz (Communications Building)
+    6: 37.0009
+    7: -122.061
+12:
+    0: 169.234.0.0
+    1: 169.234.255.255
+    2: NA
+    3: US
+    4: California
+    5: Irvine
+    6: 33.6839
+    7: -117.795

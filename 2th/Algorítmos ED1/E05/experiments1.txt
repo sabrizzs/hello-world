@@ -1,0 +1,109 @@
+$ javac -version
+javac 11.0.7
+$ java -version
+openjdk version "11.0.7" 2020-04-14
+OpenJDK Runtime Environment AdoptOpenJDK (build 11.0.7+10)
+OpenJDK 64-Bit Server VM AdoptOpenJDK (build 11.0.7+10, mixed mode)
+
+$ java-introcs ABPerms 4 2 2 -V
+badc
+bdac
+cadb
+cdab
+4
+$ java-introcs ABPerms 5 2 2 -V
+0
+$ ABPerms 6 2 3 -v
+cbafed
+cbfead
+cbfaed
+cfbead
+cfbaed
+dbafec
+dbfaec
+dbfeac
+dcafeb
+dcfaeb
+dcfeab
+dfcaeb
+dfceab
+dfbaec
+dfbeac
+ebafdc
+ebfdac
+ebfadc
+ecafdb
+ecfdab
+ecfadb
+efcdab
+efcadb
+efbdac
+efbadc
+$ java-introcs ABPerms 7 2 3
+0
+$ java-introcs ABPerms 7 3 3
+882
+$ time java-introcs ABPerms 8 3 3
+1764
+
+real	0m0.160s
+user	0m0.155s
+sys	0m0.038s
+$ time java-introcs ABPerms 9 3 3
+1764
+
+real	0m0.164s
+user	0m0.161s
+sys	0m0.037s
+$ time java-introcs ABPerms 10 3 3
+0
+
+real	0m0.143s
+user	0m0.121s
+sys	0m0.034s
+$ time java-introcs ABPerms 10 3 4
+107604
+
+real	0m0.234s
+user	0m0.234s
+sys	0m0.035s
+$ time java-introcs ABPerms 11 3 4
+213444
+
+real	0m0.627s
+user	0m0.633s
+sys	0m0.045s
+$ time java-introcs ABPerms 12 3 4
+213444
+
+real	0m2.235s
+user	0m2.250s
+sys	0m0.040s
+$ time java-introcs ABPerms 13 3 4
+0
+
+real	0m0.150s
+user	0m0.126s
+sys	0m0.034s
+$ java-introcs ABPerms 12 3 4 -v | sort | md5
+da2086141e3bbd2525c722b4e65fe2f9
+$ time java-introcs ABPerms 11 4 4
+5323032
+
+real	0m1.826s
+user	0m1.824s
+sys	0m0.043s
+$ time java-introcs ABPerms 12 4 4
+25038288
+
+real	0m12.944s
+user	0m12.910s
+sys	0m0.081s
+$ time java-introcs ABPerms 13 4 4
+97173648
+
+real	1m35.591s
+user	1m35.440s
+sys	0m0.187s
+$ java-introcs ABPerms 12 4 4 | sort | md5
+001c2b83ca9bbe774b2c47385f4d25a6

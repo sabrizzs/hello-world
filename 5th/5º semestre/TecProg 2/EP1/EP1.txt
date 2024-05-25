@@ -1,0 +1,6 @@
+Integrantes:
+Sabrina Araújo     NUSP: 12566182
+Samantha Miyahira  NUSP: 11797261
+
+URL do repositório do git:
+https://github.com/sabrizzs/galaxy-raiders-api

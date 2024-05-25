@@ -1,0 +1,17 @@
+A memória associativa armazena uma tabela com os? 
+últimos acessos realizados.
+
+Como funciona o mapeamento direto?
+Antes de um processo iniciar a sua execução, o SO carrega o endereço da tabela do mapeamento no registrador especial.
+
+O mapeamento direto requer dois acessos à memória para obter um endereço. Quais?
+Acesso à tabela de mapeamento para encontrar o número da página fisíca correspondente à página virtual, e depois um acesso à memória para acessar o endereço físico final.
+
+O que define o mapeamento associativo?
+Utiliza a memória associativa, que é endereçada pelo conteúdo em vez de endereços físicos.
+
+Por que o mapeamento associativo é consideravelmente mais rápido que a memória convencional?
+Por que a verificação de associação (correspondência entre o nº da página virtual e o nº da página física) é feita em paralelo.
+
+Quais são as duas técnicas de paginação?
+Mapeamento direto e mapeamento associativo

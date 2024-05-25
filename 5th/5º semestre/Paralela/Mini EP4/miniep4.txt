@@ -1,0 +1,6 @@
+MINI EP 4
+
+- Na linha 9, s variáveis x e y agora estão declaradas fora do loop;
+- Nas linhas 14 e 15, os floats entre 0 e 1 estão sendo calculados de forma mais "limpa";
+- Na linha 18, a variável acertos agora está usando o operador incremento ao invés de usar a operação de adição, pois o incremento é mais eficiente.
+- Na linha 22, o uso do caractere '\n' está sendo usado ao invés de "std::endl", pois '\n' é mais eficiente;

@@ -1,0 +1,13 @@
+Quais as vantagens e desvantagens de usar Sketches 
+
+     Usar sketches é vantajoso, pois são fáceis e rápidas de serem criadas e, assim, sketches de várias ideias podem ser criadas em pouco tempo e em qualquer lugar, sem a necessidade de habilidades artísticas. Pode-se criar sketches tradicionalmente, usando papel e caneta, ou digitalmente, além disso, são facilmente descartáveis, evitando que más ideias continuem no projeto. Porém, há também as desvantagens do uso de sketches, como a falta de detalhes e ambiguidade, impedindo a sua utilização de maneira eficiente por pessoas fora da equipe, em projetos complexos ou em processos convergentes, no qual as melhores ideias são selecionadas. 
+
+O que são protótipos em papel (PP) e qual a diferença para Sketches? 
+
+Protótipos em papel (PP) são representações de interfaces por meio de desenhos e esboços utilizando papel, com o intuito de auxiliar em ideias para um projeto. 
+
+Qual a diferença de um PP para um "digital wireframes" (DW) e quando devemos usar DW ao invés de papel? 
+
+ 
+
+Protótipos são ferramentas importantes para testar ideias e responder perguntas. Descreva um tipo de teste que justifique usar a técnica de Wizard of Oz ao invés de PP. 

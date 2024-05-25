@@ -1,0 +1,2 @@
+1. Sobre segurança, foi dito que para os arquitetos foi solicitado pouco além da proteção page-level e do suporte às máquinas virtuais, como a segurança poderia aumentar a partir desses arquitetos.
+2. O progresso em arquiteturas livres e implementações de código aberto exigem mudanças na arquitetura de conjunto de instruções (ISA), por que isso é problemático para Arquiteturas de Conjunto de Instruções Proprietárias (Proprietary ISAs)?

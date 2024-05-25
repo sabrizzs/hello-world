@@ -1,0 +1,191 @@
+/******************************************************************************
+ *  Compilation:  javac-introcs BagVariant.java
+ *  Execution:    java Bag < input.txt
+ *  Dependencies: StdIn.java StdOut.java
+ *
+ *  A generic bag or multiset, implemented using a singly linked list.
+ *
+ *  % more tobe.txt
+ *  to be or not to - be - - that - - - is
+ *
+ *  % java Bag < tobe.txt
+ *  size of bag = 14
+ *  is
+ *  -
+ *  -
+ *  -
+ *  that
+ *  -
+ *  -
+ *  be
+ *  -
+ *  to
+ *  not
+ *  or
+ *  be
+ *  to
+ *
+ ******************************************************************************/
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Arrays;
+
+public class BagVariant<Item extends Comparable<Item>> implements Iterable<Item> {
+
+    private Node<Item> first;    // beginning of bag
+    private int n;               // number of elements in bag
+
+    public void sort() {
+        /* se executamos sort() e imediatamente iteramos sobre os objetos
+         * no BagVariant, os objetos são percorridos em ordem crescente.
+         * Para implementar sort(), você deve, obrigatoriamente,
+         * rearranjar as células da lista ligada que armazenam os objetos em
+         * BagVariant em ordem crescente.
+         * Ordenar uma lista ligada com mergesort e in-place!
+         * Adicionar o método sort() à API
+         */
+
+        mergeSortList(first);
+    }
+
+    public Node<Item> mergeSortList(Node<Item> head) {
+        if (head == null || head.next == null)
+            return head;
+
+        Node<Item> mid = getMid(head), second_head = mid.next;
+        mid.next = null;
+
+        return (first = merge(mergeSortList(head), mergeSortList(second_head)));
+    }
+
+    private Node<Item> merge(Node<Item> head1, Node<Item> head2) {
+        Node<Item> result = new Node<Item>(), current = result;
+
+        while (head1 != null && head2 != null) {
+            if (head1.item.compareTo(head2.item) < 0) {
+                current.next = head1;
+                head1 = head1.next;
+            } else {
+                current.next = head2;
+                head2 = head2.next;
+            }
+            current = current.next;
+        }
+
+        if (head1 != null) current.next = head1;
+        if (head2 != null) current.next = head2;
+
+        return result.next;
+    }
+
+    private Node<Item> getMid(Node<Item> head) {
+        Node<Item> slow = head, fast = head.next;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+
+    // helper linked list class
+    private static class Node<Item extends Comparable<Item>> {
+        private Item item;
+        private Node<Item> next;
+    }
+
+    /**
+     * Initializes an empty bag.
+     */
+    public BagVariant() {
+        first = null;
+        n = 0;
+    }
+
+    /**
+     * Returns true if this bag is empty.
+     *
+     * @return {@code true} if this bag is empty;
+     * {@code false} otherwise
+     */
+    public boolean isEmpty() {
+        return first == null;
+    }
+
+    /**
+     * Returns the number of items in this bag.
+     *
+     * @return the number of items in this bag
+     */
+    public int size() {
+        return n;
+    }
+
+    /**
+     * Adds the item to this bag.
+     *
+     * @param item the item to add to this bag
+     */
+    public void add(Item item) {
+        Node<Item> oldfirst = first;
+        first = new Node<Item>();
+        first.item = item;
+        first.next = oldfirst;
+        n++;
+    }
+
+
+    /**
+     * Returns an iterator that iterates over the items in this bag in arbitrary order.
+     *
+     * @return an iterator that iterates over the items in this bag in arbitrary order
+     */
+    public Iterator<Item> iterator() {
+        return new LinkedIterator(first);
+    }
+
+    // an iterator, doesn't implement remove() since it's optional
+    private class LinkedIterator implements Iterator<Item> {
+        private Node<Item> current;
+
+        public LinkedIterator(Node<Item> first) {
+            current = first;
+        }
+
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        public Item next() {
+            if (!hasNext()) throw new NoSuchElementException();
+            Item item = current.item;
+            current = current.next;
+            return item;
+        }
+
+    }
+
+    /**
+     * Unit tests the {@code Bag} data type.
+     *
+     * @param args the command-line arguments
+     */
+    public static void main(String[] args) {
+        Bag<String> bag = new Bag<String>();
+        while (!StdIn.isEmpty()) {
+            String item = StdIn.readString();
+            bag.add(item);
+        }
+
+        StdOut.println("size of bag = " + bag.size());
+        for (String s : bag) {
+            StdOut.println(s);
+        }
+    }
+
+}

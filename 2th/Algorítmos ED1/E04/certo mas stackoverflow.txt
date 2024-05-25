@@ -1,0 +1,83 @@
+/* javac-introcs Join.java
+ *  java-introcs Join abcd abab
+ *  javac-introcs CheckJoin.java
+ *  javac-introcs CosmicRays.java
+ *  javac-introcs Generator.java
+ */
+
+
+public class Join {
+    // Compute length of LCS for all subproblems.
+    public static String lcs(String x, String y) {
+        int m = x.length(), n = y.length();
+        int[][] opt = new int[m + 1][n + 1];
+        for (int i = m - 1; i >= 0; i--) {
+            for (int j = n - 1; j >= 0; j--) {
+                if (x.charAt(i) == y.charAt(j)) {
+                    opt[i][j] = opt[i + 1][j + 1] + 1;
+                } else {
+                    opt[i][j] = Math.max(opt[i + 1][j], opt[i][j + 1]);
+                }
+            }
+        }
+
+        // Recover LCS itself.
+        String lcs = "";
+        int i = 0, j = 0;
+        while (i < m && j < n) {
+            if (x.charAt(i) == y.charAt(j)) {
+                lcs += x.charAt(i);
+                i++;
+                j++;
+            } else if (opt[i + 1][j] >= opt[i][j + 1]) i++;
+            else j++;
+        }
+        return lcs;
+    }
+
+    public static void join(String args0, String args1, int i, int j, String lcs, int k) {
+
+        if (k == lcs.length()) {
+            for (int q = i; q < args0.length(); q++)
+                StdOut.print(args0.charAt(q)); // printar resto do args0
+            for (int e = j; e < args1.length(); e++)
+                StdOut.print(args1.charAt(e)); // printar resto do args0
+            return;
+        }
+
+        join1(args0, args1, i, j, lcs, k);
+
+    }
+
+    public static void join1(String args0, String args1, int i, int j, String lcs, int k) {
+        if (k >= lcs.length()) {
+            join(args0, args1, i, j, lcs, k);
+            return;
+        }
+
+        if (args0.charAt(i) == lcs.charAt(k)) {
+            for (int q = j; q < args1.length(); q++) //ver qual j é igual a k
+                if (args1.charAt(q) == lcs.charAt(k)) { // se for igual printar da esquerda pra direita ate q
+                    for (int w = j; w <= q; w++) {
+                        StdOut.print(args1.charAt(w)); // printar da esquerda pra direita ate q
+                    }
+                    join1(args0, args1, i + 1, q + 1, lcs, k + 1);
+                    return;
+                }
+        } else {
+            StdOut.print(args0.charAt(i));
+            join1(args0, args1, i + 1, j, lcs, k);
+            return;
+        }
+    }
+
+    public static void main(String[] args) {
+        String arg0 = StdIn.readLine();
+        String arg1 = StdIn.readLine();
+        String lcs = lcs(arg0, arg1);
+
+        join(arg0, arg1, 0, 0, lcs, 0);
+
+    }
+
+}

@@ -1,0 +1,178 @@
+/******************************************************************************
+ *  Compilation:  javac ThreeSumSuper.java
+ *  Execution:    java ThreeSumSuper < input.txt
+ *
+ *  A program with n^2 running time. Read in n integers
+ *  and counts the number of triples that sum to exactly 0.
+ *
+ *  time java-algs4 RandomInts 4000 10000000 121 | java-algs4 ThreeSumSuper
+ *  362
+ *
+ *  real    0m1.591s
+ *  user    0m0.107s
+ *  sys     0m0.262s
+ *
+ *  time java-algs4 RandomInts 50000 10000000 121 | java-algs4 ThreeSumSuper
+ *  780515
+ *
+ *  real    0m12.807s
+ *  user    0m0.091s
+ *  sys     0m0.201s
+ *
+ *  time java-algs4 RandomIntsPlain 5000 10000000 121 | java-algs4 ThreeSumSuper
+ *  756
+ *
+ * real    0m1.315s
+ * user    0m0.046s
+ * sys     0m0.293s
+ *
+ * time java-algs4 RandomIntsPlain 10000 10000000 121 | java-algs4 ThreeSumSuper
+ * 6282
+ *
+ * real    0m1.794s
+ * user    0m0.154s
+ * sys     0m0.185s
+ *
+ * time java-algs4 RandomIntsPlain 20000 1000000000 121 | java-algs4 ThreeSumSuper
+ * 503
+ *
+ * real    0m3.571s
+ * user    0m0.077s
+ * sys     0m0.278s
+ *
+ * time java-algs4 RandomIntsPlain 20000 100000 121 | java-algs4 ThreeSumSuper
+ * 4777691  XXXXX (5006256)
+ *
+ * real    0m3.325s
+ * user    0m0.108s
+ * sys     0m0.278s
+ *
+ * time java-algs4 RandomIntsPlain 50000 10000000 121 | java-algs4 ThreeSumSuper
+ * 779789 XXXXX (780536)
+ *
+ * real    0m12.565s
+ * user    0m0.123s
+ * sys     0m0.216s
+ ******************************************************************************/
+
+import java.util.Arrays;
+
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
+
+public class ThreeSumSuper {
+
+    // print distinct triples (i, j, k) such that a[i] + a[j] + a[k] = 0
+    public static void printAll(int[] a) {
+        int n = a.length;
+        Arrays.sort(a);
+        for (int z = 0; z < n - 2; z++) {
+            int i = a[z];
+            int start = z + 1;
+            int end = n - 1;
+
+            while (start < end) {
+                int j = a[start];
+                int k = a[end];
+                if (i + j + k == 0) {
+                    
+                    if (a[start] != a[start + 1]) end = end - 1;
+                    if (a[start] == a[end]) {
+                        int ind = 2 * (end + 1 - start);
+                        while (ind > 0) {
+                            StdOut.println(i + " " + j + " " + k);
+                            ind--;
+                        }
+                        start = start + end + 1;
+
+                    } else {
+                        start++;
+                        StdOut.println(i + " " + j + " " + k);
+                    }
+                } else if (i + j + k > 0) {
+                    end = end - 1;
+                } else
+                    start++;
+            }
+        }
+    }
+
+    public static int count(int[] a) {
+        int n = a.length;
+        Arrays.sort(a);
+        int count = 0;
+        for (int z = 0; z < n - 2; z++) {
+            int i = a[z];
+            int start = z + 1;
+            int end = n - 1;
+
+            while (start < end) {
+                int j = a[start];
+                int k = a[end];
+                if (i + j + k == 0) {
+
+                    if (a[start] != a[start + 1]) end = end - 1;
+                    //if (a[start] == a[end]) {
+                    //count = count + 2 * (end + 1 - start);
+                    //start = start + end + 1;
+                    //} else {
+                    start++;
+                    count++;
+                    //}
+                } else if (i + j + k > 0) {
+                    end = end - 1;
+                } else
+                    start++;
+            }
+        }
+        return count;
+    }
+
+
+    public static void main(String[] args) {
+        int[] a = StdIn.readAllInts();
+        //int[] a = {-17, -8, -4, 5, 7, 8, 9, 11, 12, 17};
+        //int[] a = {-4, 2, 2, 2, 2, 2}; //10
+        //int[] a = {-10, -10, -10, -10, 2, 2, 2, 2, 2, 2, 2, 8, 8, 8};
+        int count = count(a);
+        StdOut.println(count);
+        if (count < 30) printAll(a);
+    }
+}
+
+333333333333333333333333333333333333333333333333333333
+
+  public static int count(int[] a) {
+        int n = a.length;
+        Arrays.sort(a);
+        int count = 0;
+        for (int z = 0; z < n - 2; z++) {
+            int i = a[z];
+            int start = z + 1;
+            int end = n - 1;
+            int inds = 0;
+            int inde = 0;
+            while (start < end) {
+                int j = a[start];
+                int k = a[end];
+                if (i + j + k == 0) {
+                    if (a[start - 1] != a[start]) inds = start;
+                    if (a[end] != a[inde]) inde = end;
+                    if (a[start] != a[start + 1]) end = end - 1;
+                    if (a[start] == a[end]) {
+                        count = count + 2 * (end + 1 - start);
+                        start = start + end + 1;
+                    } else if (a[start + 1] == a[end] && start + 1 != end) {
+                        count = count + (start - inds + 1 * (inde - start));
+                    } else {
+                        start++;
+                        count++;
+                    }
+                } else if (i + j + k > 0) {
+                    end = end - 1;
+                } else
+                    start++;
+            }
+        }
+        return count;
+    }

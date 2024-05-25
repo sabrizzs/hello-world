@@ -1,0 +1,61 @@
+    /*public static String[] words(String s) {
+        String r = "çÇáéíóúýÁÉÍÓÚÝàèìòùÀÈÌÒÙãõñäëïöüÿÄËÏÖÜÃÕÑâêîôûÂÊÎÔÛ";
+        s = s.replaceAll("[^A-Za-z" + r + "\\s]", " ");
+        s = s.trim();
+        String[] w = s.split("\\s+");
+        return w;
+    }
+
+    public static void main(String[] args) {
+        String s = StdIn.readAll(); //Arquivo que quero corrigir
+        In texto = new In(args[0]); //Peguei dicionário
+
+        String g = texto.readAll(); //transformei o dicionário em String
+
+        String[] w = words(s); // usando função words
+        String[] y = words(g);
+
+        boolean naoexiste = false;
+
+        for (String t : w) { // peguei cada linha do arquivo que quero corrigir
+            naoexiste = false;
+            for (String d : y) // cada linha do dicionário
+                if (t.equals(d)) {
+                    naoexiste = true;
+                }
+            if (naoexiste == true) {
+                System.out.println(t);
+            }
+        }
+    }*/
+
+FUNCAO BUSCA RUIM
+
+    public static int busca(String[] w, String[] y) {
+        int n = y.length;
+        System.out.println("tamanho dic" + n);
+
+        for (String t : w) {
+            int min = 0;
+            int max = n - 1;
+            int meio = (max + min) / 2;
+
+            while (t.compareTo(y[meio]) != 0 && meio != 0) {
+                System.out.println("meio: " + y[meio]);
+                if (min > max)
+                    System.out.println("se n achou: " + t);
+                if (t.compareTo(y[meio]) < 0)
+                    max = max - 1;
+                if (t.compareTo(y[meio]) > 0) //tenho que arrumar aqui pois esta em looping e voltando pra 0
+                    min = min + 1;
+                
+                //System.out.println(meio);
+                meio = (max + min) / 2;
+            }
+            if (t.compareTo(y[meio]) != 0)
+                System.out.println("se n achou: " + t);
+        }
+        return n;
+    }
+
+

@@ -1,0 +1,9 @@
+Nome: Sabrina Araújo da Silva 
+nºUSP: 12566182
+
+Na implementação de GeoLocator.java usando a tabela de símbolos ST.java, 
+ao substituir ST.java por BST.java podemos notar uma grande diferença no 
+tempo de execução, pois apresenta overflow e se aumentarmos a quantidade
+de memória a execução leva uma grande quantidade de tempo, parecendo estar 
+em loop infinito. Uma das causas disso é por conta da complexidade do put(), 
+no qual no ST.java é O(log N) e no BST.java é O(N).

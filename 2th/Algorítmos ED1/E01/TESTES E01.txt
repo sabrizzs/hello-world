@@ -1,0 +1,23 @@
+TESTES E01
+
+/* javac-introcs Teste.java < binalulu.txt
+time java-introcs Teste bina.txt < binalulu.txt | sort | uniq > bina2.txt
+time java-introcs Teste bina.txt < binalulu.txt > bina2.txt
+
+javac-introcs Teste.java < Braz_Cubas.txt
+time java-introcs Teste words_pt.txt < Braz_Cubas.txt | sort | uniq > braz.txt
+time java-introcs Teste words_pt.txt < Braz_Cubas.txt > braz.txt
+
+javac-introcs Teste.java < por-br_newscrawl_2011_10K-sentences.txt
+time java-introcs Teste words_pt.txt < por-br_newscrawl_2011_10K-sentences.txt | sort | uniq > pt_BR_10k.txt
+
+javac-introcs Ortho.java < DATA/por-br_newscrawl_2011_100K-sentences.txt
+time java-introcs Ortho DATA/words_pt.txt < DATA/por-br_newscrawl_2011_100K-sentences.txt | sort | uniq > pt_BR_100k.txt
+
+javac-introcs Ortho.java < DATA/por-br_newscrawl_2011_1M-sentences.txt
+time java-introcs -Xmx2G Ortho DATA/words_pt.txt < DATA/por-br_newscrawl_2011_1M-sentences.txt | sort | uniq > pt_BR_1M.txt
+
+
+
+LC_ALL='C'
+ */

@@ -1,0 +1,13 @@
+197.218.0.0,197.218.24.255,AF,MZ,"Maputo City","Maputo (Alto Maé ""B"")",-25.9648,32.5639
+197.218.26.0,197.218.89.255,AF,MZ,"Maputo City","Maputo (Alto Maé ""B"")",-25.9648,32.5639
+197.218.95.0,197.218.98.255,AF,MZ,"Maputo City","Maputo (Alto Maé ""B"")",-25.9648,32.5639
+169.225.0.0 , 169.225.255.255 , NA, US, Illinois, "Chicago (Near North Side)", 41.8884, -87.6305
+169.226.0.0,169.226.255.255,NA,US,"New York",Albany,42.6891,-73.825
+169.227.0.0,169.227.255.255,NA,US,Wisconsin,"Milwaukee (Wick Field)",43.0484,-87.9797
+169.228.0.0,169.228.255.255,NA,US,California,"San Diego (La Jolla)",32.8328,-117.271
+169.229.0.0,169.229.255.255,NA,US,California,"Berkeley (Downtown Berkeley)",37.8641,-122.268
+169.230.0.0,169.230.255.255,NA,US,California,"San Francisco (Mission San Rafael)",37.7674,-122.415
+169.231.0.0,169.231.255.255,NA,US,California,"Santa Barbara",34.4208,-119.698
+169.232.0.0,169.232.255.255,NA,US,California,"Los Angeles (Westwood, Los Angeles)",34.0675,-118.447
+169.233.0.0,169.233.255.255,NA,US,California,"Santa Cruz (Communications Building)",37.0009,-122.061
+169.234.0.0,169.234.255.255,NA,US,California,Irvine,33.6839,-117.795

@@ -1,0 +1,196 @@
+/******************************************************************************
+ *
+ * MAC0121 ALGORITMOS E ESTRUTURAS DE DADOS I
+ * Aluno: Sabrina Araújo da Silva
+ * Numero USP: 12566182
+ * Tarefa: E05
+ * Data: 25/09/21
+ *
+ * Baseado em
+ *
+ * DECLARO QUE SOU O ÚNICO AUTOR E RESPONSÁVEL POR ESTE PROGRAMA.  TODAS AS
+ * PARTES DO PROGRAMA, EXCETO AS QUE SÃO BASEADAS EM MATERIAL FORNECIDO
+ * PELO PROFESSOR OU COPIADAS DO LIVRO OU DAS BIBLIOTECAS DE SEDGEWICK & WAYNE,
+ * FORAM DESENVOLVIDAS POR MIM.  DECLARO TAMBÉM QUE SOU RESPONSÁVEL POR TODAS
+ * AS CÓPIAS DESTE PROGRAMA E QUE NÃO DISTRIBUÍ NEM FACILITEI A DISTRIBUIÇÃO
+ * DE CÓPIAS DESTA PROGRAMA.
+ *
+ *
+ *  Compilation:  javac-introcs ABPerms.java
+ *  Execution:    java-introcs ABPerms s k
+ *
+ ******************************************************************************/
+
+
+public class ABPerms {
+
+    // Function to find length of longest
+    // increasing subsequence in a string
+    static int lislds(String s, int ordem) {
+
+        // Stores at every i-th index, the
+        // length of the longest increasing
+        // subsequence ending with character i
+        int[] dp = new int[30];
+
+
+        // Size of string
+        int N = s.length();
+
+        // Stores the length of LIS
+        int lis = 0;
+
+        if (ordem == 0) {
+            // Iterate over each
+            // character of the string
+            for (int i = 0; i < N; i++) {
+
+                // Store position of the
+                // current character
+                int val = (int) s.charAt(i) - 97;
+
+                // Stores the length of LIS
+                // ending with current character
+                int curr = 0;
+
+                // Check for all characters
+                // less then current character
+                for (int j = 0; j < val; j++) {
+                    curr = Math.max(curr, dp[j]);
+                }
+
+                // Include current character
+                curr++;
+
+                // Update length of longest
+                // increasing subsequence
+                lis = Math.max(lis, curr);
+
+                // Updating LIS for current character
+                dp[val] = Math.max(dp[val], curr);
+            }
+        } else {
+            // calcula o LDS
+            for (int i = N - 1; i >= 0; i--) {
+
+                int val = (int) s.charAt(i) - 97;
+
+                int curr = 0;
+
+                for (int j = 0; j < val; j++) {
+                    curr = Math.max(curr, dp[j]);
+                }
+
+                curr++;
+
+                lis = Math.max(lis, curr);
+
+                dp[val] = Math.max(dp[val], curr);
+            }
+        }
+
+        // Return the length of LIS/LDS
+        return lis;
+    }
+
+
+    //SUBSTRING
+    public static String[] substring(String prefix, String remaining, int k, String[] subs) {
+        if (k == 0) {
+            StdOut.println(prefix);
+            for (int i = 0; i < subs.length; i++) {
+                if (subs[i] == null) {
+                    subs[i] = prefix;
+                    return subs;
+                }
+            }
+        }
+        if (remaining.length() == 0) return subs;
+        substring(prefix + remaining.charAt(0), remaining.substring(1), k - 1, subs);
+        substring(prefix, remaining.substring(1), k, subs);
+        return subs;
+    }
+
+    public static String reverse(String a) {
+        String reverse = "";
+        for (int b = a.length() - 1; b >= 0; b--) {
+            reverse += Character.toString(a.charAt(b)); //String minhaString2 = Character.toString('B');
+
+        }
+        return reverse;
+    }
+
+    //PERMUTAÇÃO
+    public static void perm(String s, String[] subs, int k, int j) {
+        perm("", s, subs, k, j);
+    }
+
+    private static void perm(String prefix, String s, String[] subs, int k, int j) {
+        int n = s.length();
+
+        int lis = lislds(prefix, 0);
+        if (lis > k) return;
+        int lds = lislds(prefix, 1);
+        if (lds > j) return;
+
+        /*for (int i = 0; i < subs.length; i++) {
+            if (subs[i] != null)
+                if (prefix.compareTo(subs[i]) == 0) return;
+        }*/
+        if (n == 0) {
+            //pegar substrings do prefixo final, se tiver alguma substring maior que o numero dado, ele nao pode imprimir
+            /* se eu conseguir achar, por exemplo, uma LIS de tamanho 3 para uma permutação(2,2)
+            eu nao adiciono no print pois n pode, entao so tenho que calcular a LIS e ver se ta de
+            acordo com a permutação (a,b) passada ??
+            usar o LCS?? achar o LDS
+             */
+
+            StdOut.println(prefix);
+
+        } else {
+            for (int i = 0; i < n; i++)
+                perm(prefix + s.charAt(i), s.substring(0, i) + s.substring(i + 1, n), subs, k, j);
+        }
+
+    }
+
+    private static void swap(char[] a, int i, int j) {
+        char c = a[i];
+        a[i] = a[j];
+        a[j] = c;
+    }
+
+
+    public static void main(String[] args) {
+
+
+        int n = Integer.parseInt(args[0]);
+        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+        String elements = alphabet.substring(0, n);
+
+
+        String s = elements;
+        int k = Integer.parseInt(args[1]);
+        int j = Integer.parseInt(args[2]);
+        String[] subs = new String[(int) Math.pow(2, s.length()) * 2];
+
+        //adiciono todas as substrings da string
+        int a = 1;
+        int b = 1;
+        while (a <= k) {
+            subs = substring("", s, a + 1, subs);
+            a += 1;
+        }
+        while (b <= j) {
+            subs = substring("", reverse(s), b + 1, subs);
+            b += 1;
+        }
+
+        for (int i = 0; i < subs.length; i++)
+            StdOut.print(subs[i] + " ");
+
+        perm(elements, subs, k, j);
+
+    }
+
+}

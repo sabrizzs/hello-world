@@ -1,0 +1,46 @@
+CODIGOS RUINS Q TALVEZ EU VOLTE ATRAS
+
+private static void show(String[] a) {
+        int b = 0;
+        for (int i = 0; i < a.length - 1; i++) {
+            SignedWord sw0 = new SignedWord(a[i]);
+            SignedWord sw1 = new SignedWord(a[i + 1]);
+            if (sw0.compareTo(sw1) == 0) StdOut.print("+ " + a[i] + " ");
+
+            for (int j = i + 1; j < a.length; j++) {
+                SignedWord sw2 = new SignedWord(a[j]);
+                if (sw0.compareTo(sw2) == 0) {
+                    StdOut.print(a[j] + " ");
+                    b = j;
+                } else break;
+            }
+            i = b;
+            StdOut.print("\n");
+        }
+    }
+
+///////////////////////////////////////
+
+    // print array to standard output
+    private static void show(String[] a) {
+        int b = 0;
+        Queue<Queue<String>> queue1 = new Queue<Queue<String>>();
+        for (int i = 0; i < a.length - 1; i++) {
+            SignedWord sw0 = new SignedWord(a[i]);
+            Queue<String> queue = new Queue<String>();
+            queue.enqueue(a[i]);
+            for (int j = i + 1; j < a.length; j++) {
+                SignedWord sw1 = new SignedWord(a[j]);
+                if (sw0.compareTo(sw1) == 0) {
+                    queue.enqueue(a[j]);
+                }
+            }
+            queue1.enqueue(queue);
+        }
+        for (Queue<String> i : queue1) {
+            if (i.size() >= 2) {
+                StdOut.print("+ ");
+                StdOut.println(i);
+            }
+        }
+    }

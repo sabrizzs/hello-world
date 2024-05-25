@@ -1,0 +1,75 @@
+Primeira Avaliação de MAC 0350
+09/04/2019
+
+1) valor 10 - Quais as duas principais abstrações de dados para criação do Projeto
+Conceitual de banco de dados ? Justifique sua resposta.
+
+2) Em grandes sistemas de banco de dados é fundamental controlar a utilização
+dos serviços que podem ser realizados pelos usuários. Por exemplo, um
+pesquisador da área de biologia quer ter o controle de acesso dás suas
+sequências depositadas e só divulgá-las, publicamente, quando achar plausível.
+Por outro lado, algumas interfaces não estão disponíveis para todos os usuários
+de forma homogênea. Assim deseja-se criar um banco de dados para o cadastro
+dos dados de cada usuário ínome, CPF, endereço, área de pesquisa”, instituição,
+data de nascimento, login, senha), é seu perfil (pesquisador, aluno, funcionário,
+administrador, usuário comum, temporários), além dos serviços disponíveis, Os
+usuários podem utilizar vários serviços por meio dos perfis de usuários, Para
+cada serviço deve ser cadastrado o código e a descrição do mesmo, bem como
+seu tipo. Os tipos de serviços são classificados em: visualização, inserção,
+alteração e remoção. Os serviços não estão acessíveis para um determinado
+usuário e sim para seu respectivo perfil, Cada perfil de usuário está associado a
+um conjunto de serviços disponíveis. Um serviço pode estar associado a mais de
+um perfil de usuário, Um usuário pode estar associado a mais de um perfil e um
+perfil pertencer a mais de um usuário.
+
+Uma recente funcionalidade, nesse ambiente de controle de acesso, é a criação de
+usuários tutelados: usuários tutelados são criados sob à tutela de um usuário
+comum (tutor), Um usuário tutor pode ter vários usuários tutelados. Um usuário
+tutelado tem apenas um tutor. Os usuários tutelados só podem realizar um
+subconjunto dos serviços que são permitidos a um único perfil, pertencente ao
+usuário tutor, O usuário tutelado apenas acessará os serviços de acordo com um
+usuário tutor e seu respectivo perfil. À escolha dos serviços disponibilizados
+para cada usuário tutelado é feita pelo usuário tutor, de acordo com o conjunto
+de serviços existentes em cada perfil. Considerando a descrição acima faça:
+
+2a ) - valor z.0- O projeto conceitual do banco de dados utilizando o Modelo ER-X.
+
+2h) - valor .5- O projeto lógico do banco de dados utilizando o Modelo Relacional a
+partir do projeto feito no item 2a, Defina as chaves candidatas, primárias,
+estrangeiras e restrições de integridade para cada relação.
+
+20) - valoros - Defina o conceito de superchave, Compare o conceito de superchave
+com chave primária, Ilustre tal definição e comparação com um exemplo do item
+2b,
+
+* lim usuário pode ter mais de uma área de pesquisa,
+mano
+
+3) Considere as seguintes relações:
+
+PACIENTE
+
+REL. PROC. .CONSULTA
+
+Assuma que os 1D's identificam univocamente pacientes, dentistas,
+procedimentos. Um dentista pode ter mais de uma especialidade (atributo
+multivalorado). Um paciente é atendido por apenas UM dentista em cada
+consulta, e um dentista só é capaz de atender a um paciente, em uma
+determinada consulta Nem toda consulta tem obrigatoriamente um
+procedimento associado. Uma consulta pode estar associada à mais de um
+procedimento e um procedimento pode estar associado a mais de uma consulta.
+Expresse cada uma das consultas abaixo usando álgebra relacional e ou funções
+
+de agregação.
+
+3a) -valor10- Obtenha todos os 1D Paciente da relação PACIENTE que realizaram
+consulta com dentistas com às especialidades "arrodontia" ou "endodontia”.
+
+3b) «var 15: Obtenha todos 05 nomes dos PACIENTEs que realizaram consulta
+com dentistas que tenham, ao mesmo têmpo, às especialidades “ortodontia” e
+“endodontia”,
+
+30) «valor 1,.3- Obtenha o nome de todos os dentistas que nà sua carreira realizaram
+todos os procedimentos existentes.
+
+3d) -mlor 10- Obtenha o número de consultas de pacientes para cada dentista.

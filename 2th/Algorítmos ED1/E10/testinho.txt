@@ -1,0 +1,338 @@
+/*
+ * $ cat tobe.txt 
+ * to be or not to - be - - that - - - is
+ * $ java-algs4 BagVariantClient < tobe.txt 
+ * *** Size of bag = 14
+ * *** Bag content:
+ * is
+ * -
+ * -
+ * -
+ * that
+ * -
+ * -
+ * be
+ * -
+ * to
+ * not
+ * or
+ * be
+ * to
+ * *** After sorting:
+ * -
+ * -
+ * -
+ * -
+ * -
+ * -
+ * be
+ * be
+ * is
+ * not
+ * or
+ * that
+ * to
+ * to
+ * $ 
+ */
+
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdIn;
+
+public class BagVariantClient
+{
+    public static void main(String[] args) {
+        BagVariant<String> bag = new BagVariant<String>();
+        while (!StdIn.isEmpty()) {
+            String item = StdIn.readString();
+            bag.add(item);
+        }
+
+        StdOut.println("*** Size of bag = " + bag.size());
+        StdOut.println("*** Bag content:");
+        for (String s : bag) 
+            StdOut.println(s);
+
+	bag.sort();
+        StdOut.println("*** After sorting:");
+	for (String s : bag)
+            StdOut.println(s);
+    }
+} 
+
+99999999999999999999999999999999999999999
+
+public void sort() {
+        /* se executamos sort() e imediatamente iteramos sobre os objetos
+         * no BagVariant, os objetos são percorridos em ordem crescente.
+         * Para implementar sort(), você deve, obrigatoriamente,
+         * rearranjar as células da lista ligada que armazenam os objetos em
+         * BagVariant em ordem crescente.
+         * Ordenar uma lista ligada com mergesort e in-place!
+         * Adicionar o método sort() à API
+         */
+
+        mergeSort(0, n - 1);
+    }
+
+    private static void mergeSort(int lo, int hi) {
+        if (lo < hi) {
+
+            int mid = lo + (hi - lo) / 2;
+
+            mergeSort(lo, mid);
+            mergeSort(mid + 1, hi);
+
+            merge(lo, mid, hi);
+        }
+    }
+
+    private void merge(int lo, int mid, int hi) {
+        int lo2 = mid + 1;
+
+        // If the direct merge is already sorted
+        if (arr[mid] <= arr[lo2]) { ///////
+            return;
+        }
+
+        // Two pointers to maintain start
+        // of both arrays to merge
+        while (lo <= mid && lo2 <= hi) {
+
+            // If element 1 is in right place
+            if (arr[lo] <= arr[lo2]) { //////// primeiro elemento da bag; primeiro elemento da segunda parte da bag
+                start++;
+            } else {
+                int value = arr[lo2]; ///////// value é igual ao primeiro elemento da segunda parte da bag
+                int index = lo2;
+
+                // Shift all the elements between element 1
+                // element 2, right by 1.
+                while (index != lo) {
+                    arr[index] = arr[index - 1]; /////////////
+                    index--;
+                }
+                arr[lo] = value; //////////// primeiro elemento da bag é igual o value
+
+                // Update all the pointers
+                lo++;
+                mid++;
+                lo2++;
+            }
+        }
+    }
+
+    private Item iterador(int index) {
+        int i = 0;
+        Item a = first;
+        while (i < index + 1) {
+            if (index > 0) {
+                a = a.next;
+            }
+        }
+        return a;
+    }
+
+000000000000000000000000
+public Node<Item> mergeSort(Node<Item> head) {
+        if ((head == null) || (head.next == null)) {
+            return head;
+        }
+        Node<Item> left = head;
+        Node<Item> right = head.next;
+        while ((right != null) && right.next != null) {
+            head = head.next;
+            right = right.next.next;
+        }
+        right = head.next;
+        head.next = null;
+        return merge(mergeSort(left), mergeSort(right));
+    }
+
+    public Node<Item> merge(Node<Item> left, Node<Item> right) {
+        Node<Item> head = new Node<Item>();
+        Node<Item> temp = head;
+        while ((left != null) && (right != null)) {
+            if (left.item.compareTo(right.item) == 0) {
+                temp.next = left;
+                temp = left;
+                left = left.next;
+            } else {
+                temp.next = right;
+                temp = right;
+                right = right.next;
+            }
+        }
+        if (right == null)
+            temp.next = left;
+        else
+            temp.next = right;
+        System.out.println("Teste aqui" + head.next.item);
+        return head.next;
+
+    }
+
+0000000000000000000000000000000000000 funciona errado kk
+public void sort() {
+        /* se executamos sort() e imediatamente iteramos sobre os objetos
+         * no BagVariant, os objetos são percorridos em ordem crescente.
+         * Para implementar sort(), você deve, obrigatoriamente,
+         * rearranjar as células da lista ligada que armazenam os objetos em
+         * BagVariant em ordem crescente.
+         * Ordenar uma lista ligada com mergesort e in-place!
+         * Adicionar o método sort() à API
+         */
+
+        mergeSort(0, n - 1);
+    }
+
+    private void mergeSort(int lo, int hi) {
+        if (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+
+            mergeSort(lo, mid);
+            mergeSort(mid + 1, hi);
+
+            merge(lo, mid, hi);
+        }
+    }
+
+    private void merge(int lo, int mid, int hi) {
+        int lo2 = mid + 1;
+        // If the direct merge is already sorted
+        Node<Item> bmid = iterador(mid);
+        Node<Item> blo2 = iterador(lo2);
+        System.out.println("Here 6");
+        if ((bmid != null) && (blo2 != null)) {
+            if (bmid.item.compareTo(blo2.item) == 1) { ///////
+                System.out.println("Here 5");
+                return;
+            }
+        }
+
+        // Two pointers to maintain start
+        // of both arrays to merge
+        System.out.println("Here passo do 5");
+        while (lo <= mid && lo2 <= hi) {
+            // If element 1 is in right place
+            Node<Item> blo = iterador(lo);
+            blo2 = iterador(lo2);
+            if ((blo != null) && (blo2 != null)) {
+                if (blo.item.compareTo(blo2.item) == 1) { //////// primeiro elemento da bag; primeiro elemento da segunda parte da bag
+                    lo++;
+
+                } else {
+                    Node<Item> value = new Node<Item>();
+                    value.item = blo2.item; ///////// value é igual ao primeiro elemento da segunda parte da bag
+                    int index = lo2;
+
+                    // Shift all the elements between element 1
+                    // element 2, right by 1.
+                    while (index != lo) {
+                        Node<Item> bindex = iterador(index);
+                        Node<Item> bindex2 = iterador(index);
+                        bindex.item = bindex2.item; /////////////999
+                        index--;
+                    }
+
+                    blo = iterador(index);
+                    blo.item = value.item; ////////////999 primeiro elemento da bag é igual o value
+
+                    // Update all the pointers
+                    lo++;
+                    mid++;
+                    lo2++;
+                }
+            } else {
+                break;
+            }
+        }
+    }
+
+    private Node<Item> iterador(int index) {
+        int i = 0;
+        Node<Item> a = first;
+        while (i < index + 1) {
+            if (index > 0) {
+                a = a.next;
+            }
+            i++;
+        }
+        return a;
+    }
+ 
+000000000000000000000000 funciona MEIO certo
+
+public void sort() {
+        /* se executamos sort() e imediatamente iteramos sobre os objetos
+         * no BagVariant, os objetos são percorridos em ordem crescente.
+         * Para implementar sort(), você deve, obrigatoriamente,
+         * rearranjar as células da lista ligada que armazenam os objetos em
+         * BagVariant em ordem crescente.
+         * Ordenar uma lista ligada com mergesort e in-place!
+         * Adicionar o método sort() à API
+         */
+
+        mergeSort(first);
+    }
+
+    private Node<Item> sortedMerge(Node<Item> a, Node<Item> b) {
+        Node<Item> result = null;
+        /* Base cases */
+        if (a == null)
+            return b;
+        if (b == null)
+            return a;
+
+        /* Pick either a or b, and recur */
+        StdOut.println(a.item.compareTo(b.item));
+        StdOut.println(a.item + " espaço " + b.item);
+        
+        if (a.item.compareTo(b.item) <= 0) {
+            StdOut.println("passo");
+            result = a;
+            result.next = sortedMerge(a.next, b);
+        } else {
+            result = b;
+            result.next = sortedMerge(a, b.next);
+        }
+        return result;
+    }
+
+    private Node<Item> mergeSort(Node<Item> h) {
+        // Base case : if head is null
+        if (h == null || h.next == null) {
+            return h;
+        }
+
+        // get the middle of the list
+        Node<Item> middle = getMiddle(h);
+        Node<Item> nextofmiddle = middle.next;
+
+        // set the next of middle node to null
+        middle.next = null;
+
+        // Apply mergeSort on left list
+        Node<Item> left = mergeSort(h);
+
+        // Apply mergeSort on right list
+        Node<Item> right = mergeSort(nextofmiddle);
+
+        // Merge the left and right lists
+        Node<Item> sortedlist = sortedMerge(left, right);
+        return sortedlist;
+    }
+
+
+    public Node<Item> getMiddle(Node<Item> head) {
+        if (head == null)
+            return head;
+
+        Node<Item> slow = head, fast = head;
+
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
