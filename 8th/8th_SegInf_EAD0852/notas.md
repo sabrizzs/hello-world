@@ -1,10 +1,18 @@
-#### Semana 1
+### Semana 1
 
-Tríade de princípios de segurança da informação
+Tríade de princípios de segurança da informação:
 
 - Confidencialidade
 - Integridade
 - Disponibilidade
+
+Outros princípios:
+
+- Legalidade
+- Autenticidade
+
+Primeiro vírus: Creeper por Bob Thomas
+Primeiro antívirus e host de email por Ray Tomlison
 
 ##### Exercício
 
@@ -18,3 +26,7 @@ Tríade de princípios de segurança da informação
 6. Disponibilidade
 7. Integridade
 8. Disponibilidade
+
+### Semana 2
+
+
